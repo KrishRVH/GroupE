@@ -1,4 +1,7 @@
 // Author: Adam Loeckle
+// Responsibilities:
+// - Server communication
+// - POSIX Queue/Server side messaging
 
 #include "Main.h"
 
