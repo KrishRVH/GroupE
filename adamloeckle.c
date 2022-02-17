@@ -1,6 +1,6 @@
 // Author: Adam Loeckle
 
-#include "Main.c"
+#include "Main.h"
 
 void client()
 {
