@@ -1,15 +1,22 @@
 // Main header for each source file.
 
+// Generic includes
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+// Socket/network includes
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+
+// Mqueue include
 #include <mqueue.h>
+
+// Error handling
 #include <errno.h>
 
 // Constants

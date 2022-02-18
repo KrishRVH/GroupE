@@ -38,5 +38,5 @@ void server() {
 	if (new_connection < 0) { printf("Server accept failed\n"); }
 	else { printf("Server accepted the client\n"); }
 
-	close(new_socket);
+	//close(new_socket);
 }
