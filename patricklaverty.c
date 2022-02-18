@@ -24,7 +24,6 @@ void server() {
 	server_address.sin_port = htons(PORT);
 
 	int binder = bind(new_socket, (SA*)&server_address, sizeof(server_address));
-
 	if binder != 0) {
 		printf("Socket bind failed\n");
 	}
@@ -32,7 +31,8 @@ void server() {
 		printf("Socket binded successfully\n");
 	}
 
-	if ((listen(new_socket, 5)) != 0) {
+	int listener = listen(new_socket, 5);
+	if (listener != 0) {
 		printf("Listen failed\n");
 	}
 	else {
