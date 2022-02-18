@@ -1,3 +1,4 @@
+//Author: Krish Ravi
 /*
 Scoreboard logic + Text file from Assignment00
 
