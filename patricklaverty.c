@@ -2,6 +2,8 @@
 // - Server communication
 // - Based on code from geeksforgeeks.com
 
+#include "Main.h"
+
 void server() {
 	int new_socket;
 	int new_connection;
