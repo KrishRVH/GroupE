@@ -140,7 +140,7 @@ void recieveMsg()
 	}
 }
 
-int player()
+int newPlayer()
 {
 	int num_players = 3;
 	struct Player* players = malloc(sizeof(Player) * num_players);
