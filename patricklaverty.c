@@ -1,5 +1,6 @@
 // Author: Patrick Laverty
 // - Server communication
+// - Based on code from geeksforgeeks.com
 
 void server() {
 	int new_socket;
