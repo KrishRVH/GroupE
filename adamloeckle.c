@@ -7,12 +7,6 @@
 
 #include "Main.h"
 
-// Game logic, handles recieving/sending messages
-void game()
-{
-
-}
-
 // Opens message queue, should only be ran once.
 void openMsgQueue()
 {
