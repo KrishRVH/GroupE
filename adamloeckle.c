@@ -3,7 +3,6 @@
 // - POSIX Queue/Server side messaging
 
 #include "Main.h"
-wadawdwad
 
 // Game logic, handles recieving/sending messages
 void game()
