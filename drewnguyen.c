@@ -33,7 +33,7 @@ void client()
 		printf("Connected to server \n");
 	}
 
-	close(new_socket);
+	//close(new_socket);
 }
 
 //function for communication between client and server

@@ -1,6 +1,9 @@
 // Author: Adam Loeckle
 // Responsibilities:
 // - POSIX Queue/Server side messaging
+//
+// References:
+// https://linux.die.net/man/3/
 
 #include "Main.h"
 
