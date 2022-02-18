@@ -50,3 +50,9 @@ if player resets the timer 3 times in one turn server considers it a pass
 when a new valid word is found, it needs to be added to input.txt and scored accordingly
 in singleplayer the server is only allowed to use input.txt words, not dictionary.txt
 */
+
+// Game logic, handles recieving/sending messages
+void game()
+{
+
+}
