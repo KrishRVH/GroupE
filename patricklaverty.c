@@ -4,7 +4,7 @@
 
 #include "Main.h"
 
-void server() {
+void serverr() {
 	int new_socket;
 	int new_connection;
 	int len;

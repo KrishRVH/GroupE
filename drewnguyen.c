@@ -3,7 +3,7 @@
 
 #include "Main.h"
 
-void client()
+void clientt()
 {
 	int new_socket;
 	int new_connection;
