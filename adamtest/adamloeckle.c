@@ -55,7 +55,7 @@ void recieveMsg()
 {
 	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
-	//buffer = calloc(attr.mq_msgsize, 1);
+	char *buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, buffer, attr.mq_msgsize, &priority)) != -1)
@@ -150,7 +150,7 @@ void client()
 	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serv_addr.sin_port = htons(PORT);
 
-	connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
+	connect(sockfd, (SA*)&serv_addr, sizeof(serv_addr));
 	bzero(buffer, MAX);
 	n = write(sockfd, buffer, strlen(buffer));
 }
