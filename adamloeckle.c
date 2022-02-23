@@ -60,17 +60,17 @@ void recieveMsg()
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, buffer, attr.mq_msgsize, &priority)) != -1)
 	{
-		// Player struct messsage. do something
+		// Game instruction message
 		if (priority == 10)
-		{
-			struct Player* new_player = (struct Player*)buffer;
-			printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
-		}
-		// Game instruction message. do something
-		if (priority == 9)
 		{
 			mq_receive(mqd, buffer, attr.mq_msgsize, &priority);
 			printf("Message: %s, Prio: %i\n", buffer, priority);
+		}
+		// Player struct information message
+		if (priority == 9)
+		{
+			struct Player* new_player = (struct Player*)buffer;
+			printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		}
 	}
 	else
@@ -86,56 +86,6 @@ int newPlayer()
 
 	printf("Players made");
 	return 0;
-}
-
-// https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
-void server()
-{
-	int sockfd, newsockfd, port_num;
-	socklen_t clilen;
-	struct sockaddr_in serv_addr, cli_addr;
-	char buffer[MAX];
-	int n;
-
-	// Socket creation, port number
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	bzero((char*)&serv_addr, sizeof(serv_addr));
-	port_num = atoi(PORT);
-
-	// Assigning IP, PORT
-	serv_addr.sin_family = AF_INET;
-	ser_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	serv_addr.sin_port = htons(port_num);
-
-	// Binds socket
-	bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-	clilen = sizeof(cli_addr);
-
-	int pid;
-	while (1)
-	{
-		new_sockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &clilen);
-
-		pid = fork();
-		
-		// Child process, will contain game logic?
-		if (pid == 0)
-		{
-			close(sockfd);
-			n = read(new_sockfd, buffer, MAX-1);
-			if (n < 0)
-			{
-				printf("Error reading from socket.");
-			}
-			printf("Message: %s\n", buffer);
-			close(new_sockfd);
-		}
-		// Parent process for what?
-		if (pid > 0)
-		{
-			close(new_sockfd);
-		}
-	}
 }
 
 void client()
