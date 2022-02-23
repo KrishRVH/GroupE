@@ -42,7 +42,6 @@ void sendPlayerMsg(struct Player player_input)
 // Send message for game instruction
 void sendGameMsg()
 {
-	mq_open("/Message_Queue", O_WRONLY);
 	mq_send(mqd, "HELLO", 6, 10);
 }
 
@@ -54,7 +53,7 @@ void sendGameMsg()
 
 void recieveMsg()
 {
-	mqd = mq_open ("/Message_Queue", O_RDONLY);
+	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
