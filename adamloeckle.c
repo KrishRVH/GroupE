@@ -55,7 +55,7 @@ void sendGameMsg()
 // These messages get processed by priority, this method should be called inside of the while loop
 // of the server to constantly recieve messages from the queue.
 
-void recieveAllMsg()
+void recieveMsg()
 {
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
