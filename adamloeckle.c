@@ -60,29 +60,32 @@ void recieveMsg()
 	printf("# Of messages: %ld\n", attr.mq_curmsgs);
 
 	unsigned int priority = 0;
-	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1 && attr.mq_curmsgs != 0)
+	if (attr.mq_curmsgs != 0)
 	{
-		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
-		if (priority == 10)
+		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 		{
-			printf("Message: %s, Prio: %i\n", p_buffer, priority);
-			// Accept multiplayer connection and send message to start game between the two processes
+			// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
+			if (priority == 10)
+			{
+				printf("Message: %s, Prio: %i\n", p_buffer, priority);
+				// Accept multiplayer connection and send message to start game between the two processes
+			}
+			// Game instruction message, this will c
+			if (priority == 9)
+			{
+				printf("Message: %s, Prio: %i\n", p_buffer, priority);
+			}
+			//if (priority == 8)
+			//{
+			//	printf("Message: %s, Prio: %i\n", p_buffer, priority);
+			//}
+			// Player struct information message, stores player info in array of structs
+			//if (priority == 8)
+			//{
+			//	struct Player* new_player = (struct Player*)p_buffer;
+			//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
+			//}
 		}
-		// Game instruction message, this will c
-		if (priority == 9)
-		{
-			printf("Message: %s, Prio: %i\n", p_buffer, priority);
-		}
-		//if (priority == 8)
-		//{
-		//	printf("Message: %s, Prio: %i\n", p_buffer, priority);
-		//}
-		// Player struct information message, stores player info in array of structs
-		//if (priority == 8)
-		//{
-		//	struct Player* new_player = (struct Player*)p_buffer;
-		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
-		//}
 	}
 }
 
