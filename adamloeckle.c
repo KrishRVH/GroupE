@@ -58,7 +58,7 @@ void recieveMsg()
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
-	printf("# Of messages: %n\n", attr.mq_curmsgs);
+	printf("# Of messages: %ld\n", attr.mq_curmsgs);
 
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
