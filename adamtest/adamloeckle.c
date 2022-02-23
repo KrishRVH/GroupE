@@ -29,7 +29,7 @@ void openMsgQueue()
 // mqd is already initialized 
 void closeMsgQueue()
 {
-	free(buffer);
+	//free(buffer);
 	mq_unlink("/Message_Queue");
 }
 
@@ -55,7 +55,7 @@ void recieveMsg()
 {
 	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
-	buffer = calloc(attr.mq_msgsize, 1);
+	char *buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, buffer, attr.mq_msgsize, &priority)) != -1)
@@ -91,7 +91,7 @@ int newPlayer()
 // https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
 void server()
 {
-	int sockfd, newsockfd, port_num;
+	int sockfd, new_sockfd;
 	socklen_t clilen;
 	struct sockaddr_in serv_addr, cli_addr;
 	char buffer[MAX];
@@ -100,12 +100,11 @@ void server()
 	// Socket creation, port number
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero((char*)&serv_addr, sizeof(serv_addr));
-	port_num = atoi(PORT);
 
 	// Assigning IP, PORT
 	serv_addr.sin_family = AF_INET;
-	ser_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	serv_addr.sin_port = htons(port_num);
+	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_port = htons(PORT);
 
 	// Binds socket
 	bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -122,6 +121,7 @@ void server()
 		if (pid == 0)
 		{
 			close(sockfd);
+			bzero(buffer, MAX);
 			n = read(new_sockfd, buffer, MAX-1);
 			if (n < 0)
 			{
@@ -140,18 +140,21 @@ void server()
 
 void client()
 {
-	int sockfd, portno, n;
+	int sockfd, n;
     struct sockaddr_in serv_addr, cli;
 	char buffer[MAX];
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	bzero(&servaddr, sizeof(servaddr));
+	bzero(&serv_addr, sizeof(serv_addr));
 
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	servaddr.sin_port = htons(PORT);
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_port = htons(PORT);
 
-	connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
+	connect(sockfd, (SA*)&serv_addr, sizeof(serv_addr));
 	bzero(buffer, MAX);
+
+	buffer = "Hello";
 	n = write(sockfd, buffer, strlen(buffer));
+	close(sockfd);
 }
