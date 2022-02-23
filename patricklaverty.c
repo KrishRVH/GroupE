@@ -1,43 +1,54 @@
 // Author: Patrick Laverty
 // - Server communication
 // - Based on code from geeksforgeeks.com
+// Will handle up to 3 clients
 
 #include "Main.h"
 
-void serverr() {
-	int new_socket;
-	int new_connection;
-	int len;
+void server()
+{
+	int sockfd, newsockfd, port_num;
+	socklen_t clilen;
+	struct sockaddr_in serv_addr, cli_addr;
+	char buffer[MAX];
+	int n;
 
-	struct sockaddr_in server_address;
-	struct sockaddr_in cli;
+	// Socket creation, port number
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	bzero((char*)&serv_addr, sizeof(serv_addr));
+	port_num = atoi(PORT);
 
-	// Creating Socket
-	new_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (new_socket == -1) { printf("Socket creation failed\n"); }
-	else { printf("Socket created.\n"); }
+	// Assigning IP, PORT
+	serv_addr.sin_family = AF_INET;
+	ser_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_port = htons(port_num);
 
-	bzero(&server_address, sizeof(server_address)); // Zero out the address space of the struct
+	// Binds socket
+	bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+	clilen = sizeof(cli_addr);
 
-	// Binding socket to the port
-	server_address.sin_family = AF_INET;
-	server_address.sin_addr.s_addr = htonl(INADDR_ANY); // Convert int to ip byte order
-	server_address.sin_port = htons(BINDING_PORT); // Converting ip port to byte order
+	int pid;
+	while (1)
+	{
+		new_sockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &clilen);
 
-	int binder = bind(new_socket, (SA*)&server_address, sizeof(server_address));
-	if binder != 0) { printf("Socket bind failed\n"); }
-	else { printf("Socket binded successfully\n"); }
-
-	// Socket listener
-	int listener = listen(new_socket, 5);
-	if (listener != 0) { printf("Listen failed\n"); }
-	else { printf("Server listening\n"); }
-
-	// Testing connection
-	len = sizeof(cli);
-	new_connection = accept(new_socket, (SA*)&cli, &len);
-	if (new_connection < 0) { printf("Server accept failed\n"); }
-	else { printf("Server accepted the client\n"); }
-
-	//close(new_socket);
+		pid = fork();
+		
+		// Child process, will contain game logic?
+		if (pid == 0) {
+			close(sockfd);
+			n = read(new_sockfd, buffer, MAX-1);
+			if (n < 0)
+			{
+				printf("Error reading from socket.");
+			}
+			printf("Message: %s\n", buffer);
+			close(new_sockfd);
+		}
+		// Parent process for what?
+		if (pid > 0)
+		{
+			close(new_sockfd);
+		}
+	}
 }
