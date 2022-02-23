@@ -7,14 +7,6 @@
 
 #include "Main.h"
 
-// Testing main method
-int main()
-{
-	openMsgQueue();
-	sendGameMsg();
-	recieveMsg();
-}
-
 // Opens message queue, should only be ran once.
 void openMsgQueue()
 {
@@ -106,4 +98,12 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	new_player.score = 0;
 
 	return new_player;
+}
+
+// Testing main method
+int main()
+{
+	openMsgQueue();
+	sendGameMsg();
+	recieveMsg();
 }
