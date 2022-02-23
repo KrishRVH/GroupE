@@ -56,11 +56,12 @@ void recieveMsg()
 {
 	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
+	p_buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 	{
-		p_buffer = calloc(attr.mq_msgsize, 1);
+		
 		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
 		if (priority == 10)
 		{
@@ -84,6 +85,7 @@ void recieveMsg()
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
 		free(p_buffer);
+		p_buffer = calloc(attr.mq_msgsize, 1);
 	}
 }
 
