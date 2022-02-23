@@ -54,7 +54,6 @@ void sendGameMsg()
 
 void recieveMsg()
 {
-	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
