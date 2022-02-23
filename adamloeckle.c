@@ -83,7 +83,7 @@ void recieveMsg()
 		//	struct Player* new_player = (struct Player*)p_buffer;
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
-		free(buffer);
+		free(p_buffer);
 	}
 }
 
