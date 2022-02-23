@@ -7,7 +7,7 @@ void main()
 {
     srand(time(NULL)); 
     int rng = (rand()%9)+1; //seeding random number from 1 to 10 for first turn
-    int rng2 = (rand()%9)+1; //seeding random number from 1 to 10 for input.txt
+    int rng2 = 1; //(rand()%9)+1; seeding random number from 1 to 10 for input.txt FOR SOME REASON IT WON'T GENERATE 10
     char rng2char[2];   
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
@@ -21,9 +21,9 @@ void main()
     strcat(fname, rng2char);
     printf("\nWe have chosen %s",fname);
     fileStream = fopen (fname, "r");
-    fgets (letters, 6, fileStream); 
-    printf("\n%s",letters);
+    fgets (letters, 7, fileStream); 
     fclose(fileStream);
+    printf("\nLETTERS ARE: %s",letters);
     int disallowed = 0;
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
     char prev[6]; //word can never be longer than the 6 available chars
@@ -36,20 +36,27 @@ void main()
     size_t nnew = sizeof(new)/sizeof(char);
     for (int i=0; i<n;i++)
     {
-        for (int x = 0; x < nnew, !disallowed; x++)
+        for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
         {
-            for (int y = 0; y < 6; y++)
+            for (int y = 0; y < 6 && new[x]!='\0'; y++)
             {
+                printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
                 if (new[x]!=letters[y])
-                    y++;
-                if (y==6)
-                    disallowed=1;
+                {
+                    if (letters[y+1]=='\0')
+                        disallowed=1;
+                    else
+                        continue;
+                }
+                else
+                    break;
             }
         }
-        if (!disallowed)
+        if (disallowed==0)
         {
             if (new[0]==prev[i])
             {
+                printf("\nUsed correct characters!");
                 int j = i;
                 int k = 0;
                 while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
@@ -67,6 +74,7 @@ void main()
                     int wordExist=0;
                     int bufferLength = 255;
                     char line[bufferLength];
+                    printf("\nFilename is %s",fname);
                     filePointer = fopen(fname, "r");
                     while(fgets(line, bufferLength, filePointer))
                     {
@@ -80,12 +88,12 @@ void main()
                     fclose(filePointer);
                     if (wordExist==1)
                     {
-                        printf("Word was already in file and NOT been used.");
+                        printf("\nWord was already in file and NOT been used.");
                         //add word to input.txt
                     }
                     else 
                     {
-                        printf("Word doesn't exist.");
+                        printf("\nWord doesn't exist in the file.");
                     }
                     exit(0);
                 }   
@@ -105,7 +113,8 @@ void main()
         }
         else
         {
-            printf("Word contains disallowed characters.")
+            printf("Word contains disallowed characters.");
+            exit(0);
         }
     }
 }
