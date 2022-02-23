@@ -17,7 +17,6 @@ void server() {
 
 	bzero(&server_address, sizeof(server_address)); // Zero out the address space of the struct
 
-
 	// Binding socket to the port
 	server_address.sin_family = AF_INET;
 	server_address.sin_addr.s_addr = htonl(INADDR_ANY); // Convert int to ip byte order
