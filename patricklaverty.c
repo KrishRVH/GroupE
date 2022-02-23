@@ -2,7 +2,9 @@
 // - Server communication
 // - Based on code from geeksforgeeks.com
 
-void server() {
+#include "Main.h"
+
+void serverr() {
 	int new_socket;
 	int new_connection;
 	int len;
@@ -37,5 +39,5 @@ void server() {
 	if (new_connection < 0) { printf("Server accept failed\n"); }
 	else { printf("Server accepted the client\n"); }
 
-	close(new_socket);
+	//close(new_socket);
 }
