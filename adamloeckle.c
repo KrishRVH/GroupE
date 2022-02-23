@@ -43,7 +43,7 @@ void sendPlayerMsg(struct Player player_input)
 void sendGameMsg()
 {
 	mq_send(mqd, "HELLO 1", 8, 10);
-	mq_send(mqd, "HELLO 2", 8, 8);
+	//mq_send(mqd, "HELLO 2", 8, 8);
 }
 
 // NOTE: Priority 10 is used for game moves/logic, priority 9 is used for player structs
