@@ -86,10 +86,6 @@ void recieveMsg()
 		//	struct Player* new_player = (struct Player*)p_buffer;
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
-		free(p_buffer);
-		p_buffer = NULL;
-		p_buffer = calloc(attr.mq_msgsize, 1);
-		priority = 0;
 	}
 }
 
