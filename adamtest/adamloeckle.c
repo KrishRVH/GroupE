@@ -121,6 +121,7 @@ void server()
 		if (pid == 0)
 		{
 			close(sockfd);
+			bzero(buffer, MAX);
 			n = read(new_sockfd, buffer, MAX-1);
 			if (n < 0)
 			{
@@ -152,5 +153,8 @@ void client()
 
 	connect(sockfd, (SA*)&serv_addr, sizeof(serv_addr));
 	bzero(buffer, MAX);
+
+	buffer = "Hello";
 	n = write(sockfd, buffer, strlen(buffer));
+	close(sockfd);
 }
