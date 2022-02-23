@@ -84,10 +84,6 @@ void recieveMsg()
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
 	}
-	else
-	{
-		printf("No messages.")
-	}
 }
 
 struct Player newPlayer(char *firstname, char *lastname, char *country)
@@ -109,5 +105,7 @@ int main()
 {
 	openMsgQueue();
 	sendGameMsg();
+	recieveMsg();
+	recieveMsg();
 	recieveMsg();
 }
