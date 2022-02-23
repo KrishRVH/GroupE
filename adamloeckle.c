@@ -44,7 +44,6 @@ void sendGameMsg()
 {
 	mq_open("/Message_Queue", O_WRONLY);
 	mq_send(mqd, "HELLO", 6, 10);
-	//mq_send(mqd, "HELLO 2", 8, 8);
 }
 
 // NOTE: Priority 10 is used for game moves/logic, priority 9 is used for player structs
@@ -64,7 +63,6 @@ void recieveMsg()
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 	{
-		printf("Passed");
 		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
 		if (priority == 10)
 		{
