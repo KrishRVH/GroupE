@@ -67,6 +67,8 @@ void recieveMsg()
 		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
 		if (priority == 10)
 		{
+			mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
+			printf("Message: %s, Prio: %i\n", p_buffer, priority);
 			// Accept multiplayer connection and send message to start game between the two processes
 		}
 		// Game instruction message, this will c
