@@ -40,9 +40,5 @@ struct Player
 	//int num_words_added;
 } Player;
 
-int player();
 void server();
 void client();
-void openMsgQueue();
-void closeMsgQueue();
-void recievePlayerMsg();
