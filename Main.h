@@ -27,7 +27,7 @@
 // Mqueue globals
 mqd_t mqd;
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
-//char* buffer;
+char* p_buffer;
 
 // Player struct
 struct Player

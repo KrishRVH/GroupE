@@ -29,7 +29,7 @@ void openMsgQueue()
 // mqd is already initialized 
 void closeMsgQueue()
 {
-	free(buffer);
+	free(p_buffer);
 	mq_unlink("/Message_Queue");
 }
 
@@ -55,21 +55,21 @@ void recieveMsg()
 {
 	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
-	buffer = calloc(attr.mq_msgsize, 1);
+	p_buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
-	if ((mq_receive(mqd, buffer, attr.mq_msgsize, &priority)) != -1)
+	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 	{
 		// Game instruction message
 		if (priority == 10)
 		{
-			mq_receive(mqd, buffer, attr.mq_msgsize, &priority);
-			printf("Message: %s, Prio: %i\n", buffer, priority);
+			mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
+			printf("Message: %s, Prio: %i\n", p_buffer, priority);
 		}
 		// Player struct information message
 		if (priority == 9)
 		{
-			struct Player* new_player = (struct Player*)buffer;
+			struct Player* new_player = (struct Player*)p_buffer;
 			printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		}
 	}
@@ -86,22 +86,4 @@ int newPlayer()
 
 	printf("Players made");
 	return 0;
-}
-
-void client()
-{
-	int sockfd, portno, n;
-    struct sockaddr_in serv_addr, cli;
-	char buffer[MAX];
-
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	bzero(&servaddr, sizeof(servaddr));
-
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	servaddr.sin_port = htons(PORT);
-
-	connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
-	bzero(buffer, MAX);
-	n = write(sockfd, buffer, strlen(buffer));
 }
