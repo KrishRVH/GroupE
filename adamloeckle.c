@@ -89,7 +89,7 @@ void recieveMsg()
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
 		free(p_buffer);
-		p_buffer = null;
+		p_buffer = NULL;
 		p_buffer = calloc(attr.mq_msgsize, 1);
 		priority = 0;
 	}
