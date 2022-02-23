@@ -42,9 +42,9 @@ void sendPlayerMsg(struct Player player_input)
 // Send message for game instruction
 void sendGameMsg()
 {
-	mq_send(mqd, "HELLO 1", 8, 10);
+	mq_open("/Message_Queue", O_WRONLY);
+	mq_send(mqd, "HELLO", 6, 10);
 	//mq_send(mqd, "HELLO 2", 8, 8);
-	mq_close(mqd);
 }
 
 // NOTE: Priority 10 is used for game moves/logic, priority 9 is used for player structs
@@ -72,16 +72,16 @@ void recieveMsg()
 			// Accept multiplayer connection and send message to start game between the two processes
 		}
 		// Game instruction message, this will c
-		if (priority == 9)
-		{
-			mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
-			printf("Message: %s, Prio: %i\n", p_buffer, priority);
-		}
-		if (priority == 8)
-		{
-			mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
-			printf("Message: %s, Prio: %i\n", p_buffer, priority);
-		}
+		//if (priority == 9)
+		//{
+		//	mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
+		//	printf("Message: %s, Prio: %i\n", p_buffer, priority);
+		//}
+		//if (priority == 8)
+		//{
+		//	mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
+		//	printf("Message: %s, Prio: %i\n", p_buffer, priority);
+		//}
 		// Player struct information message, stores player info in array of structs
 		//if (priority == 8)
 		//{
