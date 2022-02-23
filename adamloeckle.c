@@ -60,7 +60,7 @@ void recieveMsg()
 	printf("# Of messages: %ld\n", attr.mq_curmsgs);
 
 	unsigned int priority = 0;
-	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1 && attr.mq_curmsgs != 0)
 	{
 		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
 		if (priority == 10)
