@@ -60,7 +60,7 @@ void recieveMsg()
 	printf("# Of messages: %ld\n", attr.mq_curmsgs);
 
 	unsigned int priority = 0;
-	if (attr.mq_curmsgs != 0)
+	while (attr.mq_curmsgs != 0)
 	{
 		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 		{
@@ -108,7 +108,5 @@ int main()
 {
 	openMsgQueue();
 	sendGameMsg();
-	recieveMsg();
-	recieveMsg();
 	recieveMsg();
 }
