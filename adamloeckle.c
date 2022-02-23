@@ -42,7 +42,7 @@ void sendPlayerMsg(struct Player player_input)
 // Send message for game instruction
 void sendGameMsg()
 {
-	mq_send(mqd, "HELLO 1", 8, 9);
+	mq_send(mqd, "HELLO 1", 8, 10);
 	mq_send(mqd, "HELLO 2", 8, 8);
 }
 
@@ -61,7 +61,7 @@ void recieveMsg()
 	printf("# Of messages: %ld\n", attr.mq_curmsgs);
 
 	unsigned int priority = 0;
-	while ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 	{
 		
 		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
@@ -86,7 +86,6 @@ void recieveMsg()
 		//	struct Player* new_player = (struct Player*)p_buffer;
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
-		priority = 0;
 	}
 }
 
