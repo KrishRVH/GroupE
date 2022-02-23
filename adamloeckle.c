@@ -58,32 +58,42 @@ void recieveMsg()
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
-	if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+	while ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 	{
-		// Game instruction message
+		// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
 		if (priority == 10)
+		{
+			// Accept multiplayer connection and send message to start game between the two processes
+		}
+		// Game instruction message, this will c
+		if (priority == 9)
 		{
 			mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority);
 			printf("Message: %s, Prio: %i\n", p_buffer, priority);
 		}
-		// Player struct information message
-		if (priority == 9)
+		if (priority == 8)
 		{
-			struct Player* new_player = (struct Player*)p_buffer;
-			printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
+
 		}
-	}
-	else
-	{
-		perror("ERROR");
+		// Player struct information message, stores player info in array of structs
+		//if (priority == 8)
+		//{
+		//	struct Player* new_player = (struct Player*)p_buffer;
+		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
+		//}
 	}
 }
 
-int newPlayer()
+Player newPlayer(char *firstname, char *lastname, char *country)
 {
-	int num_players = 3;
-	struct Player* players = malloc(sizeof(Player) * num_players);
+	struct Player new_player;
+	
+	strcpy(new_player.firstname, firstname);
+	strcpy(new_player.lastname, lastname);
+	strcpy(new_player.country, country);
+	new_player.num_words = 0;
+	new_player.num_words_added = 0;
+	new_player.score = 0;
 
-	printf("Players made");
-	return 0;
+	return new_player;
 }

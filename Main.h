@@ -32,12 +32,12 @@ char* p_buffer;
 // Player struct
 struct Player
 {
-	//char firstname[50];
-	//char lastname[50];
-	//char country[50];
+	char firstname[50];
+	char lastname[50];
+	char country[50];
 	int score;
-	//int num_words;
-	//int num_words_added;
+	int num_words;
+	int num_words_added;
 } Player;
 
 int player();

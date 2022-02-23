@@ -1,0 +1,12 @@
+Game Functionality and Outline
+------------------------------
+
+
+Server:
+1) While loop, forks for each new client that connects
+2) Every new fork starts with recieving a command for single player, multi player, or exit
+3) The second server task depends on the above response, if the server recieves single/multiplayer, the process will then accept 3 inputs from the client (First name, last name, country). Exit closes the client connection
+4) If the new client selects multiplayer, it will check to see if there is already another client in multiplayer for 2 minutes and then asks the new client to continue waiting if there is no one playing or play single player
+   - POSIX queue message for client currently waiting for another player
+5) Game starts, it will send the client a word and give them 4 minutes to submit an answer.
+6) Client sends a word which then calls the word check method. Work check method returns a correct or not correct response.
