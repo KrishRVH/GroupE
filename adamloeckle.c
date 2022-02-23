@@ -84,7 +84,7 @@ void recieveMsg()
 	}
 }
 
-Player newPlayer(char *firstname, char *lastname, char *country)
+struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
 	struct Player new_player;
 	
