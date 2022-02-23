@@ -29,7 +29,7 @@ void openMsgQueue()
 // mqd is already initialized 
 void closeMsgQueue()
 {
-	free(buffer);
+	//free(buffer);
 	mq_unlink("/Message_Queue");
 }
 
@@ -55,7 +55,7 @@ void recieveMsg()
 {
 	struct mq_attr attr;
 	mq_getattr(mqd, &attr);
-	buffer = calloc(attr.mq_msgsize, 1);
+	//buffer = calloc(attr.mq_msgsize, 1);
 
 	unsigned int priority = 0;
 	if ((mq_receive(mqd, buffer, attr.mq_msgsize, &priority)) != -1)
@@ -91,7 +91,7 @@ int newPlayer()
 // https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
 void server()
 {
-	int sockfd, newsockfd, port_num;
+	int sockfd, new_sockfd, port_num;
 	socklen_t clilen;
 	struct sockaddr_in serv_addr, cli_addr;
 	char buffer[MAX];
@@ -104,7 +104,7 @@ void server()
 
 	// Assigning IP, PORT
 	serv_addr.sin_family = AF_INET;
-	ser_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serv_addr.sin_port = htons(port_num);
 
 	// Binds socket
@@ -145,7 +145,7 @@ void client()
 	char buffer[MAX];
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	bzero(&servaddr, sizeof(servaddr));
+	bzero(&serv_addr, sizeof(serv_addr));
 
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
