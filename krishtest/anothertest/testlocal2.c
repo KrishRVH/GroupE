@@ -25,8 +25,8 @@ void main()
     printf("\n%s",letters);
     fclose(fileStream);
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
-    char prev[6] = "body";
-    char new[6] = "dye";
+    char prev[6] = "DYE";
+    char new[6] = "DYEB";
     int disallowed = 0;
     size_t n = sizeof(prev)/sizeof(char);
     size_t nnew = sizeof(new)/sizeof(char);
@@ -34,12 +34,18 @@ void main()
     {
         for (int x = 0; x < nnew && disallowed==0; x++)
         {
-            for (int y = 0; y < 7 && new[x]!='\0'; y++)
+            for (int y = 0; y < 6 && new[x]!='\0'; y++)
             {
+                printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
                 if (new[x]!=letters[y])
-                    y++;
-                if (y==7)
-                    disallowed=1;
+                {
+                    if (letters[y+1]=='\0')
+                        disallowed=1;
+                    else
+                        continue;
+                }
+                else
+                    break;
             }
         }
         if (disallowed==0)
