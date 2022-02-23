@@ -1,6 +1,6 @@
 #include "Main.h"
 
-void run_client()
+void main()
 {
     client();
 }

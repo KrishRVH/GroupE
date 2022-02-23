@@ -1,6 +1,6 @@
 #include "Main.h"
 
-void run_server()
+void main()
 {
     server();
 }
