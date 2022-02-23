@@ -87,6 +87,10 @@ void recieveMsg()
 		//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 		//}
 	}
+	else
+	{
+		perror("ERROR");
+	}
 }
 
 struct Player newPlayer(char *firstname, char *lastname, char *country)
