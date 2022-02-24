@@ -109,7 +109,8 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 }
 
 // Test server socket code for multiple forked clients
-int server(){
+int server()
+{
 
 	int sockfd, ret, newSocket;
 	struct sockaddr_in serverAddr, newAddr;
@@ -233,7 +234,5 @@ int client(){
 // Testing main method
 int main()
 {
-	openMsgQueue();
-	sendGameMsg();
-	recieveMsg();
+
 }
