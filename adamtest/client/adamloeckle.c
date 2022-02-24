@@ -108,56 +108,48 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	return new_player;
 }
 
-int main(int argc, char**argv) {  
-	struct sockaddr_in addr, cl_addr;  
-	int sockfd, ret;  
-	char buffer[BUF_SIZE];  
-	struct hostent * server;
-	char * serverAddr;
+int main(){
 
-	if (argc < 2) {
-	printf("usage: client < ip address >\n");
-	exit(1);  
+	int clientSocket, ret;
+	struct sockaddr_in serverAddr;
+	char buffer[1024];
+
+	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if(clientSocket < 0){
+		printf("[-]Error in connection.\n");
+		exit(1);
+	}
+	printf("[+]Client Socket is created.\n");
+
+	memset(&serverAddr, '\0', sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(PORT);
+	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(ret < 0){
+		printf("[-]Error in connection.\n");
+		exit(1);
+	}
+	printf("[+]Connected to Server.\n");
+
+	while(1){
+		printf("Client: \t");
+		scanf("%s", &buffer[0]);
+		send(clientSocket, buffer, strlen(buffer), 0);
+
+		if(strcmp(buffer, ":exit") == 0){
+			close(clientSocket);
+			printf("[-]Disconnected from server.\n");
+			exit(1);
+		}
+
+		if(recv(clientSocket, buffer, 1024, 0) < 0){
+			printf("[-]Error in receiving data.\n");
+		}else{
+			printf("Server: \t%s\n", buffer);
+		}
 	}
 
-	serverAddr = argv[1]; 
-	
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);  
-	if (sockfd < 0) {  
-	printf("Error creating socket!\n");  
-	exit(1);  
-	}
-	printf("Socket created...\n");   
-
-	memset(&addr, 0, sizeof(addr));  
-	addr.sin_family = AF_INET;  
-	addr.sin_addr.s_addr = inet_addr(serverAddr);
-	addr.sin_port = PORT;     
-
-	ret = connect(sockfd, (struct sockaddr *) &addr, sizeof(addr));  
-	if (ret < 0) {  
-	printf("Error connecting to the server!\n");  
-	exit(1);  
-	}  
-	printf("Connected to the server...\n");  
-
-	memset(buffer, 0, BUF_SIZE);
-	printf("Enter your message(s): ");
-
-	while (fgets(buffer, BUF_SIZE, stdin) != NULL) {
-	ret = sendto(sockfd, buffer, BUF_SIZE, 0, (struct sockaddr *) &addr, sizeof(addr));  
-	if (ret < 0) {  
-	printf("Error sending data!\n\t-%s", buffer);  
-	}
-	ret = recvfrom(sockfd, buffer, BUF_SIZE, 0, NULL, NULL);  
-	if (ret < 0) {  
-	printf("Error receiving data!\n");    
-	} else {
-	printf("Received: ");
-	fputs(buffer, stdout);
-	printf("\n");
-	}  
-	}
- 
- return 0;    
+	return 0;
 }

@@ -164,75 +164,72 @@ void client()
 }
 
 // Test server socket code for multiple forked clients
-void server() {
-	struct sockaddr_in addr, cl_addr;
-	int sockfd, len, ret, newsockfd;
-	char buffer[BUF_SIZE];
+int main(){
+
+	int sockfd, ret;
+	struct sockaddr_in serverAddr;
+
+	int newSocket;
+	struct sockaddr_in newAddr;
+
+	socklen_t addr_size;
+
+	char buffer[1024];
 	pid_t childpid;
-	char clientAddr[CLADDR_LEN];
-	
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sockfd < 0) {
-	printf("Error creating socket!\n");
-	exit(1);
+
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sockfd < 0){
+		printf("[-]Error in connection.\n");
+		exit(1);
 	}
-	printf("Socket created...\n");
-	
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = PORT;
-	
-	ret = bind(sockfd, (struct sockaddr *) &addr, sizeof(addr));
-	if (ret < 0) {
-	printf("Error binding!\n");
-	exit(1);
+	printf("[+]Server Socket is created.\n");
+
+	memset(&serverAddr, '\0', sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(PORT);
+	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	ret = bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(ret < 0){
+		printf("[-]Error in binding.\n");
+		exit(1);
 	}
-	printf("Binding done...\n");
+	printf("[+]Bind to port %d\n", 4444);
 
-	printf("Waiting for a connection...\n");
-	listen(sockfd, 5);
-
-	for (;;) { //infinite loop
-	len = sizeof(cl_addr);
-	newsockfd = accept(sockfd, (struct sockaddr *) &cl_addr, &len);
-	if (newsockfd < 0) {
-	printf("Error accepting connection!\n");
-	//exit(1);
+	if(listen(sockfd, 10) == 0){
+		printf("[+]Listening....\n");
+	}else{
+		printf("[-]Error in binding.\n");
 	}
-	printf("Connection accepted...\n");
 
-	inet_ntop(AF_INET, &(cl_addr.sin_addr), clientAddr, CLADDR_LEN);
-	if ((childpid = fork()) == 0) { //creating a child process
 
-	close(sockfd); 
-	//stop listening for new connections by the main process. 
-	//the child will continue to listen. 
-	//the main process now handles the connected client.
-
-		for (;;) {
-			memset(buffer, 0, BUF_SIZE);
-			ret = recvfrom(newsockfd, buffer, BUF_SIZE, 0, (struct sockaddr *) &cl_addr, &len);
-			if(ret < 0) {
-			printf("Error receiving data!\n");  
+	while(1){
+		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);
+		if(newSocket < 0){
 			exit(1);
-			}
-			printf("Received data from %s: %s\n", clientAddr, buffer); 
-
-			ret = sendto(newsockfd, buffer, BUF_SIZE, 0, (struct sockaddr *) &cl_addr, len);   
-			if (ret < 0) {  
-			printf("Error sending data!\n");  
-			exit(1);  
-			}  
-			printf("Sent data to %s: %s\n", clientAddr, buffer);
 		}
-	}
-	close(newsockfd);
-	}
-}
+		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 
-// Testing main method
-int main()
-{
-	server();
+		if((childpid = fork()) == 0){
+			close(sockfd);
+
+			while(1){
+				recv(newSocket, buffer, 1024, 0);
+				if(strcmp(buffer, ":exit") == 0){
+					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+					break;
+				}else{
+					printf("Client: %s\n", buffer);
+					send(newSocket, buffer, strlen(buffer), 0);
+					bzero(buffer, sizeof(buffer));
+				}
+			}
+		}
+
+	}
+
+	close(newSocket);
+
+
+	return 0;
 }
