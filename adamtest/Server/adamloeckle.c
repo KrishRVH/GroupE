@@ -164,7 +164,7 @@ void client()
 }
 
 // Test server socket code for multiple forked clients
-void socketThread(int clientSocket)
+void * socketThread(int clientSocket)
 {
 	char client_message[2000];
 	char buffer[1024];
