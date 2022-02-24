@@ -41,6 +41,7 @@ struct Player
 	int score;
 	int num_words;
 	int num_words_added;
+	int player_turn;
 } Player;
 
 int player();

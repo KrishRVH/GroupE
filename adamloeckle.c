@@ -108,115 +108,127 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	return new_player;
 }
 
-void * cientThread(void *arg)
-{
-	printf("In thread\n");
-	char message[1000];
-  	char buffer[1024];
-	int clientSocket;
-  	struct sockaddr_in serverAddr;
-  	socklen_t addr_size;
-	
-	clientSocket = socket(PF_INET, SOCK_STREAM, 0);
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(7799);
-	serverAddr.sin_addr.s_addr = inet_addr("localhost");
-  	memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
-
-	
-	addr_size = sizeof serverAddr;
-    connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
-    strcpy(message,"Hello");
-
-	if( send(clientSocket , message , strlen(message) , 0) < 0)
-    {
-            printf("Send failed\n");
-    }
-
-    //Read the message from the server into the buffer
-    if(recv(clientSocket, buffer, 1024, 0) < 0)
-    {
-       printf("Receive failed\n");
-    }
-    //Print the received message
-    printf("Data received: %s\n",buffer);
-    close(clientSocket);
-    pthread_exit(NULL);
-}
-
 // Test server socket code for multiple forked clients
-void socketThread(int clientSocket)
-{
-	char client_message[2000];
-	char buffer[1024];
-	int newSocket = clientSocket;
-	recv(newSocket, client_message, 2000, 0);
-	
-	char *message = malloc(sizeof(client_message)+20);
-	strcpy(message, "Hello client : ");
-	strcat(message, client_message);
-	strcat(message, "\n");
-	strcpy(buffer, message);
-	free(message);
-	sleep(1);
-	send(newSocket, buffer, 13, 0);
-	printf("Exit socketThread \n");
-	close(newSocket);
-}
+int server(){
 
-// https://dzone.com/articles/parallel-tcpip-socket-server-with-multi-threading
-void server()
-{
-	int serverSocket, newSocket;
-	struct sockaddr_in serverAddr;
-	struct sockaddr_storage serverStorage;
+	int sockfd, ret, newSocket;
+	struct sockaddr_in serverAddr, newAddr;
 	socklen_t addr_size;
-	pid_t pid[50];
+	char buffer[MAX];
+	pid_t childpid;
 
-	serverSocket = socket(PF_INET, SOCK_STREAM, 0);
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	memset(&serverAddr, '\0', sizeof(serverAddr));
+
+
 	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(7799);
+	serverAddr.sin_port = htons(PORT);
 	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-	memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
-	bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
-
-	if (listen(serverSocket, 50) == 0)
+	ret = bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(ret < 0)
 	{
-		printf("Listening...\n");
+		printf("[-]Error in binding.\n");
+		exit(1);
+	}
+	printf("[+]Bind to port %d\n", 4444);
+
+	if(listen(sockfd, 10) == 0)
+	{
+		printf("[+]Listening....\n");
 	}
 	else
 	{
-		printf("Error\n");
-		pthread_t tid[60];
-		int i = 0;
+		printf("[-]Error in binding.\n");
 	}
+
 
 	while(1)
 	{
-		addr_size = sizeof(serverStorage);
-		newSocket = (serverSocket, (struct sockaddr*)&serverStorage, &addr_size);
-		int pid_c = 0;
-
-		if ((pid_c = fork()) == 0)
+		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);
+		if(newSocket < 0)
 		{
-			socketThread(newSocket);
+			exit(1);
 		}
-		else
-		{
-			pid[i++] = pid_c;
-			if (i >= 49)
+		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+
+		if((childpid = fork()) == 0){
+			close(sockfd);
+
+			while(1)
 			{
-				i = 0;
-				while(i < 50)
+				recv(newSocket, buffer, 1024, 0);
+				if(strcmp(buffer, ":exit") == 0)
 				{
-					waitpid(pid[i++], NULL, 0);
+					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+					break;
 				}
-				i = 0;
+				else
+				{
+					printf("Client: %s\n", buffer);
+					send(newSocket, buffer, strlen(buffer), 0);
+					bzero(buffer, sizeof(buffer));
+				}
 			}
 		}
 	}
+	close(newSocket);
+	return 0;
 }
+
+// https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
+int client(){
+
+	int clientSocket, ret;
+	struct sockaddr_in serverAddr;
+	char buffer[1024];
+
+	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if(clientSocket < 0)
+	{
+		printf("[-]Error in connection.\n");
+		exit(1);
+	}
+	printf("[+]Client Socket is created.\n");
+
+	memset(&serverAddr, '\0', sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(PORT);
+	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(ret < 0)
+	{
+		printf("[-]Error in connection.\n");
+		exit(1);
+	}
+	printf("[+]Connected to Server.\n");
+
+	while(1)
+	{
+		printf("Client: \t");
+		scanf("%s", &buffer[0]);
+		send(clientSocket, buffer, strlen(buffer), 0);
+
+		if(strcmp(buffer, ":exit") == 0)
+		{
+			close(clientSocket);
+			printf("[-]Disconnected from server.\n");
+			exit(1);
+		}
+
+		if(recv(clientSocket, buffer, 1024, 0) < 0)
+		{
+			printf("[-]Error in receiving data.\n");
+		}
+		else
+		{
+			printf("Server: \t%s\n", buffer);
+		}
+	}
+	return 0;
+}
+
 
 // Testing main method
 int main()
