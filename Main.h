@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 
 // Socket/network includes
 #include <netdb.h>
@@ -21,6 +22,9 @@
 
 // Error handling
 #include <errno.h>
+
+// RNG Seeding
+#include <time.h>
 
 // Constants
 #define MAX 50
