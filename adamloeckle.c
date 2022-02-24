@@ -178,8 +178,8 @@ int server()
 }
 
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
-int client(){
-
+int client()
+{
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;
 	char buffer[1024];
