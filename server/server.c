@@ -121,6 +121,10 @@ int main()
                     // Create new player struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
 
+                    printf("First name: %s", added_player.firstname);
+                    printf("Last name: %s", added_player.lastname);
+                    printf("Country: %s", added_player.country);
+
 				}
                 if(strcmp(buffer, "2") == 0)
 				{
