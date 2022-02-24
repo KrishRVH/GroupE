@@ -106,10 +106,17 @@ int main()
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
                     printf("%s\n", firstname);
+                    bzero(buffer, sizeof(buffer));
+
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(lastname, buffer);
+                    printf("%s\n", lastname);
+                    bzero(buffer, sizeof(buffer));
+
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(country, buffer);
+                    printf("%s\n", country);
+                    bzero(buffer, sizeof(buffer));
 
                     // Create new player struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
