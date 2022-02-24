@@ -108,6 +108,116 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	return new_player;
 }
 
+void * cientThread(void *arg)
+{
+	printf("In thread\n");
+	char message[1000];
+  	char buffer[1024];
+	int clientSocket;
+  	struct sockaddr_in serverAddr;
+  	socklen_t addr_size;
+	
+	clientSocket = socket(PF_INET, SOCK_STREAM, 0);
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(7799);
+	serverAddr.sin_addr.s_addr = inet_addr("localhost");
+  	memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+
+	
+	addr_size = sizeof serverAddr;
+    connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
+    strcpy(message,"Hello");
+
+	if( send(clientSocket , message , strlen(message) , 0) < 0)
+    {
+            printf("Send failed\n");
+    }
+
+    //Read the message from the server into the buffer
+    if(recv(clientSocket, buffer, 1024, 0) < 0)
+    {
+       printf("Receive failed\n");
+    }
+    //Print the received message
+    printf("Data received: %s\n",buffer);
+    close(clientSocket);
+    pthread_exit(NULL);
+}
+
+// Test server socket code for multiple forked clients
+void socketThread(int clientSocket)
+{
+	char client_message[2000];
+	char buffer[1024];
+	int newSocket = clientSocket;
+	recv(newSocket, client_message, 2000, 0);
+	
+	char *message = malloc(sizeof(client_message)+20);
+	strcpy(message, "Hello client : ");
+	strcat(message, client_message);
+	strcat(message, "\n");
+	strcpy(buffer, message);
+	free(message);
+	sleep(1);
+	send(newSocket, buffer, 13, 0);
+	printf("Exit socketThread \n");
+	close(newSocket);
+}
+
+// https://dzone.com/articles/parallel-tcpip-socket-server-with-multi-threading
+void server()
+{
+	int serverSocket, newSocket;
+	struct sockaddr_in serverAddr;
+	struct sockaddr_storage serverStorage;
+	socklen_t addr_size;
+	pid_t pid[50];
+
+	serverSocket = socket(PF_INET, SOCK_STREAM, 0);
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(7799);
+	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
+	bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+
+	if (listen(serverSocket, 50) == 0)
+	{
+		printf("Listening...\n");
+	}
+	else
+	{
+		printf("Error\n");
+		pthread_t tid[60];
+		int i = 0;
+	}
+
+	while(1)
+	{
+		addr_size = sizeof(serverStorage);
+		newSocket = (serverSocket, (struct sockaddr*)&serverStorage, &addr_size);
+		int pid_c = 0;
+
+		if ((pid_c = fork()) == 0)
+		{
+			socketThread(newSocket);
+		}
+		else
+		{
+			pid[i++] = pid_c;
+			if (i >= 49)
+			{
+				i = 0;
+				while(i < 50)
+				{
+					waitpid(pid[i++], NULL, 0);
+				}
+				i = 0;
+			}
+		}
+	}
+}
+
 // Testing main method
 int main()
 {
