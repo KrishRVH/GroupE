@@ -198,7 +198,7 @@ void server() {
 	newsockfd = accept(sockfd, (struct sockaddr *) &cl_addr, &len);
 	if (newsockfd < 0) {
 	printf("Error accepting connection!\n");
-	exit(1);
+	//exit(1);
 	}
 	printf("Connection accepted...\n");
 
