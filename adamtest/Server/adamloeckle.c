@@ -164,76 +164,70 @@ void client()
 }
 
 // Test server socket code for multiple forked clients
-void * socketThread(int clientSocket)
-{
-	char client_message[2000];
-	char buffer[1024];
-	int newSocket = clientSocket;
-	recv(newSocket, client_message, 2000, 0);
+void server() {
+	struct sockaddr_in addr, cl_addr;
+	int sockfd, len, ret, newsockfd;
+	char buffer[BUF_SIZE];
+	pid_t childpid;
+	char clientAddr[CLADDR_LEN];
 	
-	char *message = malloc(sizeof(client_message)+20);
-	strcpy(message, "Hello client : ");
-	strcat(message, client_message);
-	strcat(message, "\n");
-	strcpy(buffer, message);
-	free(message);
-	sleep(1);
-	send(newSocket, buffer, 13, 0);
-	printf("Exit socketThread \n");
-	close(newSocket);
-}
-
-// https://dzone.com/articles/parallel-tcpip-socket-server-with-multi-threading
-void server()
-{
-	int serverSocket, newSocket;
-	struct sockaddr_in serverAddr;
-	struct sockaddr_storage serverStorage;
-	socklen_t addr_size;
-	pid_t pid[50];
-
-	serverSocket = socket(PF_INET, SOCK_STREAM, 0);
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(7799);
-	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-	memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
-	bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
-
-	if (listen(serverSocket, 50) == 0)
-	{
-		printf("Listening...\n");
+	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sockfd < 0) {
+	printf("Error creating socket!\n");
+	exit(1);
 	}
-	else
-	{
-		printf("Error\n");
+	printf("Socket created...\n");
+	
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = INADDR_ANY;
+	addr.sin_port = PORT;
+	
+	ret = bind(sockfd, (struct sockaddr *) &addr, sizeof(addr));
+	if (ret < 0) {
+	printf("Error binding!\n");
+	exit(1);
 	}
-	pthread_t tid[60];
-	int i = 0;
+	printf("Binding done...\n");
 
-	while(1)
-	{
-		addr_size = sizeof(serverStorage);
-		newSocket = (serverSocket, (struct sockaddr*)&serverStorage, &addr_size);
-		int pid_c = 0;
+	printf("Waiting for a connection...\n");
+	listen(sockfd, 5);
 
-		if ((pid_c = fork()) == 0)
-		{
-			socketThread(newSocket);
-		}
-		else
-		{
-			pid[i++] = pid_c;
-			if (i >= 49)
-			{
-				i = 0;
-				while(i < 50)
-				{
-					waitpid(pid[i++], NULL, 0);
-				}
-				i = 0;
+	for (;;) { //infinite loop
+	len = sizeof(cl_addr);
+	newsockfd = accept(sockfd, (struct sockaddr *) &cl_addr, &len);
+	if (newsockfd < 0) {
+	printf("Error accepting connection!\n");
+	exit(1);
+	}
+	printf("Connection accepted...\n");
+
+	inet_ntop(AF_INET, &(cl_addr.sin_addr), clientAddr, CLADDR_LEN);
+	if ((childpid = fork()) == 0) { //creating a child process
+
+	close(sockfd); 
+	//stop listening for new connections by the main process. 
+	//the child will continue to listen. 
+	//the main process now handles the connected client.
+
+		for (;;) {
+			memset(buffer, 0, BUF_SIZE);
+			ret = recvfrom(newsockfd, buffer, BUF_SIZE, 0, (struct sockaddr *) &cl_addr, &len);
+			if(ret < 0) {
+			printf("Error receiving data!\n");  
+			exit(1);
 			}
+			printf("Received data from %s: %s\n", clientAddr, buffer); 
+
+			ret = sendto(newsockfd, buffer, BUF_SIZE, 0, (struct sockaddr *) &cl_addr, len);   
+			if (ret < 0) {  
+			printf("Error sending data!\n");  
+			exit(1);  
+			}  
+			printf("Sent data to %s: %s\n", clientAddr, buffer);
 		}
+	}
+	close(newsockfd);
 	}
 }
 

@@ -24,8 +24,11 @@
 #include <errno.h>
 
 // Constants
+#define PORT 4444
+#define BUF_SIZE 2000
+#define CLADDR_LEN 100
+
 #define MAX 50
-#define PORT 8000
 #define SA struct sockaddr
 
 // Mqueue globals
