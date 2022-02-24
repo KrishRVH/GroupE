@@ -102,7 +102,7 @@ int main()
                     char lastname[50];
                     char country[50];
 
-                    // Receiving player information from new client
+                    // Receiving player information
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
                     printf("%s\n", firstname);
@@ -120,6 +120,10 @@ int main()
 
                     // Create new player struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
+
+                    printf("First name: %s", added_player.firstname);
+                    printf("Last name: %s", added_player.lastname);
+                    printf("Country: %s", added_player.country);
 
 				}
                 if(strcmp(buffer, "2") == 0)
