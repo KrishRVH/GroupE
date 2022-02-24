@@ -161,7 +161,6 @@ void client()
 		pthread_join(tid[i++],NULL);
 		printf("%d:\n",i);
 	}
-	return 0;
 }
 
 // Test server socket code for multiple forked clients
@@ -208,9 +207,9 @@ void server()
 	else
 	{
 		printf("Error\n");
-		pthread_t tid[60];
-		int i = 0;
 	}
+	pthread_t tid[60];
+	int i = 0;
 
 	while(1)
 	{
