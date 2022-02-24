@@ -76,7 +76,7 @@ int main()
 		exit(1);
 	}
 	printf("CONSOLE: Binded to port %d\n", 4444);
-    listen(sockfd, 10)
+    listen(sockfd, 10);
 
 	while(1)
 	{
