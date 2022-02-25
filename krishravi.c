@@ -62,7 +62,7 @@ in singleplayer the server is only allowed to use input.txt words, not dictionar
 void main()
 {
     srand(time(NULL)); 
-    int rng = (rand()%6); //seeding random number from 1 to 10 for first turn letter
+    int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
     int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
     char rng2char[7];   
     sprintf(rng2char, "%d.txt", rng2);
@@ -87,7 +87,7 @@ void main()
     char newf[101] = "";
     char newadd[101] = "\n";    
     char usedWords[100][100];
-    strcpy(usedWords[0],"EACH");
+    strcpy(usedWords[0],"COOKIE");
     strcpy(usedWords[1],"HEAVEC");
     int noUsedWords = 1;
     for (int i = 0; i<=noUsedWords;i++)
@@ -98,43 +98,32 @@ void main()
     int first = 1;
     printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
     gets(prev);
-    size_t prevv = sizeof(prev)/sizeof(char);
-    for (int x = 0; x < prevv && disallowed==0 && prev[x]!='\0'; x++)
+    if (prev[0]!=letters[rng])
     {
-        for (int y = 0; y < 6 && prev[x]!='\0'; y++)
-        {
-            printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
-            if (prev[x]!=letters[y])
-            {
-                if (letters[y+1]=='\0')
-                {
-                    disallowed=1;
-                    printf("\nWord contains disallowed characters.");
-                }
-                else
-                    continue;
-            }
-            else
-                break;
-        }
+        printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
+        //penalise
+        exit(0);
     }
     while (run!=0)
     {
-        printf("\nEnter new word ");
-        scanf("%99s",&new);
+        if (first == 1)
+        {
+            strcpy(new,prev);
+            first = 0;
+        }
+        else
+        {
+            printf("\nEnter new word ");
+            scanf("%99s",&new);
+        }
         strcat(newf, new);
         strcat(newf,"\n");
-        strcat(newadd, new);
-        strcat(newadd,"\n");
+        strcat(newadd, newf);
         size_t n = sizeof(prev)/sizeof(char);
         size_t nnew = sizeof(new)/sizeof(char);
-        char *lowernew = malloc(nnew);
-        disallowed = 0;
-        if(strcmp(new, prev) == 0)
-        {
-            printf("\nnice try. you cannot just enter the previous word. L + ratio");
-            exit(0);
-        }
+        size_t nnewf = sizeof(newf)/sizeof(char);
+        char *lowernew = malloc(nnewf);
+        
         for (int i=0; i<n;i++)
         {
             for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
@@ -172,8 +161,8 @@ void main()
                         printf("\n Word is valid!");
                         //check if word is a dictionary word
                         printf("\nConverting %s to lower",new);
-                        for(int i = 0; i<nnew; i++)
-                            lowernew[i] = tolower(new[i]);
+                        for(int i = 0; i<nnewf; i++)
+                            lowernew[i] = tolower(newf[i]);
                         FILE* filePointerd;
                         int wordExistd=0;
                         int bufferLengthd = 255;
@@ -275,6 +264,7 @@ void main()
                         if (j<n)
                             continue;
                         printf("\n Invalid but part of it was at some point");
+                        //in theory we should never be here?
                         //penalise
                         exit(0);
                     }
