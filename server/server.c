@@ -64,7 +64,6 @@ int main()
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	memset(&serverAddr, '\0', sizeof(serverAddr));
 
-
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(PORT);
 	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -121,7 +120,6 @@ int main()
                     printf("First name: %s\n", added_player.firstname);
                     printf("Last name: %s\n", added_player.lastname);
                     printf("Country: %s\n", added_player.country);
-
 				}
                 if(strcmp(buffer, "2") == 0)
 				{

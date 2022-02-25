@@ -25,6 +25,71 @@
 #define PORT 8000
 #define SA struct sockaddr
 
+void playersTurn(){
+    //receive from server:
+    //          set of random alphabets
+    //          player's current score
+    //          opponents' current score
+    //          words that have been used in the game so far
+    //          starting character of the word that the player needs to form the word with
+    
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*set of alphabets var*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*player.score*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*opponent's.score*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*words already used*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*Starting Character to form words */, buffer);
+    //bzero(buffer, sizeof(buffer));    
+
+    printf("Set of random alphabets: %s\n", /*set of alphabets var*/);
+    printf("Your score is: %d\n", /*player score var*/);
+    printf("Your opponents score(s) (are/is): %d\n", /*still figuring out*/);
+    printf("Words that have already been used: %s\n", /*still figuring out*/);
+    printf("Starting character to form words: %s\n", /*still in process*/)
+
+    //timer for 4minutes here or on server side?
+
+    printf("\nEnter your word: ");
+    scanf("%s", buffer[0]);
+    send(clientSocket, buffer, strlen(buffer), 0);
+
+    //if server accepts word as valid
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*player.score*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+
+    recv(clientSocket, buffer, 1024, 0);
+    strcpy(/*all opponent's scores*/, buffer);
+    //bzero(buffer, sizeof(buffer));
+    
+    printf("\nYour updated score is: %d\n", /*player score var*/);
+    printf("Your opponent's score(s) (is/are): %d", /*still in progr*/);
+
+
+    //questions: should clientSocket var be something else?
+    //am i using recv, strcpy, and bzero correctly?
+    //what to do about set of alphabets var, obtaining all opponent's scores
+    //what to do about words already used, starting char to form words
+    //do i need a struct on client side
+
+}
+
+
+
+
+
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
 int main()
 {
@@ -79,11 +144,21 @@ int main()
             printf("\nEnter your country: ");
             scanf("%s", &buffer[0]);
             send(clientSocket, buffer, strlen(buffer), 0);
+
+
+
         }
 
-        if(strcmp(buffer, "1") == 0)
+        if(strcmp(buffer, "2") == 0)
 		{
-
+			//multiplayer
+			//send connection to server
+			//server will check to see if there is another client in multiplayer for 2mins
+			//asks client to continue waiting if there is no one playing or play singleplayer
+			//POSIX QUEUE MESSAGE FOR CLIENT CURRENTLY WAITING FOR ANOTHER PLAYER
+			//CLIENT receives word when game starts
+			//client sends word to call word check METHOD
+			//work check METHOD returns a correct or not correct response
 		}
 
 		if(strcmp(buffer, "3") == 0)
