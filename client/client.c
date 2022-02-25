@@ -144,7 +144,9 @@ int main()
             printf("\nEnter your country: ");
             scanf("%s", &buffer[0]);
             send(clientSocket, buffer, strlen(buffer), 0);
-			
+
+			// Game starts...
+
         }
 
         if(strcmp(buffer, "2") == 0)

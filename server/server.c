@@ -30,13 +30,15 @@ mqd_t mqd;
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
 char* p_buffer;
 
+// Global storage for used words,
+
 // Player struct
 struct Player
 {
+	int score;
 	char firstname[50];
 	char lastname[50];
 	char country[50];
-	int score;
 	int num_words;
 	int num_words_added;
 	int player_turn;
@@ -46,12 +48,12 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
 	struct Player new_player;
 	
+	new_player.score = 0;
 	strcpy(new_player.firstname, firstname);
 	strcpy(new_player.lastname, lastname);
 	strcpy(new_player.country, country);
 	new_player.num_words = 0;
 	new_player.num_words_added = 0;
-	new_player.score = 0;
 
 	return new_player;
 }
@@ -74,9 +76,33 @@ void openMsgQueue()
 	}
 }
 
-void sendPlayerConnectMsg(char *firstname)
+void sendPlayerConnectMsg()
 {
+	mq_send(mqd, "1", 1, 10);
+}
 
+int recievePlayerConnectMsg()
+{
+	int prio = 10;
+	mq_getattr(mqd, &attr);
+	p_buffer = calloc(attr.mq_msgsize, 1);
+	int num_msgs = attr.mq_curmsgs;
+	
+	if (num_msgs != 0)
+	{
+		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 // Send message for game instruction
@@ -87,7 +113,7 @@ void sendGameMsg()
 	mq_send(mqd, "HELLO3", 7, 10);
 }
 
-void recieveMsg()
+void recieveMsgs()
 {
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
@@ -111,19 +137,20 @@ void recieveMsg()
 			{
 				printf("Message: %s, Prio: %i\n", p_buffer, priority);
 			}
-			//if (priority == 8)
-			//{
-			//	printf("Message: %s, Prio: %i\n", p_buffer, priority);
-			//}
-			// Player struct information message, stores player info in array of structs
-			//if (priority == 8)
-			//{
-			//	struct Player* new_player = (struct Player*)p_buffer;
-			//	printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
-			//}
+			// Player struct information message, recieves following from player:
+			// - Set of random alphabets (Global var)
+			// - Current player score (Local for client fork)
+			// - Other players score ***
+			// - Words that have been used so far (Global var)
+			if (priority == 8)
+			{
+				struct Player* new_player = (struct Player*)p_buffer;
+				printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
+			}
 		}
 		num_msgs -= 1;
 	}
+	free(p_buffer);
 }
 
 // Test server socket code for multiple forked clients
@@ -201,6 +228,10 @@ int serverTest()
 					bzero(firstname, sizeof(firstname));
 					bzero(lastname, sizeof(lastname));
 					bzero(country, sizeof(country));
+
+					// Game starts...
+					
+
 				}
                 if(strcmp(buffer, "2") == 0)
 				{
@@ -226,7 +257,18 @@ int serverTest()
                     printf("Last name: %s\n", added_player.lastname);
                     printf("Country: %s\n", added_player.country);
 
+					if (recievePlayerConnectMsg() == 1)
+					{
+						// Starts multiplayer game with other connected player
+					}
+					else
+					{
+						// Sends message to POSIX queue that this client is waiting.
+						// Asks client if they want to wait after two minutes of waiting.
+						sendPlayerConnectMsg();
+					}
 
+					
 
 				}
                 // Clean client exit
