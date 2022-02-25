@@ -62,14 +62,14 @@ in singleplayer the server is only allowed to use input.txt words, not dictionar
 void main()
 {
     srand(time(NULL)); 
-    int rng = (rand()%10)+1; //seeding random number from 1 to 10 for first turn
+    int rng = (rand()%6); //seeding random number from 1 to 10 for first turn letter
     int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
     char rng2char[7];   
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
     char letters [6];
     char fname[14] = "";
-    printf("\nrng2 generated was %d",rng2);
+    printf("\nrng generated was %d",rng);
     if (rng2==10)
         strcat(fname, "input_");
     else    
@@ -87,7 +87,7 @@ void main()
     char newf[101] = "";
     char newadd[101] = "\n";    
     char usedWords[100][100];
-    strcpy(usedWords[0],"COOKIE");
+    strcpy(usedWords[0],"EACH");
     strcpy(usedWords[1],"HEAVEC");
     int noUsedWords = 1;
     for (int i = 0; i<=noUsedWords;i++)
@@ -95,8 +95,29 @@ void main()
         printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
     }
     int run = 1;
-    printf("\nEnter previous word ");
+    int first = 1;
+    printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
     gets(prev);
+    size_t prevv = sizeof(prev)/sizeof(char);
+    for (int x = 0; x < prevv && disallowed==0 && prev[x]!='\0'; x++)
+    {
+        for (int y = 0; y < 6 && prev[x]!='\0'; y++)
+        {
+            printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
+            if (prev[x]!=letters[y])
+            {
+                if (letters[y+1]=='\0')
+                {
+                    disallowed=1;
+                    printf("\nWord contains disallowed characters.");
+                }
+                else
+                    continue;
+            }
+            else
+                break;
+        }
+    }
     while (run!=0)
     {
         printf("\nEnter new word ");
@@ -108,6 +129,7 @@ void main()
         size_t n = sizeof(prev)/sizeof(char);
         size_t nnew = sizeof(new)/sizeof(char);
         char *lowernew = malloc(nnew);
+        disallowed = 0;
         if(strcmp(new, prev) == 0)
         {
             printf("\nnice try. you cannot just enter the previous word. L + ratio");
