@@ -67,13 +67,12 @@ mqd_t openMsgQueue(char *queue_name)
 	if (mqd == -1)
 	{
 		perror("mq_open");
-		return NULL;
 	}
 	else
 	{
 		printf("MQ was opened \n");
-		return mqd_t;
 	}
+	return mqd_t;
 }
 
 void sendPlayerConnectMsg(mqd_t mqd)
@@ -88,6 +87,7 @@ int recievePlayerConnectMsg(mqd_t mqd)
 	p_buffer = calloc(attr.mq_msgsize, 1);
 	int num_msgs = attr.mq_curmsgs;
 	
+	unsigned int priority = 0;
 	if (num_msgs != 0)
 	{
 		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
@@ -420,7 +420,7 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
 int serverTest()
 {
 	// Opens POSIX message queue
-	openMsgQueue();
+	openMsgQueue("/Message_queue");
 
 	int sockfd, ret, newSocket;
 	struct sockaddr_in serverAddr, newAddr;
