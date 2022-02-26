@@ -25,6 +25,7 @@
 #define PORT 8000
 #define SA struct sockaddr
 
+/*
 void playersTurn(){
     //receive from server:
     //          set of random alphabets
@@ -83,11 +84,10 @@ void playersTurn(){
     //what to do about set of alphabets var, obtaining all opponent's scores
     //what to do about words already used, starting char to form words
     //do i need a struct on client side
-
+    
 }
 
-
-
+*/
 
 
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
