@@ -469,7 +469,7 @@ int serverTest()
 			{
 				recv(newSocket, buffer, 1024, 0);
 				printf("%s\n", buffer);
-                if(strcmp(buffer, "1") == 0)
+                if(strcmp(buffer, ":exit") == 0)
 				{
 					// Single player game
 
