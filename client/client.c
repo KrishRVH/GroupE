@@ -127,6 +127,7 @@ int main()
 
 		scanf("%s", &buffer[0]);
 		send(clientSocket, buffer, strlen(buffer), 0);
+        printf("Input: %s", buffer);
 
         if(strcmp(buffer, "1") == 0)
 		{
