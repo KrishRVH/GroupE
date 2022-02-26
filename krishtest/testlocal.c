@@ -99,32 +99,43 @@ void main()
                     int k = 0;
                     while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
                     {
-                        printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
+                        //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
                         j++;
                         k++;
                         //printf("The value of j is %d k is %d n is %d", j,k,n);
                     }
                     if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
                     {
-                        printf("\n Word is valid!");
+                        printf("\nWord is valid!");
                         //check if word is a dictionary word
                         printf("\nConverting %s to lower",new);
                         for(int w = 0; w<nnewf; w++)
                         {
                             lowernew[w] = tolower(newf[w]);
-                            printf("\nvalue %d of lowernew is %c",w,lowernew[w]);
                         }
                         FILE* filePointerd;
                         int wordExistd=0;
                         int bufferLengthd = 255;
                         char lined[bufferLengthd];
+                        int linedlen = 0;
+                        int lowernewlen = 0;
                         printf("\nChecking if %s is a valid dictionary word",lowernew);
                         filePointerd = fopen("dictionary.txt", "r");
+                        for (int i = 0; lowernew[i]!='\0'; i++)
+                        {
+                            lowernewlen++;
+                        }
                         while(fgets(lined, bufferLengthd, filePointerd))
                         {
-                            char *ptrd = strstr(lined, lowernew);
-                            if (ptrd != NULL) 
+                            linedlen=0;
+                            for (int i = 0; lined[i]!='\0'; i++)
                             {
+                                linedlen++;
+                            }
+                            char *ptrd = strstr(lined, lowernew);
+                            if (ptrd != NULL && (linedlen==lowernewlen)) 
+                            {
+                                //printf("\nline is %d characters long and newf is %d long",linedlen,lowernewlen);
                                 wordExistd=1;
                                 break;
                             }
@@ -176,12 +187,24 @@ void main()
                         int wordExist=0;
                         int bufferLength = 255;
                         char line[bufferLength];
+                        int linelen = 0;
+                        int newflen = 0;
+                        for (int i = 0; newf[i]!='\0'; i++)
+                        {
+                            newflen++;
+                        }
                         filePointer = fopen(fname, "r");
                         while(fgets(line, bufferLength, filePointer))
                         {
-                            char *ptr = strstr(line, newf); //check newf in debugger
-                            if (ptr != NULL) 
+                            linelen=0;
+                            for (int i = 0; line[i]!='\0'; i++)
                             {
+                                linelen++;
+                            }
+                            char *ptr = strstr(line, newf); //check newf in debugger
+                            if (ptr != NULL && (linelen==newflen)) 
+                            {
+                                //printf("\nINPUT.txt line is %d characters long and newf is %d long",linelen,newflen);
                                 wordExist=1;
                                 break;
                             }
