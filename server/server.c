@@ -567,5 +567,5 @@ int serverTest()
 
 int main()
 {
-
+	serverTest();
 }
