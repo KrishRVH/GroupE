@@ -89,7 +89,7 @@ void playersTurn(){
 
 
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
-int client()
+int main()
 {
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;
@@ -206,7 +206,7 @@ int client()
 	return 0;
 }
 
-int main(){
+int testClient(){
 
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;

@@ -417,7 +417,7 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
 }
 
 // Test server socket code for multiple forked clients
-int serverTest()
+int main()
 {
 	// Opens POSIX message queue
 	openMsgQueue("/Message_queue");
@@ -573,7 +573,7 @@ int serverTest()
 	return 0;
 }
 
-int main(){
+int testServer(){
 
 	int sockfd, ret;
 	 struct sockaddr_in serverAddr;
