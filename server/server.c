@@ -72,7 +72,7 @@ mqd_t openMsgQueue(char *queue_name)
 	{
 		printf("MQ was opened \n");
 	}
-	return mqd_t;
+	return struct mqd_t;
 }
 
 void sendPlayerConnectMsg(mqd_t mqd)
