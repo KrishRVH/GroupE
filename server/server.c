@@ -506,11 +506,11 @@ int main()
 						scanf("%s", &buffer[0]);
 						send(newSocket, buffer, 1024, 0);
 						
-						//scanf("%s", &buffer[0]);
-						//send(newSocket, buffer, 1024, 0);
+						scanf("%s", &buffer[0]);
+						send(newSocket, buffer, 1024, 0);
 
-						//scanf("%s", &buffer[0]);
-						//send(newSocket, buffer, 1024, 0);
+						scanf("%s", &buffer[0]);
+						send(newSocket, buffer, 1024, 0);
 					}
 				}
                 if(strcmp(buffer, "2") == 0)
