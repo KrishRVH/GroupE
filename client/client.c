@@ -147,6 +147,35 @@ int main()
 
 			// Game starts...
 
+            int game_start = 1;
+            if(game_start)
+            {
+                recv(clientSocket, buffer, 1024, 0);
+
+                if (strcmp(buffer, "turn") == 0)
+                {
+                    // Players turn, recieves letters, list of words, etc.
+                    char *letters;
+                    bzero(buffer, sizeof(buffer));
+                    recv(clientSocket, buffer, 1024, 0);
+                    strcpy(letters, buffer);
+
+                    // Recieves number of list of words, then loops recv for words storing into array
+                    int noUsedWords = 0;
+                    char usedWords[100][100];
+
+                    recv(clientSocket, buffer, 1024, 0);
+                    noUsedWords = buffer[0] - '0';
+                    printf("Number of used words: %i", noUsedWords);
+
+
+                }
+                else
+                {
+                    // Idk
+                }
+            }
+
         }
 
         if(strcmp(buffer, "2") == 0)
