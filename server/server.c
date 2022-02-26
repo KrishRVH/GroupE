@@ -442,7 +442,11 @@ int serverTest()
 		exit(1);
 	}
 	printf("CONSOLE: Binded to port %d\n", 4444);
-    listen(sockfd, 10);
+    if(listen(sockfd, 10) == 0){
+		printf("[+]Listening....\n");
+	}else{
+		printf("[-]Error in binding.\n");
+	}
 
 	// Player information
 	char firstname[50];
