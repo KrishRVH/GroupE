@@ -208,7 +208,6 @@ int serverTest()
 					// POSIX queues
 					mqd_t word_valid = openMsgQueue("/Word_valid");
 
-
                     // Receiving player information
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
@@ -234,9 +233,11 @@ int serverTest()
 					bzero(country, sizeof(country));
 
 					// Game starts...
-					
-
-
+					int game_start = 1;
+					while(game_start)
+					{
+						
+					}
 				}
                 if(strcmp(buffer, "2") == 0)
 				{
@@ -300,5 +301,5 @@ int serverTest()
 
 int main()
 {
-	
+
 }
