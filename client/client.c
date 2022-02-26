@@ -148,11 +148,12 @@ int main()
             int game_start = 1;
             if(game_start)
             {
+                char test[50];
                 recv(clientSocket, buffer, 1024, 0);
-
-                printf("Turn: %s\n", buffer);
-
-                if (strcmp(buffer, "turn") == 0)
+                strcpy(test, buffer);
+                printf("Turn: %s\n", test);
+                
+                /* if (strcmp(buffer, "turn") == 0)
                 {
                     // Players turn, recieves letters, list of words, etc.
                     char *letters;
@@ -174,7 +175,7 @@ int main()
                 else
                 {
                     // Idk
-                }
+                } */
             }
 
         }

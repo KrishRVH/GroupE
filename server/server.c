@@ -487,6 +487,8 @@ int serverTest()
                     // Create new player struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
 
+					printf("First: %s Last: %s Country: %s", firstname, lastname, country);
+
 					bzero(firstname, sizeof(firstname));
 					bzero(lastname, sizeof(lastname));
 					bzero(country, sizeof(country));
@@ -498,11 +500,11 @@ int serverTest()
 						scanf("%s", &buffer[0]);
 						send(newSocket, buffer, 1024, 0);
 						
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
+						//scanf("%s", &buffer[0]);
+						//send(newSocket, buffer, 1024, 0);
 
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
+						//scanf("%s", &buffer[0]);
+						//send(newSocket, buffer, 1024, 0);
 					}
 				}
                 if(strcmp(buffer, "2") == 0)
