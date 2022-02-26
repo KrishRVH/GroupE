@@ -26,7 +26,6 @@
 #define SA struct sockaddr
 
 // Mqueue globals
-mqd_t mqd;
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
 char* p_buffer;
 
@@ -59,29 +58,30 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 }
 
 // Opens message queue, should only be ran once.
-void openMsgQueue()
+mqd_t openMsgQueue(char *queue_name)
 {
 	// Ensures message queue does not already exist and creates a new one
-	mq_unlink("/Message_Queue");
-	mqd = mq_open("/Message_Queue", O_CREAT | O_RDWR, 0600, NULL);
+	mq_unlink(queue_name);
+	mqd_t mqd = mq_open(queue_name, O_CREAT | O_RDWR, 0600, NULL);
 
 	if (mqd == -1)
 	{
 		perror("mq_open");
-		exit(1);
+		return NULL;
 	}
 	else
 	{
 		printf("MQ was opened \n");
+		return mqd_t;
 	}
 }
 
-void sendPlayerConnectMsg()
+void sendPlayerConnectMsg(mqd_t mqd)
 {
 	mq_send(mqd, "1", 1, 10);
 }
 
-int recievePlayerConnectMsg()
+int recievePlayerConnectMsg(mqd_t mqd)
 {
 	int prio = 10;
 	mq_getattr(mqd, &attr);
@@ -106,14 +106,14 @@ int recievePlayerConnectMsg()
 }
 
 // Send message for game instruction
-void sendGameMsg()
+void sendGameMsg(mqd_t mqd)
 {
 	mq_send(mqd, "HELLO", 6, 10);
 	mq_send(mqd, "HELLO2", 7, 10);
 	mq_send(mqd, "HELLO3", 7, 10);
 }
 
-void recieveMsgs()
+void recieveMsg(mqd_t mqd)
 {
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
@@ -205,6 +205,10 @@ int serverTest()
 				{
 					// Single player game
 
+					// POSIX queues
+					mqd_t word_valid = openMsgQueue("/Word_valid");
+
+
                     // Receiving player information
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
@@ -232,10 +236,14 @@ int serverTest()
 					// Game starts...
 					
 
+
 				}
                 if(strcmp(buffer, "2") == 0)
 				{
 					// Multiplayer game
+
+					// POSIX queues
+					mqd_t waiting_players = openMsgQueue("/Waiting_players");
 
 					// Receiving player information
                     recv(newSocket, buffer, 1024, 0);
@@ -257,7 +265,7 @@ int serverTest()
                     printf("Last name: %s\n", added_player.lastname);
                     printf("Country: %s\n", added_player.country);
 
-					if (recievePlayerConnectMsg() == 1)
+					if (recievePlayerConnectMsg(waiting_players) == 1)
 					{
 						// Starts multiplayer game with other connected player
 					}
@@ -265,7 +273,7 @@ int serverTest()
 					{
 						// Sends message to POSIX queue that this client is waiting.
 						// Asks client if they want to wait after two minutes of waiting.
-						sendPlayerConnectMsg();
+						sendPlayerConnectMsg(waiting_players);
 					}
 
 					
@@ -292,7 +300,5 @@ int serverTest()
 
 int main()
 {
-	openMsgQueue();
-	sendGameMsg();
-	recieveMsg();
+	
 }
