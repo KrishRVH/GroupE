@@ -150,12 +150,15 @@ int main()
             {
                 recv(clientSocket, buffer, 1024, 0);
 
+                printf("Turn: %s\n", buffer);
+
                 if (strcmp(buffer, "turn") == 0)
                 {
                     // Players turn, recieves letters, list of words, etc.
                     char *letters;
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
+                    printf("Letters: %s\n", buffer);
                     strcpy(letters, buffer);
 
                     // Recieves number of list of words, then loops recv for words storing into array
@@ -164,7 +167,7 @@ int main()
 
                     recv(clientSocket, buffer, 1024, 0);
                     noUsedWords = buffer[0] - '0';
-                    printf("Number of used words: %i", noUsedWords);
+                    printf("Number of used words: %i\n", noUsedWords);
 
 
                 }
