@@ -425,7 +425,7 @@ int serverTest()
 	int sockfd, ret, newSocket;
 	struct sockaddr_in serverAddr, newAddr;
 	socklen_t addr_size;
-	char buffer[MAX];
+	char buffer[1024];
 	pid_t childpid;
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
