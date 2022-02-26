@@ -4,17 +4,19 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+
 void main()
 {
     srand(time(NULL)); 
-    int rng = (rand()%10)+1; //seeding random number from 1 to 10 for first turn
+    int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
     int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
     char rng2char[7];   
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
     char letters [6];
     char fname[14] = "";
-    printf("\nrng2 generated was %d",rng2);
+    printf("\nrng generated was %d",rng);
     if (rng2==10)
         strcat(fname, "input_");
     else    
@@ -29,8 +31,8 @@ void main()
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
     char prev[100]; //
     char new[100];
-    char newf[101] = "";
-    char newadd[101] = "\n";    
+    char newf[101] = ""; //"new\n"  
+    char newadd[101] = "\n";    // "\nnew\n"
     char usedWords[100][100];
     strcpy(usedWords[0],"COOKIE");
     strcpy(usedWords[1],"HEAVEC");
@@ -40,24 +42,36 @@ void main()
         printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
     }
     int run = 1;
-    printf("\nEnter previous word ");
+    int first = 1;
+    printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
     gets(prev);
+    if (prev[0]!=letters[rng])
+    {
+        printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
+        //penalise
+        exit(0);
+    }
     while (run!=0)
     {
-        printf("\nEnter new word ");
-        scanf("%99s",&new);
+        if (first == 1)
+        {
+            strcpy(new,prev);
+            first = 0;
+        }
+        else
+        {
+            printf("\nEnter new word ");
+            scanf("%99s",&new);
+        }
+        strcpy(newf,"");
+        strcpy(newadd,"\n");
         strcat(newf, new);
         strcat(newf,"\n");
-        strcat(newadd, new);
-        strcat(newadd,"\n");
+        strcat(newadd, newf);
         size_t n = sizeof(prev)/sizeof(char);
         size_t nnew = sizeof(new)/sizeof(char);
-        char *lowernew = malloc(nnew);
-        if(strcmp(new, prev) == 0)
-        {
-            printf("\nnice try. you cannot just enter the previous word. L + ratio");
-            exit(0);
-        }
+        size_t nnewf = sizeof(newf)/sizeof(char);
+        char lowernew[101];
         for (int i=0; i<n;i++)
         {
             for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
@@ -95,8 +109,11 @@ void main()
                         printf("\n Word is valid!");
                         //check if word is a dictionary word
                         printf("\nConverting %s to lower",new);
-                        for(int i = 0; i<nnew; i++)
-                            lowernew[i] = tolower(new[i]);
+                        for(int w = 0; w<nnewf; w++)
+                        {
+                            lowernew[w] = tolower(newf[w]);
+                            printf("\nvalue %d of lowernew is %c",w,lowernew[w]);
+                        }
                         FILE* filePointerd;
                         int wordExistd=0;
                         int bufferLengthd = 255;
@@ -112,7 +129,7 @@ void main()
                                 break;
                             }
                         }
-                        free(lowernew);
+                        bzero(lowernew,sizeof(lowernew));
                         fclose(filePointerd);
                         if (wordExistd==1)
                         {
@@ -162,7 +179,7 @@ void main()
                         filePointer = fopen(fname, "r");
                         while(fgets(line, bufferLength, filePointer))
                         {
-                            char *ptr = strstr(line, newf);
+                            char *ptr = strstr(line, newf); //check newf in debugger
                             if (ptr != NULL) 
                             {
                                 wordExist=1;
@@ -173,7 +190,6 @@ void main()
                         if (wordExist==1)
                         {
                             printf("\nWord was already in file.");
-                            //ISSUE: IT DETECTS THE HEAVE WITHIN HEAVEC
                         }
                         else 
                         {
@@ -198,6 +214,7 @@ void main()
                         if (j<n)
                             continue;
                         printf("\n Invalid but part of it was at some point");
+                        //in theory we should never be here?
                         //penalise
                         exit(0);
                     }
