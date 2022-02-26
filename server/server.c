@@ -468,12 +468,13 @@ int serverTest()
 			while(1)
 			{
 				recv(newSocket, buffer, 1024, 0);
+				printf("%s\n", buffer);
                 if(strcmp(buffer, "1") == 0)
 				{
 					// Single player game
 
 					// POSIX queues
-					mqd_t word_valid = openMsgQueue("/Word_valid");
+					//mqd_t word_valid = openMsgQueue("/Word_valid");
 
                     // Receiving player information
                     recv(newSocket, buffer, 1024, 0);
@@ -491,7 +492,8 @@ int serverTest()
                     // Create new player struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
 
-					printf("First: %s Last: %s Country: %s", firstname, lastname, country);
+					printf("First: %s Last: %s Country: %s", added_player.firstname, 
+					added_player.lastname, added_player.country);
 
 					bzero(firstname, sizeof(firstname));
 					bzero(lastname, sizeof(lastname));
