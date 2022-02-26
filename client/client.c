@@ -129,7 +129,7 @@ int client()
 		send(clientSocket, buffer, strlen(buffer), 0);
         printf("Input: %s", buffer);
 
-        if(strcmp(buffer, ":exit") == 0)
+        if(strcmp(buffer, "1") == 0)
 		{
             printf("\nSingle Player Mode\n");
             printf("Enter your first name: ");
