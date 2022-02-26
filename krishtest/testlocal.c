@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+
 void main()
 {
     srand(time(NULL)); 
@@ -29,8 +31,8 @@ void main()
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
     char prev[100]; //
     char new[100];
-    char newf[101] = "";
-    char newadd[101] = "\n";    
+    char newf[101] = ""; //"new\n"  
+    char newadd[101] = "\n";    // "\nnew\n"
     char usedWords[100][100];
     strcpy(usedWords[0],"COOKIE");
     strcpy(usedWords[1],"HEAVEC");
@@ -61,14 +63,15 @@ void main()
             printf("\nEnter new word ");
             scanf("%99s",&new);
         }
+        strcpy(newf,"");
+        strcpy(newadd,"\n");
         strcat(newf, new);
         strcat(newf,"\n");
         strcat(newadd, newf);
         size_t n = sizeof(prev)/sizeof(char);
         size_t nnew = sizeof(new)/sizeof(char);
         size_t nnewf = sizeof(newf)/sizeof(char);
-        char *lowernew = malloc(nnewf);
-        
+        char lowernew[101];
         for (int i=0; i<n;i++)
         {
             for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
@@ -106,8 +109,11 @@ void main()
                         printf("\n Word is valid!");
                         //check if word is a dictionary word
                         printf("\nConverting %s to lower",new);
-                        for(int i = 0; i<nnewf; i++)
-                            lowernew[i] = tolower(newf[i]);
+                        for(int w = 0; w<nnewf; w++)
+                        {
+                            lowernew[w] = tolower(newf[w]);
+                            printf("\nvalue %d of lowernew is %c",w,lowernew[w]);
+                        }
                         FILE* filePointerd;
                         int wordExistd=0;
                         int bufferLengthd = 255;
@@ -123,7 +129,7 @@ void main()
                                 break;
                             }
                         }
-                        free(lowernew);
+                        bzero(lowernew,sizeof(lowernew));
                         fclose(filePointerd);
                         if (wordExistd==1)
                         {
@@ -173,7 +179,7 @@ void main()
                         filePointer = fopen(fname, "r");
                         while(fgets(line, bufferLength, filePointer))
                         {
-                            char *ptr = strstr(line, newf);
+                            char *ptr = strstr(line, newf); //check newf in debugger
                             if (ptr != NULL) 
                             {
                                 wordExist=1;
@@ -184,7 +190,6 @@ void main()
                         if (wordExist==1)
                         {
                             printf("\nWord was already in file.");
-                            //ISSUE: IT DETECTS THE HEAVE WITHIN HEAVEC
                         }
                         else 
                         {
