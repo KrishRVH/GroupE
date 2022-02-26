@@ -25,7 +25,7 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-/*
+
 void playersTurn(){
     //receive from server:
     //          set of random alphabets
@@ -34,49 +34,49 @@ void playersTurn(){
     //          words that have been used in the game so far
     //          starting character of the word that the player needs to form the word with
     
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*set of alphabets var*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*set of alphabets var*/, buffer);
     //bzero(buffer, sizeof(buffer));
 
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*player.score*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*player.score*/, buffer);
     //bzero(buffer, sizeof(buffer));
 
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*opponent's.score*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*opponent's.score*/, buffer);
     //bzero(buffer, sizeof(buffer));
 
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*words already used*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*words already used*/, buffer);
     //bzero(buffer, sizeof(buffer));
 
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*Starting Character to form words */, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*Starting Character to form words */, buffer);
     //bzero(buffer, sizeof(buffer));    
 
-    printf("Set of random alphabets: %s\n", /*set of alphabets var*/);
-    printf("Your score is: %d\n", /*player score var*/);
-    printf("Your opponents score(s) (are/is): %d\n", /*still figuring out*/);
-    printf("Words that have already been used: %s\n", /*still figuring out*/);
-    printf("Starting character to form words: %s\n", /*still in process*/)
+    //printf("Set of random alphabets: %s\n", /*set of alphabets var*/);
+    //printf("Your score is: %d\n", /*player score var*/);
+    //printf("Your opponents score(s) (are/is): %d\n", /*still figuring out*/);
+    //printf("Words that have already been used: %s\n", /*still figuring out*/);
+    //printf("Starting character to form words: %s\n", /*still in process*/)
 
     //timer for 4minutes here or on server side?
 
-    printf("\nEnter your word: ");
-    scanf("%s", buffer[0]);
-    send(clientSocket, buffer, strlen(buffer), 0);
+    //printf("\nEnter your word: ");
+    //scanf("%s", buffer[0]);
+    //send(clientSocket, buffer, strlen(buffer), 0);
 
     //if server accepts word as valid
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*player.score*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*player.score*/, buffer);
     //bzero(buffer, sizeof(buffer));
 
-    recv(clientSocket, buffer, 1024, 0);
-    strcpy(/*all opponent's scores*/, buffer);
+    //recv(clientSocket, buffer, 1024, 0);
+    //strcpy(/*all opponent's scores*/, buffer);
     //bzero(buffer, sizeof(buffer));
     
-    printf("\nYour updated score is: %d\n", /*player score var*/);
-    printf("Your opponent's score(s) (is/are): %d", /*still in progr*/);
+    //printf("\nYour updated score is: %d\n", /*player score var*/);
+    //printf("Your opponent's score(s) (is/are): %d", /*still in progr*/);
 
 
     //questions: should clientSocket var be something else?
@@ -86,8 +86,6 @@ void playersTurn(){
     //do i need a struct on client side
     
 }
-
-*/
 
 
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
