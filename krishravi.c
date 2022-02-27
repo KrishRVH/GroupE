@@ -59,6 +59,154 @@ in singleplayer the server is only allowed to use input.txt words, not dictionar
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+
+void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int* noUsedWords)
+{
+    //Computer will check input file line by line for usable words (if they're wordbuilder words that haven't been used yet, it plays them)
+    int prevlen = 0;
+    char new[100];
+    for (int i = 0; prev[i]!='\0'; i++)
+    {
+        prevlen++;
+    }
+    FILE* filePointer;
+    int wordExist=0;
+    int bufferLength = 99;
+    char line[bufferLength];
+    int linelen = 0;
+    int disallowed = 0;
+    int run = 1;
+    char newf[101] = ""; //"new\n"  
+    char newadd[101] = "\n";    // "\nnew\n"
+    filePointer = fopen(fname, "r");
+    while(fgets(line, bufferLength, filePointer) && run!=0)
+    {
+        strcpy(new,"");
+        int c = getc(filePointer);
+        if (c == EOF) 
+        {
+            printf("\nComputer could not find appropriate word");
+            exit(0);
+        }
+        linelen=0;
+        for (int i = 0; line[i]!='\0'; i++)
+        {
+            linelen++;
+        }
+        for(int i = 0; i < linelen; i++)
+        {
+            strcat(new[i],line[i]);
+        }
+        strcpy(newf,"");
+        strcpy(newadd,"\n");
+        strcat(newf, new);
+        //strcat(newf,"\n");
+        strcat(newadd, new);
+        strcat(newadd,"\n");
+        size_t n = sizeof(prev)/sizeof(char);
+        size_t nnew = sizeof(new)/sizeof(char);
+        size_t nnewf = sizeof(newf)/sizeof(char);
+        for (int i=0; i<n;i++)
+        {
+            for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
+            {
+                //make sure no disallowed characters are in it
+                for (int y = 0; y < 6 && new[x]!='\0'; y++)
+                {
+                    printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
+                    if (new[x]!=letters[y])
+                    {
+                        if (letters[y+1]=='\0')
+                            disallowed=1;
+                        else
+                            continue;
+                    }
+                    else
+                        break;
+                }
+            }
+            if (disallowed==0)
+            {
+                if (new[0]==prev[i])
+                {
+                    printf("\nUsed correct characters!");
+                    int j = i;
+                    int k = 0;
+                    while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
+                    {
+                        //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
+                        j++;
+                        k++;
+                        //printf("The value of j is %d k is %d n is %d", j,k,n);
+                    }
+                    if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
+                    {
+                        printf("\nComputer's Word is valid!");
+                        //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
+                        int dup = 0;      
+                        for (int j = 0; j < 100; j++) 
+                        {
+                            if(strcmp(new, usedWords[j]) == 0) 
+                            {
+                                dup = 1;   // got a duplicate
+                                break;    
+                            }
+                        }
+                        if (dup == 0) {    // not a duplicate: add it to usedWords
+                            strcpy(usedWords[noUsedWords+1], new);
+                            noUsedWords += 1;
+                        }
+                        if(dup) 
+                        {
+                            printf("\nWORD HAS ALREADY BEEN USED THIS GAME.");
+                            //penalise
+                            for (int i = 0; i<=noUsedWords;i++)
+                            {
+                                printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            printf("\nWord has NOT been used this game. Added to used words.");
+                            for (int i = 0; i<=noUsedWords;i++)
+                            {
+                                printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+                            }
+                            run = 0;
+                        }
+                        strcpy(prev,new);
+                        strcpy(new,"");
+                        break;
+                    }   
+                    else
+                    {
+                        if (j<n)
+                            continue;
+                        printf("\n Invalid but part of it was at some point");
+                        //in theory we should never be here?
+                        //penalise
+                        break;
+                    }
+                }
+                if (i==(n-1))
+                {
+                    printf("\nComputer's Word is not valid.");
+                    //penalise
+                    break;
+                }
+            }
+            else
+            {
+                printf("Word contains disallowed characters.");
+                //penalise
+                break;
+            }
+        }
+    }
+    fclose(filePointer);
+}
 void main()
 {
     srand(time(NULL)); 
@@ -84,8 +232,8 @@ void main()
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
     char prev[100]; //
     char new[100];
-    char newf[101] = "";
-    char newadd[101] = "\n";    
+    char newf[101] = ""; //"new\n"  
+    char newadd[101] = "\n";    // "\nnew\n"
     char usedWords[100][100];
     strcpy(usedWords[0],"COOKIE");
     strcpy(usedWords[1],"HEAVEC");
@@ -116,14 +264,15 @@ void main()
             printf("\nEnter new word ");
             scanf("%99s",&new);
         }
+        strcpy(newf,"");
+        strcpy(newadd,"\n");
         strcat(newf, new);
         strcat(newf,"\n");
         strcat(newadd, newf);
         size_t n = sizeof(prev)/sizeof(char);
         size_t nnew = sizeof(new)/sizeof(char);
         size_t nnewf = sizeof(newf)/sizeof(char);
-        char *lowernew = malloc(nnewf);
-        
+        char lowernew[101];
         for (int i=0; i<n;i++)
         {
             for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
@@ -151,34 +300,48 @@ void main()
                     int k = 0;
                     while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
                     {
-                        printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
+                        //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
                         j++;
                         k++;
                         //printf("The value of j is %d k is %d n is %d", j,k,n);
                     }
                     if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
                     {
-                        printf("\n Word is valid!");
+                        printf("\nWord is valid!");
                         //check if word is a dictionary word
                         printf("\nConverting %s to lower",new);
-                        for(int i = 0; i<nnewf; i++)
-                            lowernew[i] = tolower(newf[i]);
+                        for(int w = 0; w<nnewf; w++)
+                        {
+                            lowernew[w] = tolower(newf[w]);
+                        }
                         FILE* filePointerd;
                         int wordExistd=0;
                         int bufferLengthd = 255;
                         char lined[bufferLengthd];
+                        int linedlen = 0;
+                        int lowernewlen = 0;
                         printf("\nChecking if %s is a valid dictionary word",lowernew);
                         filePointerd = fopen("dictionary.txt", "r");
+                        for (int i = 0; lowernew[i]!='\0'; i++)
+                        {
+                            lowernewlen++;
+                        }
                         while(fgets(lined, bufferLengthd, filePointerd))
                         {
-                            char *ptrd = strstr(lined, lowernew);
-                            if (ptrd != NULL) 
+                            linedlen=0;
+                            for (int i = 0; lined[i]!='\0'; i++)
                             {
+                                linedlen++;
+                            }
+                            char *ptrd = strstr(lined, lowernew);
+                            if (ptrd != NULL && (linedlen==lowernewlen)) 
+                            {
+                                //printf("\nline is %d characters long and newf is %d long",linedlen,lowernewlen);
                                 wordExistd=1;
                                 break;
                             }
                         }
-                        free(lowernew);
+                        bzero(lowernew,sizeof(lowernew));
                         fclose(filePointerd);
                         if (wordExistd==1)
                         {
@@ -225,12 +388,24 @@ void main()
                         int wordExist=0;
                         int bufferLength = 255;
                         char line[bufferLength];
+                        int linelen = 0;
+                        int newflen = 0;
+                        for (int i = 0; newf[i]!='\0'; i++)
+                        {
+                            newflen++;
+                        }
                         filePointer = fopen(fname, "r");
                         while(fgets(line, bufferLength, filePointer))
                         {
-                            char *ptr = strstr(line, newf);
-                            if (ptr != NULL) 
+                            linelen=0;
+                            for (int i = 0; line[i]!='\0'; i++)
                             {
+                                linelen++;
+                            }
+                            char *ptr = strstr(line, newf); //check newf in debugger
+                            if (ptr != NULL && (linelen==newflen)) 
+                            {
+                                //printf("\nINPUT.txt line is %d characters long and newf is %d long",linelen,newflen);
                                 wordExist=1;
                                 break;
                             }
@@ -239,7 +414,6 @@ void main()
                         if (wordExist==1)
                         {
                             printf("\nWord was already in file.");
-                            //ISSUE: IT DETECTS THE HEAVE WITHIN HEAVEC
                         }
                         else 
                         {
@@ -252,12 +426,16 @@ void main()
                         }
                         strcpy(prev,new);
                         strcpy(new,"");
-                        printf("\n TYPE 0 EXIT, ANY OTHER NUMBER TO CONTINUE. ");
-                        scanf("%d",&run);
+                        printf("\n TYPE 0 EXIT, ANY OTHER NUMBER FOR COMPUTER TURN");
+                        scanf("%d",&run);                        
                         if (run==0)
                             exit(0);
                         else
+                        {
+                            //send everything to computer here, ensuring to update prev and new
+                            computerTurn(&prev,&usedWords,&letters,&fname, &noUsedWords);
                             break;
+                        }
                     }   
                     else
                     {
