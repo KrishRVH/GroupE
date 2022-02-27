@@ -177,7 +177,7 @@ int main()
                     int resetCounter = 0;
                     while(1)
                     {
-                        // Recieves number of resets that already exist
+                        // Recieves number of passes that already exist
                         bzero(buffer, sizeof(buffer));
                         recv(clientSocket, buffer, 1024, 0);
                         resetCounter = buffer - '0';
@@ -212,6 +212,8 @@ int main()
                             strcpy(starting_char, buffer);
                             printf("The starting character is: %c\n", starting_char);
 
+
+                            // ------------------------------------------------------------------------------------
                             // Player can submit a guess in under 4 minutes
                             // Start time for 4 minutes
                             signal(SIGALRM, mySignal);
@@ -223,6 +225,7 @@ int main()
                             scanf("%s", &buffer[0]);
                             send(clientSocket, buffer, 1024, 0);
 
+                            // -------------------------------------------------------------------------------------
                             // Correct/incorrect word response from server
                             char *word_valid;
                             bzero(buffer, sizeof(buffer));

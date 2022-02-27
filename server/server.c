@@ -242,6 +242,7 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
 	recv(newSocket, buffer, 1024, 0);
 	strcpy(prev, buffer);
 
+	// ----------------------------------------------------------------------------------
     while (prev[0]!=letters[rng])
     {
         //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
