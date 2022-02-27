@@ -87,6 +87,13 @@ void playersTurn(){
     
 }
 
+//need to change exit condition to pass turn 
+void myAlarm(int sig)
+{
+
+}
+
+
 
 // https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
 int main()
@@ -94,6 +101,9 @@ int main()
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;
 	char buffer[1024];
+
+    void(*mySignal)(int);
+    mySignal = myAlarm;
 
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if(clientSocket < 0)
@@ -147,7 +157,7 @@ int main()
 			// Game starts...
 
             int game_start = 1;
-            if(game_start)
+            while(game_start)
             {
                 char test[50];
                 recv(clientSocket, buffer, 1024, 0);
@@ -163,15 +173,84 @@ int main()
                     printf("Letters: %s\n", buffer);
                     //strcpy(letters, buffer);
 
-                    // Recieves number of list of words, then loops recv for words storing into array
-                    int noUsedWords = 0;
-                    char usedWords[100][100];
+                    // Starts player turn
+                    int resetCounter = 0;
+                    while(1)
+                    {
+                        // Recieves number of resets that already exist
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+                        resetCounter = buffer - '0';
 
-                    recv(clientSocket, buffer, 1024, 0);
-                    noUsedWords = buffer[0] - '0';
-                    printf("Number of used words: %i\n", noUsedWords);
+                        if (resetCounter == 3)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            // Recieves number of list of words, then loops recv for words storing into array
+                            int noUsedWords = 0;
+                            char usedWords[100][100];
 
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, 1024, 0);
+                            noUsedWords = buffer - '0';
+                            
+                            printf("Number of used words: %i\n", noUsedWords);
+                            for (int i = 0; i < noUsedWords; i++)
+                            {
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                strcpy(usedWords[i], buffer);
+                                printf("%s ", usedWords[i]);
+                            }
 
+                            // Recieves starting character
+                            char starting_char = '0';
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, 1024, 0);
+                            strcpy(starting_char, buffer);
+                            printf("The starting character is: %c\n", starting_char);
+
+                            // Player can submit a guess in under 4 minutes
+                            // Start time for 4 minutes
+                            signal(SIGALRM, mySignal);
+                            alarm(240);
+
+                            // Player word submission
+                            printf("\nEnter your word: ");
+                            bzero(buffer, sizeof(buffer));
+                            scanf("%s", &buffer[0]);
+                            send(clientSocket, buffer, 1024, 0);
+
+                            // Correct/incorrect word response from server
+                            char *word_valid;
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, 1024, 0);
+                            strcpy(word_valid, buffer);
+
+                            if (strcmp(word_valid, "correct") == 0)
+                            {
+                                printf("Correct answer!\n");
+                                break;
+                            }
+                            else
+                            {
+                                printf("Incorrect answer!\n");
+                            }
+
+                            // Current player score
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, 1024, 0);
+                            printf("Current score: %s\n", buffer);
+
+                            // Opponent score
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, 1024, 0);
+                            printf("Opponents score: %s\n", buffer);
+                            
+                        }
+                    }
                 }
                 else
                 {

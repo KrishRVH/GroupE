@@ -40,8 +40,16 @@ struct Player
 	char country[50];
 	int num_words;
 	int num_words_added;
-	int player_turn;
+	int resets;
 } Player;
+
+struct Computer
+{
+	int score;
+	int num_words;
+	int num_words_added;
+	int resets;
+} Computer;
 
 struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
@@ -55,6 +63,17 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	new_player.num_words_added = 0;
 
 	return new_player;
+}
+
+struct Computer newComputer()
+{
+	struct Computer new_computer;
+	new_computer.score = 0;
+	new_computer.num_words = 0;
+	new_computer.num_words_added = 0;
+	new_computer.passes = 0;
+
+	return new_computer;
 }
 
 // Opens message queue, should only be ran once.
@@ -153,10 +172,15 @@ void recieveMsg(mqd_t mqd)
 	free(p_buffer);
 }
 
-void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct Player *player)
+
+// Single player
+void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct Player *player, struct Computer *computer)
 {
 	// Socket variables
 	char buffer[1024];
+
+	// Correct/incorrect
+	char answer[] = "incorrect";
 
     srand(time(NULL)); 
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
@@ -186,23 +210,48 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
     char newf[101] = ""; //"new\n"  
     char newadd[101] = "\n";    // "\nnew\n"
 
-	// Sends used words to client
-    for (int i = 0; i<=noUsedWords;i++)
+	// Sends number of passes that have been used by the client
+	char num_resets = player.resets + '0';
+	bzero(buffer, sizeof(buffer));
+	strcpy(buffer, num_resets);
+	send(newSocket, buffer, 1024, 0);
+
+	// Sends number of used words and used words to client
+	char num_used_words = noUsedWords + '0';
+	bzero(buffer, sizeof(buffer));
+	strcpy(buffer, num_used_words);
+	send(newSocket, buffer, 1024, 0);
+
+    for (int i = 0; i <= noUsedWords; i++)
     {
         //printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+		bzero(buffer, sizeof(buffer));
+		strcpy(buffer, usedWords[i]);
+		send(newSocket, buffer, 1024, 0);
     }
-    printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
+
+	// Sends starting character to client
+    //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
+	bzero(buffer, sizeof(buffer));
+	strcpy(buffer, letters[rng]);
+	send(newSocket, buffer, 1024, 0);
     
+	// Recieves first word from client
 	//gets(prev);
+	bzero(buffer, sizeof(buffer));
 	recv(newSocket, buffer, 1024, 0);
 	strcpy(prev, buffer);
-	bzero(buffer, sizeof(buffer));
 
-    if (prev[0]!=letters[rng])
+    while (prev[0]!=letters[rng])
     {
-        printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
-        //penalise
-        //exit(0);
+        //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
+
+		bzero(buffer, sizeof(buffer));
+		strcpy(buffer, answer);
+		send(newSocket, buffer, 1024, 0);
+
+		player.score -= 1;
+		player.resets += 1;
     }
 
 	int run = 1;
@@ -489,8 +538,9 @@ int main()
                     strcpy(country, buffer);
                     bzero(buffer, sizeof(buffer));
 
-                    // Create new player struct
+                    // Create new player and computer struct
                     struct Player added_player = newPlayer(firstname, lastname, country);
+					struct Computer added_computer = newComputer();
 
 					printf("First: %s Last: %s Country: %s", added_player.firstname, 
 					added_player.lastname, added_player.country);
@@ -503,14 +553,10 @@ int main()
 					int game_start = 1;
 					if(game_start)
 					{
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
-						
+						// turn input
 						scanf("%s", &buffer[0]);
 						send(newSocket, buffer, 1024, 0);
 
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
 					}
 				}
                 if(strcmp(buffer, "2") == 0)
