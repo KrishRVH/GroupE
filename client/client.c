@@ -161,7 +161,7 @@ int main()
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
                     printf("Letters: %s\n", buffer);
-                    strcpy(letters, buffer);
+                    //strcpy(letters, buffer);
 
                     // Recieves number of list of words, then loops recv for words storing into array
                     int noUsedWords = 0;
