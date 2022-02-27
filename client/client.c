@@ -212,36 +212,34 @@ int main()
                             strcpy(starting_char, buffer);
                             printf("The starting character is: %c\n", starting_char);
 
+                            while (1) {
+                                // Player can submit a guess in under 4 minutes
+                                // Start time for 4 minutes
+                                signal(SIGALRM, mySignal);
+                                alarm(240);
 
-                            // ------------------------------------------------------------------------------------
-                            // Player can submit a guess in under 4 minutes
-                            // Start time for 4 minutes
-                            signal(SIGALRM, mySignal);
-                            alarm(240);
+                                // Player word submission
+                                printf("\nEnter your word: ");
+                                bzero(buffer, sizeof(buffer));
+                                scanf("%s", &buffer[0]);
+                                send(clientSocket, buffer, 1024, 0);
+                                    
+                                // Correct/incorrect word response from server
+                                char *word_valid;
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                strcpy(word_valid, buffer);
 
-                            // Player word submission
-                            printf("\nEnter your word: ");
-                            bzero(buffer, sizeof(buffer));
-                            scanf("%s", &buffer[0]);
-                            send(clientSocket, buffer, 1024, 0);
-
-                            // -------------------------------------------------------------------------------------
-                            // Correct/incorrect word response from server
-                            char *word_valid;
-                            bzero(buffer, sizeof(buffer));
-                            recv(clientSocket, buffer, 1024, 0);
-                            strcpy(word_valid, buffer);
-
-                            if (strcmp(word_valid, "correct") == 0)
-                            {
-                                printf("Correct answer!\n");
-                                break;
+                                if (strcmp(word_valid, "correct") == 0) {
+                                    printf("Correct answer!\n");
+                                    break; // OPA!
+                                } else if (strcmp(word_valid, "incorrect_fin"))
+                                    printf("Final incorrect answer.\n");
+                                    break;
+                                else {
+                                    printf("Incorrect answer!\n");
+                                }
                             }
-                            else
-                            {
-                                printf("Incorrect answer!\n");
-                            }
-
                             // Current player score
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, 1024, 0);

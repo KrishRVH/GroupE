@@ -172,6 +172,29 @@ void recieveMsg(mqd_t mqd)
 	free(p_buffer);
 }
 
+// Penalize player for incorrect.
+int incorrect = 0;
+void penalise(int pen) {
+    if (incorrect == 3) {
+        bzero(buffer, sizeof(buffer));
+        strcpy(buffer, "incorrect_fin");
+        send(newSocket, buffer, 1024, 0);
+        incorrect = 0;
+        player.score -= pen;
+	    player.resets += pen;
+        return;
+    }
+
+    bzero(buffer, sizeof(buffer));
+    strcpy(buffer, "incorrect");
+    send(newSocket, buffer, 1024, 0);
+
+    player.score -= pen;
+	player.resets += pen;
+
+    incorrect++;
+}
+
 
 // Single player
 void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct Player *player, struct Computer *computer)
@@ -229,36 +252,31 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
 		strcpy(buffer, usedWords[i]);
 		send(newSocket, buffer, 1024, 0);
     }
-
-	// Sends starting character to client
-    //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
-	bzero(buffer, sizeof(buffer));
-	strcpy(buffer, letters[rng]);
-	send(newSocket, buffer, 1024, 0);
-    
-	// Recieves first word from client
-	//gets(prev);
-	bzero(buffer, sizeof(buffer));
-	recv(newSocket, buffer, 1024, 0);
-	strcpy(prev, buffer);
-
 	// ----------------------------------------------------------------------------------
-    while (prev[0]!=letters[rng])
-    {
-        //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
-
-		bzero(buffer, sizeof(buffer));
-		strcpy(buffer, answer);
-		send(newSocket, buffer, 1024, 0);
-
-		player.score -= 1;
-		player.resets += 1;
-    }
+    // Sends starting character to client
+    //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
+    bzero(buffer, sizeof(buffer));
+    strcpy(buffer, letters[rng]);
+    send(newSocket, buffer, 1024, 0);
+    
 
 	int run = 1;
     int first = 1;
     while (run!=0)
     {
+        // Recieves first word from client
+        //gets(prev);
+        bzero(buffer, sizeof(buffer));
+        recv(newSocket, buffer, 1024, 0);
+        strcpy(prev, buffer);
+
+
+        if (prev[0]!=letters[rng]) {
+            //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
+            penalise(1);
+            continue;
+        }
+
         if (first == 1)
         {
             strcpy(new,prev);
@@ -356,7 +374,8 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                         else 
                         {
                             printf("\nWord is not a valid dictionary word.");
-                            //penalise
+                            penalise(1);
+                            continue;
                         }
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
                         int dup = 0;      
@@ -375,11 +394,12 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                         if(dup) 
                         {
                             printf("\nWORD HAS ALREADY BEEN USED THIS GAME.");
-                            //penalise
                             for (int i = 0; i<=noUsedWords;i++)
                             {
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
+                            penalise(2);
+                            continue;
                         }
                         else
                         {
@@ -396,16 +416,13 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                         char line[bufferLength];
                         int linelen = 0;
                         int newflen = 0;
-                        for (int i = 0; newf[i]!='\0'; i++)
-                        {
+                        for (int i = 0; newf[i]!='\0'; i++) {
                             newflen++;
                         }
                         filePointer = fopen(fname, "r");
-                        while(fgets(line, bufferLength, filePointer))
-                        {
+                        while(fgets(line, bufferLength, filePointer)) {
                             linelen=0;
-                            for (int i = 0; line[i]!='\0'; i++)
-                            {
+                            for (int i = 0; line[i]!='\0'; i++) {
                                 linelen++;
                             }
                             char *ptr = strstr(line, newf); //check newf in debugger
@@ -420,6 +437,8 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                         if (wordExist==1)
                         {
                             printf("\nWord was already in file.");
+                            penalise(1);
+                            continue;
                         }
                         else 
                         {
@@ -437,6 +456,18 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                         if (run==0)
                             exit(0);
                         else
+                            bzero(buffer, sizeof(buffer));
+                            strcpy(buffer, "correct");
+                            send(newSocket, buffer, 1024, 0);
+
+                            bzero(buffer, sizeof(buffer));
+                            strcpy(buffer, to_string(player.score));
+                            send(newSocket, buffer, 1024, 0);
+
+                            // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
+                            bzero(buffer, sizeof(buffer));
+                            strcpy(buffer, to_string(Computer.score));
+                            send(newSocket, buffer, 1024, 0);
                             break;
                     }   
                     else
@@ -445,22 +476,22 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
                             continue;
                         printf("\n Invalid but part of it was at some point");
                         //in theory we should never be here?
-                        //penalise
-                        exit(0);
+                        penalise(1);
+                        continue;
                     }
                 }
                 if (i==(n-1))
                 {
                     printf("\n Word is not valid.");
-                    //penalise
-                    exit(0);
+                    penalise(1);
+                    continue;
                 }
             }
             else
             {
                 printf("Word contains disallowed characters.");
-                //penalise
-                exit(0);
+                penalise(1);
+                continue;
             }
         }
     }
