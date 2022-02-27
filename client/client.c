@@ -223,7 +223,6 @@ int main()
                                 bzero(buffer, sizeof(buffer));
                                 scanf("%s", &buffer[0]);
                                 send(clientSocket, buffer, 1024, 0);
-                                    
                                 // Correct/incorrect word response from server
                                 char *word_valid;
                                 bzero(buffer, sizeof(buffer));

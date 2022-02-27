@@ -525,7 +525,7 @@ int main()
 	printf("CONSOLE: Binded to port %d\n", 4444);
     if(listen(sockfd, 10) == 0){
 		printf("[+]Listening....\n");
-	}else{
+	} else {
 		printf("[-]Error in binding.\n");
 	}
 
