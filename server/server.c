@@ -173,7 +173,7 @@ char* recieveMsg(mqd_t mqd)
 }
 
 // Penalize player for incorrect.
-void penalise(int pen, int newSocket, struct Player player) {
+void penalise(int pen, int newSocket, struct Player *player) {
     char buffer[1024];
     if (incorrect == 3) {
         bzero(buffer, sizeof(buffer));
@@ -193,6 +193,55 @@ void penalise(int pen, int newSocket, struct Player player) {
 	player.resets += pen;
 
     incorrect++;
+}
+
+char * dictionaryCheck()
+{
+    char message[];
+    printf("\nConverting %s to lower",new);
+    for(int w = 0; w<nnewf; w++)
+    {
+        lowernew[w] = tolower(newf[w]);
+    }
+    FILE* filePointerd;
+    int wordExistd=0;
+    int bufferLengthd = 255;
+    char lined[bufferLengthd];
+    int linedlen = 0;
+    int lowernewlen = 0;
+    printf("\nChecking if %s is a valid dictionary word",lowernew);
+    filePointerd = fopen("dictionary.txt", "r");
+    for (int i = 0; lowernew[i]!='\0'; i++)
+    {
+        lowernewlen++;
+    }
+    while(fgets(lined, bufferLengthd, filePointerd))
+    {
+        linedlen=0;
+        for (int i = 0; lined[i]!='\0'; i++)
+        {
+            linedlen++;
+        }
+        char *ptrd = strstr(lined, lowernew);
+        if (ptrd != NULL && (linedlen==lowernewlen)) 
+        {
+            //printf("\nline is %d characters long and newf is %d long",linedlen,lowernewlen);
+            wordExistd=1;
+            break;
+        }
+    }
+    bzero(lowernew,sizeof(lowernew));
+    fclose(filePointerd);
+    if (wordExistd==1)
+    {
+        message = "VALID";
+        return message;
+    }
+    else
+    {
+        message = "INVALID";
+        return message;
+    }
 }
 
 
@@ -280,7 +329,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
         if (prev[0]!=letters[rng]) {
             printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
-            penalise(1, newSocket, Player);
+            penalise(1, newSocket, &player);
             if (incorrect == 3) { break; } else { continue; }
         }
 
@@ -336,52 +385,17 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         printf("\nWord is valid!");
                         //check if word is a dictionary word
 
-                        dictionaryCheck();
-
-                        printf("\nConverting %s to lower",new);
-                        for(int w = 0; w<nnewf; w++)
+                        char *valid_dict = dictionaryCheck(lowernew, newSocket, &player);
+                        if (strcmp(valid_dict, "VALID"))
                         {
-                            lowernew[w] = tolower(newf[w]);
-                        }
-                        FILE* filePointerd;
-                        int wordExistd=0;
-                        int bufferLengthd = 255;
-                        char lined[bufferLengthd];
-                        int linedlen = 0;
-                        int lowernewlen = 0;
-                        printf("\nChecking if %s is a valid dictionary word",lowernew);
-                        filePointerd = fopen("dictionary.txt", "r");
-                        for (int i = 0; lowernew[i]!='\0'; i++)
-                        {
-                            lowernewlen++;
-                        }
-                        while(fgets(lined, bufferLengthd, filePointerd))
-                        {
-                            linedlen=0;
-                            for (int i = 0; lined[i]!='\0'; i++)
-                            {
-                                linedlen++;
-                            }
-                            char *ptrd = strstr(lined, lowernew);
-                            if (ptrd != NULL && (linedlen==lowernewlen)) 
-                            {
-                                //printf("\nline is %d characters long and newf is %d long",linedlen,lowernewlen);
-                                wordExistd=1;
-                                break;
-                            }
-                        }
-                        bzero(lowernew,sizeof(lowernew));
-                        fclose(filePointerd);
-                        if (wordExistd==1)
-                        {
-                            printf("\nWord is a valid dictionary word!");
+                            
                         }
                         else
                         {
-                            printf("\nWord is not a valid dictionary word.");
-                            penalise(1, newSocket, Player);
+                            penalise(1, newSocket, &player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
+
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
                         int dup = 0;      
                         for (int j = 0; j < 100; j++) 
@@ -403,7 +417,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             {
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
-                            penalise(2, newSocket, Player);
+                            penalise(2, newSocket, &player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
                         else
@@ -442,7 +456,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         if (wordExist==1)
                         {
                             printf("\nWord was already in file.");
-                            penalise(1, newSocket, Player);
+                            penalise(1, newSocket, &player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
                         else 
@@ -483,21 +497,21 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             continue;
                         printf("\n Invalid but part of it was at some point");
                         //in theory we should never be here?
-                        penalise(1, newSocket, Player);
+                        penalise(1, newSocket, &player);
                         if (incorrect == 3) { break; } else { continue; }
                     }
                 }
                 if (i==(n-1))
                 {
                     printf("\n Word is not valid.");
-                    penalise(1, newSocket, Player);
+                    penalise(1, newSocket, &player);
                     if (incorrect == 3) { break; } else { continue; }
                 }
             }
             else
             {
                 printf("Word contains disallowed characters.");
-                penalise(1, newSocket, Player);
+                penalise(1, newSocket, &player);
                 if (incorrect == 3) { break; } else { continue; }
             }
         }
