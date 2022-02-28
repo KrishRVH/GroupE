@@ -242,13 +242,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 	// Sends number of resets that have been used by the client
 	char num_resets = player->resets + '0';
 	bzero(buffer, sizeof(buffer));
-	strcpy(buffer, (char)num_resets);
+	strcpy(buffer, &num_resets);
 	send(newSocket, buffer, 1024, 0);
 
 	// Sends number of used words and used words to client
 	char num_used_words = noUsedWords + '0';
 	bzero(buffer, sizeof(buffer));
-	strcpy(buffer, (char)num_used_words);
+	strcpy(buffer, &num_used_words);
 	send(newSocket, buffer, 1024, 0);
 
     for (int i = 0; i <= noUsedWords; i++)
