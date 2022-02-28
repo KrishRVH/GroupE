@@ -442,13 +442,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         
                         if (strcmp(recieveMsg(dictionary_check), "INVALID"))
                         {
-                            penalise(1, newSocket, &player);
+                            penalise(1, newSocket, player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
 
                         if (strcmp(recieveMsg(input_check), "INVALID"))
                         {
-                            addPoints(5, &player);
+                            addPoints(5, player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
 
@@ -473,7 +473,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             {
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
-                            penalise(2, newSocket, &player);
+                            penalise(2, newSocket, player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
                         else
@@ -514,21 +514,21 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             continue;
                         printf("\n Invalid but part of it was at some point");
                         //in theory we should never be here?
-                        penalise(1, newSocket, &player);
+                        penalise(1, newSocket, player);
                         if (incorrect == 3) { break; } else { continue; }
                     }
                 }
                 if (i==(n-1))
                 {
                     printf("\n Word is not valid.");
-                    penalise(1, newSocket, &player);
+                    penalise(1, newSocket, player);
                     if (incorrect == 3) { break; } else { continue; }
                 }
             }
             else
             {
                 printf("Word contains disallowed characters.");
-                penalise(1, newSocket, &player);
+                penalise(1, newSocket, player);
                 if (incorrect == 3) { break; } else { continue; }
             }
         }
