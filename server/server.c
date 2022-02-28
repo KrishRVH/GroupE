@@ -30,7 +30,8 @@
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
 char* p_buffer;
 
-// Global storage for used words,
+// Globals
+int incorrect = 0;
 
 // Player struct
 struct Player
@@ -175,10 +176,8 @@ void recieveMsg(mqd_t mqd)
 }
 
 // Penalize player for incorrect.
-int incorrect = 0;
 void penalise(int pen, int newSocket, struct Player player) {
     char buffer[1024];
-    int incorrect;
     if (incorrect == 3) {
         bzero(buffer, sizeof(buffer));
         strcpy(buffer, "incorrect_fin");
@@ -269,7 +268,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 
         for (int i = 0; i <= noUsedWords; i++)
         {
-            //printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+            printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, usedWords[i]);
             send(newSocket, buffer, 1024, 0);
