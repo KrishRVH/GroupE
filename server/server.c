@@ -180,8 +180,8 @@ void penalise(int pen, int newSocket, struct Player *player) {
         strcpy(buffer, "incorrect_fin");
         send(newSocket, buffer, 1024, 0);
         incorrect = 0;
-        player.score -= pen;
-	    player.resets += pen;
+        player->score -= pen;
+	    player->resets += pen;
         return;
     }
 
@@ -189,8 +189,8 @@ void penalise(int pen, int newSocket, struct Player *player) {
     strcpy(buffer, "incorrect");
     send(newSocket, buffer, 1024, 0);
 
-    player.score -= pen;
-	player.resets += pen;
+    player->score -= pen;
+	player->resets += pen;
 
     incorrect++;
 }
@@ -200,9 +200,8 @@ void addPoints(int pen, struct Player *player)
     player.score += pen;
 }
 
-int dictionaryCheck(char *lowernew, int newSocket)
+int dictionaryCheck(char *newf, size_t nnewf, char *lowernew, int newSocket)
 {
-    printf("\nConverting %s to lower",new);
     for(int w = 0; w<nnewf; w++)
     {
         lowernew[w] = tolower(newf[w]);
@@ -422,7 +421,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
                         if (fork() == 0)
                         {
-                            int valid_dict = dictionaryCheck(lowernew, newSocket);
+                            int valid_dict = dictionaryCheck(newf, nnewf, lowernew, newSocket);
                             if (valid_dict == 1){}
                             else
                             {
