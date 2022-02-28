@@ -189,7 +189,7 @@ void penalise(int pen, int newSocket, struct Player *player) {
     if (incorrect == 3) 
     {
         bzero(buffer, sizeof(buffer));
-        strcpy(buffer, "incorrect_fin");
+        strcpy(buffer, "final");
         send(newSocket, buffer, 1024, 0);
         incorrect = 0;
         player->score -= pen;
