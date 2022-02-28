@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 
 // Socket/network includes
 #include <netdb.h>
@@ -180,7 +181,7 @@ int main()
                         // Recieves number of resets that already exist
                         bzero(buffer, sizeof(buffer));
                         recv(clientSocket, buffer, 1024, 0);
-                        resetCounter = buffer - '0';
+                        resetCounter = buffer[0] - '0';
 
                         if (resetCounter == 3)
                         {
@@ -194,7 +195,7 @@ int main()
 
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, 1024, 0);
-                            noUsedWords = buffer - '0';
+                            sscanf(buffer, "%d", &noUsedWords);
                             
                             printf("Number of used words: %i\n", noUsedWords);
                             for (int i = 0; i < noUsedWords; i++)
@@ -209,7 +210,7 @@ int main()
                             char starting_char = '0';
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, 1024, 0);
-                            strcpy(starting_char, buffer);
+                            strcpy(&starting_char, buffer);
                             printf("The starting character is: %c\n", starting_char);
 
                             while (1) {
