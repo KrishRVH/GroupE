@@ -61,6 +61,7 @@ struct Player newPlayer(char *firstname, char *lastname, char *country)
 	strcpy(new_player.country, country);
 	new_player.num_words = 0;
 	new_player.num_words_added = 0;
+    new_player.resets = 0;
 
 	return new_player;
 }
@@ -71,7 +72,7 @@ struct Computer newComputer()
 	new_computer.score = 0;
 	new_computer.num_words = 0;
 	new_computer.num_words_added = 0;
-	new_computer.passes = 0;
+	new_computer.resets = 0;
 
 	return new_computer;
 }
@@ -174,7 +175,9 @@ void recieveMsg(mqd_t mqd)
 
 // Penalize player for incorrect.
 int incorrect = 0;
-void penalise(int pen) {
+void penalise(int pen, int newSocket, struct Player player) {
+    char buffer[1024];
+    int incorrect;
     if (incorrect == 3) {
         bzero(buffer, sizeof(buffer));
         strcpy(buffer, "incorrect_fin");
@@ -197,7 +200,7 @@ void penalise(int pen) {
 
 
 // Single player
-void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct Player *player, struct Computer *computer)
+void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 {
 	// Socket variables
 	char buffer[1024];
@@ -232,8 +235,10 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
     char new[100];
     char newf[101] = ""; //"new\n"  
     char newadd[101] = "\n";    // "\nnew\n"
+    int noUsedWords = 1;
+    char usedWords[100][100];
 
-	// Sends number of passes that have been used by the client
+	// Sends number of resets that have been used by the client
 	char num_resets = player.resets + '0';
 	bzero(buffer, sizeof(buffer));
 	strcpy(buffer, num_resets);
@@ -282,12 +287,7 @@ void playerTurn(int newSocket, char usedWords[100][100], int noUsedWords, struct
             strcpy(new,prev);
             first = 0;
         }
-        else
-        {
 
-            //printf("\nEnter new word ");
-            //scanf("%99s",&new);
-        }
         strcpy(newf,"");
         strcpy(newadd,"\n");
         strcat(newf, new);
@@ -586,8 +586,10 @@ int main()
 					if(game_start)
 					{
 						// turn input
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
+						//scanf("%s", &buffer[0]);
+						//send(newSocket, buffer, 1024, 0);
+
+                        playerTurn(newSocket, added_player, added_computer);
 
 					}
 				}

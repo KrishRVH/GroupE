@@ -177,7 +177,7 @@ int main()
                     int resetCounter = 0;
                     while(1)
                     {
-                        // Recieves number of passes that already exist
+                        // Recieves number of resets that already exist
                         bzero(buffer, sizeof(buffer));
                         recv(clientSocket, buffer, 1024, 0);
                         resetCounter = buffer - '0';
