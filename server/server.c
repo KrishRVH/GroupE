@@ -283,7 +283,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 
 
         if (prev[0]!=letters[rng]) {
-            //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
+            printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
             penalise(1, newSocket, Player);
             if (incorrect == 3) { break; } else { continue; }
         }
