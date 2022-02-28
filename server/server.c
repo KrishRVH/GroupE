@@ -245,19 +245,11 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 	strcpy(buffer, &num_resets);
 	send(newSocket, buffer, 1024, 0);
 
-	// Sends number of used words and used words to client
-	char num_used_words = noUsedWords + '0';
-	bzero(buffer, sizeof(buffer));
-	strcpy(buffer, &num_used_words);
-	send(newSocket, buffer, 1024, 0);
+    // Sends starting letters
+    bzero(buffer, sizeof(buffer));
+    strcpy(buffer, letters);
+    send(newSocket, buffer, 1024, 0);
 
-    for (int i = 0; i <= noUsedWords; i++)
-    {
-        //printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
-		bzero(buffer, sizeof(buffer));
-		strcpy(buffer, usedWords[i]);
-		send(newSocket, buffer, 1024, 0);
-    }
 	// ----------------------------------------------------------------------------------
     // Sends starting character to client
     //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
@@ -269,6 +261,20 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
     int first = 1;
     while (run!=0)
     {
+        // Sends number of used words and used words to client
+        char num_used_words = noUsedWords + '0';
+        bzero(buffer, sizeof(buffer));
+        strcpy(buffer, &num_used_words);
+        send(newSocket, buffer, 1024, 0);
+
+        for (int i = 0; i <= noUsedWords; i++)
+        {
+            //printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+            bzero(buffer, sizeof(buffer));
+            strcpy(buffer, usedWords[i]);
+            send(newSocket, buffer, 1024, 0);
+        }
+        
         // Recieves first word from client
         //gets(prev);
         bzero(buffer, sizeof(buffer));

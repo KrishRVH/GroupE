@@ -167,6 +167,11 @@ int main()
                 
                 if (strcmp(buffer, "turn") == 0)
                 {
+                    // Recieves number of resets that already exist
+                    bzero(buffer, sizeof(buffer));
+                    recv(clientSocket, buffer, 1024, 0);
+                    int resetCounter = buffer[0] - '0';
+
                     // Players turn, recieves letters, list of words, etc.
                     char *letters;
                     bzero(buffer, sizeof(buffer));
@@ -174,15 +179,17 @@ int main()
                     printf("Letters: %s\n", buffer);
                     //strcpy(letters, buffer);
 
+                    // Recieves starting character
+                    char starting_char = '0';
+                    bzero(buffer, sizeof(buffer));
+                    recv(clientSocket, buffer, 1024, 0);
+                    strcpy(&starting_char, buffer);
+                    printf("The starting character is: %c\n", starting_char);
+
                     // Starts player turn
-                    int resetCounter = 0;
+                    //int resetCounter = 0;
                     while(1)
                     {
-                        // Recieves number of resets that already exist
-                        bzero(buffer, sizeof(buffer));
-                        recv(clientSocket, buffer, 1024, 0);
-                        resetCounter = buffer[0] - '0';
-
                         if (resetCounter == 3)
                         {
                             break;
@@ -205,13 +212,6 @@ int main()
                                 strcpy(usedWords[i], buffer);
                                 printf("%s ", usedWords[i]);
                             }
-
-                            // Recieves starting character
-                            char starting_char = '0';
-                            bzero(buffer, sizeof(buffer));
-                            recv(clientSocket, buffer, 1024, 0);
-                            strcpy(&starting_char, buffer);
-                            printf("The starting character is: %c\n", starting_char);
 
                             while (1) {
                                 // Player can submit a guess in under 4 minutes
