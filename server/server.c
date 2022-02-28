@@ -195,9 +195,13 @@ void penalise(int pen, int newSocket, struct Player *player) {
     incorrect++;
 }
 
-char * dictionaryCheck()
+void addPoints(int pen, struct Player *player)
 {
-    char message[];
+    player.score += pen;
+}
+
+int dictionaryCheck(char *lowernew, int newSocket)
+{
     printf("\nConverting %s to lower",new);
     for(int w = 0; w<nnewf; w++)
     {
@@ -234,14 +238,45 @@ char * dictionaryCheck()
     fclose(filePointerd);
     if (wordExistd==1)
     {
-        message = "VALID";
-        return message;
+        return 1;
     }
     else
     {
-        message = "INVALID";
-        return message;
+        return 0;
     }
+}
+
+int inputCheck()
+{
+    //check if word is already in the input file https://www.efaculty.in/c-programs/check-whether-a-given-word-exists-in-a-file-or-not-program-in-c/
+    FILE* filePointer;
+    int wordExist=0;
+    int bufferLength = 255;
+    char line[bufferLength];
+    int linelen = 0;
+    int newflen = 0;
+    for (int i = 0; newf[i]!='\0'; i++)
+    {
+        newflen++;
+    }
+    filePointer = fopen(fname, "r");
+    while(fgets(line, bufferLength, filePointer))
+    {
+        linelen=0;
+        for (int i = 0; line[i]!='\0'; i++)
+        {
+            linelen++;
+        }
+        char *ptr = strstr(line, newf); //check newf in debugger
+        if (ptr != NULL && (linelen==newflen)) 
+        {
+            //printf("\nINPUT.txt line is %d characters long and newf is %d long",linelen,newflen);
+            wordExist=1;
+            return 0;
+        }
+    }
+    return 1;
+    fclose(filePointer);
 }
 
 
@@ -385,19 +420,42 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         printf("\nWord is valid!");
                         //check if word is a dictionary word
 
-                        char *valid_dict = dictionaryCheck(lowernew, newSocket, &player);
-                        if (strcmp(valid_dict, "VALID"))
+                        if (fork() == 0)
                         {
-                            
+                            int valid_dict = dictionaryCheck(lowernew, newSocket);
+                            if (valid_dict == 1){}
+                            else
+                            {
+                                char message[8] = "INVALID";
+                                sendGameMsg(dictionary_check, message, 8);
+                            }
                         }
                         else
+                        {
+                            wait(NULL);
+                            char *valid_input = inputCheck(usedWords, noUsedWords);
+                            if (valid_input){}
+                            else
+                            {
+                                char message[8] = "INVALID";
+                                sendGameMsg(input_check, message, 8);
+                            }
+                        }
+                        
+                        if (strcmp(recieveMsg(dictionary_check), "INVALID"))
                         {
                             penalise(1, newSocket, &player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
 
+                        if (strcmp(recieveMsg(input_check), "INVALID"))
+                        {
+                            addPoints(5, &player);
+                            if (incorrect == 3) { break; } else { continue; }
+                        }
+
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
-                        int dup = 0;      
+                        int dup = 0;
                         for (int j = 0; j < 100; j++) 
                         {
                             if(strcmp(new, usedWords[j]) == 0) 
@@ -428,46 +486,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
                         }
-                        //check if word is already in the input file https://www.efaculty.in/c-programs/check-whether-a-given-word-exists-in-a-file-or-not-program-in-c/
-                        FILE* filePointer;
-                        int wordExist=0;
-                        int bufferLength = 255;
-                        char line[bufferLength];
-                        int linelen = 0;
-                        int newflen = 0;
-                        for (int i = 0; newf[i]!='\0'; i++) {
-                            newflen++;
-                        }
-                        filePointer = fopen(fname, "r");
-                        while(fgets(line, bufferLength, filePointer)) {
-                            linelen=0;
-                            for (int i = 0; line[i]!='\0'; i++) {
-                                linelen++;
-                            }
-                            char *ptr = strstr(line, newf); //check newf in debugger
-                            if (ptr != NULL && (linelen==newflen)) 
-                            {
-                                //printf("\nINPUT.txt line is %d characters long and newf is %d long",linelen,newflen);
-                                wordExist=1;
-                                break;
-                            }
-                        }
-                        fclose(filePointer);
-                        if (wordExist==1)
-                        {
-                            printf("\nWord was already in file.");
-                            penalise(1, newSocket, &player);
-                            if (incorrect == 3) { break; } else { continue; }
-                        }
-                        else 
-                        {
-                            printf("\nWord doesn't exist in the file and will be added.");
-                            //add word to input file https://stackoverflow.com/questions/19429138/append-to-the-end-of-a-file-in-c
-                            FILE * fptr;	
-                            fptr = fopen(fname, "a"); 
-                            fputs(newadd, fptr);
-                            fclose (fptr);
-                        }
+
                         strcpy(prev,new);
                         strcpy(new,"");
                         //printf("\n TYPE 0 EXIT, ANY OTHER NUMBER TO CONTINUE. ");
