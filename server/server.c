@@ -262,7 +262,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
     // Sends starting character to client
     //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
     bzero(buffer, sizeof(buffer));
-    strcpy(buffer, letters[rng]);
+    strcpy(buffer, *letters[rng]);
     send(newSocket, buffer, 1024, 0);
     
 	int run = 1;
