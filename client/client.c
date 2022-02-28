@@ -234,8 +234,10 @@ int main()
                                     printf("Correct answer!\n");
                                     break; // OPA!
                                 } else if (strcmp(word_valid, "incorrect_fin"))
+                                {
                                     printf("Final incorrect answer.\n");
                                     break;
+                                }
                                 else {
                                     printf("Incorrect answer!\n");
                                 }
