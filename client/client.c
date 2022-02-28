@@ -171,7 +171,7 @@ int main()
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
                     int resetCounter = buffer[0] - '0';
-                    printf("Number of resets used: %d", resetCounter);
+                    printf("Number of resets used: %d\n", resetCounter);
 
                     // Players turn, recieves letters, list of words, etc.
                     char *letters;
@@ -230,15 +230,20 @@ int main()
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
 
-                                if (strcmp(buffer, "correct") == 0) {
+                                printf("BUFFER: %s", buffer);
+
+                                if (strcmp(buffer, "correct") == 0) 
+                                {
                                     printf("Correct answer!\n");
                                     break; // OPA!
-                                } else if (strcmp(buffer, "incorrect_fin"))
+                                } 
+                                if (strcmp(buffer, "incorrect_fin"))
                                 {
                                     printf("Final incorrect answer.\n");
                                     break;
                                 }
-                                else {
+                                else 
+                                {
                                     printf("Incorrect answer!\n");
                                 }
                             }
