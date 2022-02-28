@@ -279,7 +279,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
         if (prev[0]!=letters[rng]) {
             //printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
             penalise(1);
-            continue;
+            if (incorrect == 3) { break; } else { continue; }
         }
 
         if (first == 1)
@@ -375,7 +375,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                         {
                             printf("\nWord is not a valid dictionary word.");
                             penalise(1);
-                            continue;
+                            if (incorrect == 3) { break; } else { continue; }
                         }
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
                         int dup = 0;      
@@ -399,7 +399,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
                             penalise(2);
-                            continue;
+                            if (incorrect == 3) { break; } else { continue; }
                         }
                         else
                         {
@@ -438,7 +438,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                         {
                             printf("\nWord was already in file.");
                             penalise(1);
-                            continue;
+                            if (incorrect == 3) { break; } else { continue; }
                         }
                         else 
                         {
@@ -477,21 +477,21 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                         printf("\n Invalid but part of it was at some point");
                         //in theory we should never be here?
                         penalise(1);
-                        continue;
+                        if (incorrect == 3) { break; } else { continue; }
                     }
                 }
                 if (i==(n-1))
                 {
                     printf("\n Word is not valid.");
                     penalise(1);
-                    continue;
+                    if (incorrect == 3) { break; } else { continue; }
                 }
             }
             else
             {
                 printf("Word contains disallowed characters.");
                 penalise(1);
-                continue;
+                if (incorrect == 3) { break; } else { continue; }
             }
         }
     }
