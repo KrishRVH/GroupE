@@ -224,15 +224,15 @@ int main()
                                 bzero(buffer, sizeof(buffer));
                                 scanf("%s", &buffer[0]);
                                 send(clientSocket, buffer, 1024, 0);
-                                
+
                                 // Correct/incorrect word response from server
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
 
-                                if (strcmp(word_valid, "correct") == 0) {
+                                if (strcmp(buffer, "correct") == 0) {
                                     printf("Correct answer!\n");
                                     break; // OPA!
-                                } else if (strcmp(word_valid, "incorrect_fin"))
+                                } else if (strcmp(buffer, "incorrect_fin"))
                                 {
                                     printf("Final incorrect answer.\n");
                                     break;
