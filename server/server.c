@@ -99,7 +99,7 @@ mqd_t openMsgQueue(char *queue_name)
 
 void sendPlayerConnectMsg(mqd_t mqd)
 {
-	mq_send(mqd, "1", 1, 10);
+	mq_send(mqd, "WAITING", 1, 10);
 }
 
 int recievePlayerConnectMsg(mqd_t mqd)
@@ -128,15 +128,14 @@ int recievePlayerConnectMsg(mqd_t mqd)
 }
 
 // Send message for game instruction
-void sendGameMsg(mqd_t mqd)
+void sendGameMsg(mqd_t mqd, char *message, int size)
 {
-	mq_send(mqd, "HELLO", 6, 10);
-	mq_send(mqd, "HELLO2", 7, 10);
-	mq_send(mqd, "HELLO3", 7, 10);
+	mq_send(mqd, message, size, 10);
 }
 
-void recieveMsg(mqd_t mqd)
+char* recieveMsg(mqd_t mqd)
 {
+    char message[1024];
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
@@ -144,35 +143,33 @@ void recieveMsg(mqd_t mqd)
 	int num_msgs = attr.mq_curmsgs;
 	
 	unsigned int priority = 0;
-	while (num_msgs != 0)
+	if (num_msgs != 0)
 	{
 		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
 		{
-			// Multiplayer waiting message, returns 1 if there is a player able to connect, returns 0 if no player or game is going on already
+			// Collects message from queue
 			if (priority == 10)
 			{
 				printf("Message: %s, Prio: %i\n", p_buffer, priority);
-				// Accept multiplayer connection and send message to start game between the two processes
+                strcpy(message, p_buffer);
 			}
-			// Game instruction message, this will c
-			if (priority == 9)
-			{
-				printf("Message: %s, Prio: %i\n", p_buffer, priority);
-			}
+
+            // TESTING PURPOSES
 			// Player struct information message, recieves following from player:
 			// - Set of random alphabets (Global var)
 			// - Current player score (Local for client fork)
 			// - Other players score ***
 			// - Words that have been used so far (Global var)
-			if (priority == 8)
+			if (priority == 1)
 			{
 				struct Player* new_player = (struct Player*)p_buffer;
 				printf("Player: %i, Prio: %i\n", new_player[0].score, priority);
 			}
 		}
-		num_msgs -= 1;
+		//num_msgs -= 1;
 	}
 	free(p_buffer);
+    return message;
 }
 
 // Penalize player for incorrect.
@@ -200,7 +197,7 @@ void penalise(int pen, int newSocket, struct Player player) {
 
 
 // Single player
-void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
+void playerTurn(int newSocket, struct Player *player, struct Computer *computer, mqd_t dictionary_check, mqd_t input_check)
 {
 	// Socket variables
 	char buffer[1024];
@@ -338,6 +335,9 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                     {
                         printf("\nWord is valid!");
                         //check if word is a dictionary word
+
+                        dictionaryCheck();
+
                         printf("\nConverting %s to lower",new);
                         for(int w = 0; w<nnewf; w++)
                         {
@@ -376,7 +376,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                         {
                             printf("\nWord is a valid dictionary word!");
                         }
-                        else 
+                        else
                         {
                             printf("\nWord is not a valid dictionary word.");
                             penalise(1, newSocket, Player);
@@ -507,8 +507,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 // Test server socket code for multiple forked clients
 int main()
 {
-	// Opens POSIX message queue
-	openMsgQueue("/Message_queue");
+	mqd_t dictionary_check = openMsgQueue("/Dictionary_check");
+    mqd_t input_check = openMsgQueue("/Input_check");
 
 	int sockfd, ret, newSocket;
 	struct sockaddr_in serverAddr, newAddr;
@@ -561,9 +561,6 @@ int main()
 				{
 					// Single player game
 
-					// POSIX queues
-					//mqd_t word_valid = openMsgQueue("/Word_valid");
-
                     // Receiving player information
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
@@ -596,7 +593,7 @@ int main()
 						scanf("%s", &buffer[0]);
 						send(newSocket, buffer, 1024, 0);
 
-                        playerTurn(newSocket, &added_player, &added_computer);
+                        playerTurn(newSocket, &added_player, &added_computer, dictionary_check, input_check);
 
 					}
 				}
