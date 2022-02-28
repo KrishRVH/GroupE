@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 
 // Socket/network includes
 #include <netdb.h>
@@ -459,13 +460,15 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                             strcpy(buffer, "correct");
                             send(newSocket, buffer, 1024, 0);
 
+                            char char_player_score = player->score + '0';
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, to_string(player->score));
+                            strcpy(buffer, (char)char_player_score));
                             send(newSocket, buffer, 1024, 0);
 
                             // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
+                            char char_computer_score = computer->score + '0';
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, to_string(Computer.score));
+                            strcpy(buffer, (char)char_computer_score);
                             send(newSocket, buffer, 1024, 0);
                             break;
                     }   
