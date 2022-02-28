@@ -237,7 +237,7 @@ int main()
                                     printf("Correct answer!\n");
                                     break; // OPA!
                                 } 
-                                if (strcmp(buffer, "final"))
+                                if (strcmp(buffer, "final") == 0)
                                 {
                                     printf("Final incorrect answer.\n");
                                     break;
