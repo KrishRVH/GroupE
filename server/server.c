@@ -185,7 +185,6 @@ char* recieveMsg(mqd_t mqd)
 // Penalize player for incorrect.
 void penalise(int pen, int newSocket, struct Player *player) {
     char buffer[1024];
-    printf("INCORRECT TIMES: %d\n", incorrect);
     if (incorrect == 3) 
     {
         bzero(buffer, sizeof(buffer));
@@ -424,7 +423,11 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         if (fork() == 0)
                         {
                             int valid_dict = dictionaryCheck(nnewf, lowernew, newSocket);
-                            if (valid_dict == 1){}
+                            if (valid_dict == 1)
+                            {
+                                char message[8] = "VALID";
+                                sendGameMsg(dictionary_check, message, 8);
+                            }
                             else
                             {
                                 char message[8] = "INVALID";
@@ -435,7 +438,11 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         {
                             wait(NULL);
                             int valid_input = inputCheck();
-                            if (valid_input == 1){}
+                            if (valid_input == 1)
+                            {
+                                char message[8] = "VALID";
+                                sendGameMsg(input_check, message, 8);
+                            }
                             else
                             {
                                 char message[8] = "INVALID";
