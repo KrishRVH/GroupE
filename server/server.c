@@ -33,6 +33,15 @@ char* p_buffer;
 // Globals
 int incorrect = 0;
 
+char prev[100]; //
+char new[100];
+char newf[101] = ""; 
+char newadd[101] = "\n";
+char usedWords[100][100];
+int noUsedWords = 1;
+char letters [6];
+char fname[14] = "";
+
 // Player struct
 struct Player
 {
@@ -197,10 +206,10 @@ void penalise(int pen, int newSocket, struct Player *player) {
 
 void addPoints(int pen, struct Player *player)
 {
-    player.score += pen;
+    player->score += pen;
 }
 
-int dictionaryCheck(char *newf, size_t nnewf, char *lowernew, int newSocket)
+int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
 {
     for(int w = 0; w<nnewf; w++)
     {
@@ -296,8 +305,6 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 	// File selection, gets random letters
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
-    char letters [6];
-    char fname[14] = "";
     printf("\nrng generated was %d",rng);
     if (rng2==10)
         strcat(fname, "input_");
@@ -309,14 +316,6 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     fclose(fileStream);
 	
     int disallowed = 0;
-
-    // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
-    char prev[100]; //
-    char new[100];
-    char newf[101] = ""; //"new\n"  
-    char newadd[101] = "\n";    // "\nnew\n"
-    int noUsedWords = 0;
-    char usedWords[100][100];
 
 	// Sends number of resets that have been used by the client
 	char num_resets = player->resets + '0';
@@ -421,7 +420,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
                         if (fork() == 0)
                         {
-                            int valid_dict = dictionaryCheck(newf, nnewf, lowernew, newSocket);
+                            int valid_dict = dictionaryCheck(nnewf, lowernew, newSocket);
                             if (valid_dict == 1){}
                             else
                             {
@@ -432,7 +431,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         else
                         {
                             wait(NULL);
-                            char *valid_input = inputCheck(usedWords, noUsedWords);
+                            char *valid_input = inputCheck();
                             if (valid_input){}
                             else
                             {
