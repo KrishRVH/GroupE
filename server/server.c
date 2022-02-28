@@ -185,7 +185,9 @@ char* recieveMsg(mqd_t mqd)
 // Penalize player for incorrect.
 void penalise(int pen, int newSocket, struct Player *player) {
     char buffer[1024];
-    if (incorrect == 3) {
+    printf("INCORRECT TIMES: %d\n", incorrect);
+    if (incorrect == 3) 
+    {
         bzero(buffer, sizeof(buffer));
         strcpy(buffer, "incorrect_fin");
         send(newSocket, buffer, 1024, 0);

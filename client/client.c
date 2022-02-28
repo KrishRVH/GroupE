@@ -171,6 +171,7 @@ int main()
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
                     int resetCounter = buffer[0] - '0';
+                    printf("Number of resets used: %d", resetCounter);
 
                     // Players turn, recieves letters, list of words, etc.
                     char *letters;
@@ -216,8 +217,8 @@ int main()
                             while (1) {
                                 // Player can submit a guess in under 4 minutes
                                 // Start time for 4 minutes
-                                signal(SIGALRM, mySignal);
-                                alarm(240);
+                                //signal(SIGALRM, mySignal);
+                                //alarm(240);
 
                                 // Player word submission
                                 printf("\nEnter your word: ");
