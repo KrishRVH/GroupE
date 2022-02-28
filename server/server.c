@@ -431,8 +431,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         else
                         {
                             wait(NULL);
-                            char *valid_input = inputCheck();
-                            if (valid_input){}
+                            int valid_input = inputCheck();
+                            if (valid_input == 1){}
                             else
                             {
                                 char message[8] = "INVALID";
