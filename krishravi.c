@@ -60,8 +60,16 @@ in singleplayer the server is only allowed to use input.txt words, not dictionar
 #include <string.h>
 #include <ctype.h>
 #define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+char prev[100]; //
+char new[100];
+char newf[101] = ""; 
+char newadd[101] = "\n";
+char usedWords[100][100];
+int noUsedWords = 1;
+char letters [6];
+char fname[14] = "";
 
-void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int* noUsedWords)
+void computerTurn()
 {
     //Computer will check input file line by line for usable words (if they're wordbuilder words that haven't been used yet, it plays them)
     int prevlen = 0;
@@ -77,11 +85,18 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
     int linelen = 0;
     int disallowed = 0;
     int run = 1;
-    char newf[101] = ""; //"new\n"  
-    char newadd[101] = "\n";    // "\nnew\n"
+    int skip = 0;
+    strcpy(newf,""); //"new\n"  
+    strcpy(newadd,"\n");    // "\nnew\n"
     filePointer = fopen(fname, "r");
     while(fgets(line, bufferLength, filePointer) && run!=0)
     {
+        if (skip!=3)
+        {
+            skip++;
+            continue;
+        }
+        disallowed = 0;
         strcpy(new,"");
         int c = getc(filePointer);
         if (c == EOF) 
@@ -89,15 +104,20 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
             printf("\nComputer could not find appropriate word");
             exit(0);
         }
+        else
+        {
+            ungetc(c,filePointer);
+        }
         linelen=0;
         for (int i = 0; line[i]!='\0'; i++)
         {
             linelen++;
         }
-        for(int i = 0; i < linelen; i++)
+        for (int i = 0; i < linelen-1; i++)
         {
-            strcat(new[i],line[i]);
+            new[i] = line[i];
         }
+        new[linelen-1] = '\0';
         strcpy(newf,"");
         strcpy(newadd,"\n");
         strcat(newf, new);
@@ -114,7 +134,7 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
                 //make sure no disallowed characters are in it
                 for (int y = 0; y < 6 && new[x]!='\0'; y++)
                 {
-                    printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
+                    //printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
                     if (new[x]!=letters[y])
                     {
                         if (letters[y+1]=='\0')
@@ -130,7 +150,7 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
             {
                 if (new[0]==prev[i])
                 {
-                    printf("\nUsed correct characters!");
+                    //printf("\nUsed correct characters!");
                     int j = i;
                     int k = 0;
                     while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
@@ -142,18 +162,19 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
                     }
                     if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
                     {
-                        printf("\nComputer's Word is valid!");
+                        //printf("\nComputer's Word is valid!");
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
                         int dup = 0;      
                         for (int j = 0; j < 100; j++) 
                         {
                             if(strcmp(new, usedWords[j]) == 0) 
                             {
+                                printf("\nWord %10s has been found in %d of usedWords as %10s",new,j,usedWords[j]);
                                 dup = 1;   // got a duplicate
                                 break;    
                             }
                         }
-                        if (dup == 0) {    // not a duplicate: add it to usedWords
+                        if (dup == 0) {    // not a duplicate: add it to usedWords  
                             strcpy(usedWords[noUsedWords+1], new);
                             noUsedWords += 1;
                         }
@@ -169,7 +190,8 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
                         }
                         else
                         {
-                            printf("\nWord has NOT been used this game. Added to used words.");
+                            //printf("\nWord has NOT been used this game. Added to used words.");
+                            printf("\nComputer played the word: %s",new);
                             for (int i = 0; i<=noUsedWords;i++)
                             {
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
@@ -192,14 +214,14 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
                 }
                 if (i==(n-1))
                 {
-                    printf("\nComputer's Word is not valid.");
+                    //printf("\nComputer's Word is not valid.");
                     //penalise
                     break;
                 }
             }
             else
             {
-                printf("Word contains disallowed characters.");
+                printf("\nWord contains disallowed characters.");
                 //penalise
                 break;
             }
@@ -209,14 +231,14 @@ void computerTurn(char* prev, char** usedWords, char* letters, char* fname, int*
 }
 void main()
 {
+    strcpy(usedWords[0],"COOKIE");
+    strcpy(usedWords[1],"HEAVEC");  
     srand(time(NULL)); 
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
     int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
     char rng2char[7];   
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
-    char letters [6];
-    char fname[14] = "";
     printf("\nrng generated was %d",rng);
     if (rng2==10)
         strcat(fname, "input_");
@@ -230,14 +252,7 @@ void main()
     printf("\nLETTERS ARE: %s",letters);
     int disallowed = 0;
     // CODE TO CHECK VALIDITY OF NEW WORD AGAINST PREVIOUS WORD
-    char prev[100]; //
-    char new[100];
-    char newf[101] = ""; //"new\n"  
-    char newadd[101] = "\n";    // "\nnew\n"
-    char usedWords[100][100];
-    strcpy(usedWords[0],"COOKIE");
-    strcpy(usedWords[1],"HEAVEC");
-    int noUsedWords = 1;
+
     for (int i = 0; i<=noUsedWords;i++)
     {
         printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
@@ -261,6 +276,7 @@ void main()
         }
         else
         {
+            printf("\nPlayer's turn!");
             printf("\nEnter new word ");
             scanf("%99s",&new);
         }
@@ -426,14 +442,14 @@ void main()
                         }
                         strcpy(prev,new);
                         strcpy(new,"");
-                        printf("\n TYPE 0 EXIT, ANY OTHER NUMBER FOR COMPUTER TURN");
+                        printf("\n TYPE 0 TO EXIT, ANY OTHER NUMBER FOR COMPUTER TURN: ");
                         scanf("%d",&run);                        
                         if (run==0)
                             exit(0);
                         else
                         {
                             //send everything to computer here, ensuring to update prev and new
-                            computerTurn(&prev,&usedWords,&letters,&fname, &noUsedWords);
+                            computerTurn();
                             break;
                         }
                     }   
