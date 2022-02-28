@@ -588,8 +588,8 @@ int main()
 					if(game_start)
 					{
 						// turn input
-						//scanf("%s", &buffer[0]);
-						//send(newSocket, buffer, 1024, 0);
+						scanf("%s", &buffer[0]);
+						send(newSocket, buffer, 1024, 0);
 
                         playerTurn(newSocket, &added_player, &added_computer);
 
