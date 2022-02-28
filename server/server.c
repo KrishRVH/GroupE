@@ -135,7 +135,7 @@ void sendGameMsg(mqd_t mqd, char *message, int size)
 
 char* recieveMsg(mqd_t mqd)
 {
-    char message[1024];
+    char *message = malloc(1024);
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 
