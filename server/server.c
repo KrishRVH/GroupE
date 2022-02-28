@@ -462,13 +462,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
 
                             char *char_player_score = player->score + '0';
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, (char)char_player_score);
+                            strcpy(buffer, char_player_score);
                             send(newSocket, buffer, 1024, 0);
 
                             // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
                             char *char_computer_score = computer->score + '0';
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, (char)char_computer_score);
+                            strcpy(buffer, char_computer_score);
                             send(newSocket, buffer, 1024, 0);
                             break;
                     }   
