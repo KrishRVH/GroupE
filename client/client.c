@@ -230,8 +230,6 @@ int main()
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
 
-                                printf("BUFFER: %s", buffer);
-
                                 if (strcmp(buffer, "correct") == 0) 
                                 {
                                     printf("Correct answer!\n");

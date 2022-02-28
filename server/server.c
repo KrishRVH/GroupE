@@ -426,11 +426,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             if (valid_dict == 1)
                             {
                                 char message[8] = "VALID";
+                                printf("VALID WORD IN DICT\n");
                                 sendGameMsg(dictionary_check, message, 8);
                             }
                             else
                             {
                                 char message[8] = "INVALID";
+                                printf("INVALID WORD IN DICT\n");
                                 sendGameMsg(dictionary_check, message, 8);
                             }
                         }
@@ -441,11 +443,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             if (valid_input == 1)
                             {
                                 char message[8] = "VALID";
+                                printf("VALID WORD IN INPUT\n");
                                 sendGameMsg(input_check, message, 8);
                             }
                             else
                             {
                                 char message[8] = "INVALID";
+                                printf("INVALID WORD IN INPUT\n");
                                 sendGameMsg(input_check, message, 8);
                             }
                         }
@@ -530,7 +534,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                 }
                 if (i==(n-1))
                 {
-                    printf("\n Word is not valid.");
+                    printf("\n BUFFALO: Word is not valid.");
                     penalise(1, newSocket, player);
                     if (incorrect == 3) { break; } else { continue; }
                 }
