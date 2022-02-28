@@ -39,7 +39,7 @@ char new[100];
 char newf[101] = ""; 
 char newadd[101] = "\n";
 char usedWords[100][100];
-int noUsedWords = 1;
+int noUsedWords = 0;
 char letters [6];
 char fname[14] = "";
 
