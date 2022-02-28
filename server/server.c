@@ -236,7 +236,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
     char new[100];
     char newf[101] = ""; //"new\n"  
     char newadd[101] = "\n";    // "\nnew\n"
-    int noUsedWords = 1;
+    int noUsedWords = 0;
     char usedWords[100][100];
 
 	// Sends number of resets that have been used by the client
@@ -274,7 +274,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
             strcpy(buffer, usedWords[i]);
             send(newSocket, buffer, 1024, 0);
         }
-        
+
         // Recieves first word from client
         //gets(prev);
         bzero(buffer, sizeof(buffer));
@@ -457,8 +457,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer)
                         }
                         strcpy(prev,new);
                         strcpy(new,"");
-                        printf("\n TYPE 0 EXIT, ANY OTHER NUMBER TO CONTINUE. ");
-                        scanf("%d",&run);
+                        //printf("\n TYPE 0 EXIT, ANY OTHER NUMBER TO CONTINUE. ");
+                        //scanf("%d",&run);
                         if (run==0)
                             exit(0);
                         else
