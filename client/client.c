@@ -165,7 +165,7 @@ int main()
                 strcpy(test, buffer);
                 printf("Turn: %s\n", test);
                 
-                if (strcmp(buffer, "turn"))
+                if (strcmp(buffer, "turn") == 0)
                 {
                     if (DEBUGGER) 
                         printf("Waiting for # of resets..");
