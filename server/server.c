@@ -138,7 +138,7 @@ int recievePlayerConnectMsg(mqd_t mqd)
 }
 
 // Send message for game instruction
-void sendGameMsg(mqd_t mqd, char *message, int size)
+void sendGameMsg(mqd_t mqd, char *message[8], int size)
 {
 	mq_send(mqd, message, size, 10);
 }
