@@ -141,7 +141,7 @@ int main()
         if (DEBUGGER) 
             printf("sending choice..\n");
 		send(clientSocket, buffer, strlen(buffer), 0);
-        printf("Input: %s", buffer);
+        printf("Input: %s\n", buffer);
 
         if(strcmp(buffer, "1"))
 		{

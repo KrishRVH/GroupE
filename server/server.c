@@ -636,6 +636,8 @@ int main()
 			close(sockfd); 
 			while(1)
 			{
+                if (DEBUGGER) 
+                    printf("getting choice..\n");
 				recv(newSocket, buffer, 1024, 0);
 				printf("%s\n", buffer);
                 if(strcmp(buffer, "1"))
