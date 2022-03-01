@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <stdbool.h> 
 
 // Socket/network includes
 #include <netdb.h>

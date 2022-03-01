@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h> 
 #include <sys/wait.h>
 
 // Socket/network includes
