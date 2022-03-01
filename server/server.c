@@ -554,7 +554,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         bzero(buffer, sizeof(buffer));
                         strcpy(buffer, &char_computer_score);
                         send(newSocket, buffer, 1024, 0);
-                        break;
+                        continue;
                     }   
                     else
                     {
