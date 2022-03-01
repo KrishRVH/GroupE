@@ -27,6 +27,8 @@
 #define PORT 8000
 #define SA struct sockaddr
 
+DEBUGGER = true;
+
 // Mqueue globals
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
 char* p_buffer;
@@ -184,6 +186,9 @@ char* recieveMsg(mqd_t mqd)
 
 // Penalize player for incorrect.
 void penalise(int pen, int newSocket, struct Player *player) {
+    if (DEBUGGER) 
+        printf("Sending penalty..\n");
+
     char buffer[1024];
     if (incorrect == 3) 
     {
@@ -319,11 +324,17 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 	
     int disallowed = 0;
 
+    if (DEBUGGER) 
+        printf("Sending resets..\n");
+
 	// Sends number of resets that have been used by the client
 	char num_resets = player->resets + '0';
 	bzero(buffer, sizeof(buffer));
 	strcpy(buffer, &num_resets);
 	send(newSocket, buffer, 1024, 0);
+
+    if (DEBUGGER) 
+        printf("Sending starting letters..\n");
 
     // Sends starting letters
     bzero(buffer, sizeof(buffer));
@@ -331,6 +342,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     send(newSocket, buffer, 1024, 0);
 
 	// ----------------------------------------------------------------------------------
+    if (DEBUGGER) 
+        printf("Sending starting characters..\n");
     // Sends starting character to client
     //printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
     bzero(buffer, sizeof(buffer));
@@ -341,6 +354,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     int first = 1;
     while (run!=0)
     {
+        if (DEBUGGER) 
+            printf("Sending # of used words..\n");
         // Sends number of used words and used words to client
         char num_used_words = noUsedWords + '0';
         bzero(buffer, sizeof(buffer));
@@ -349,6 +364,9 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
         printf("%d", noUsedWords);
         if (noUsedWords != 0) {
+            if (DEBUGGER) 
+                printf("Sending used words..\n");
+
             for (int i = 0; i <= noUsedWords; i++)
             {
                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
@@ -360,6 +378,9 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
         // Recieves first word from client
         //gets(prev);
+        if (DEBUGGER) 
+            printf("Receiving word..\n");
+
         bzero(buffer, sizeof(buffer));
         recv(newSocket, buffer, 1024, 0);
         strcpy(prev, buffer);
@@ -508,15 +529,23 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         //scanf("%d",&run);
                         if (run==0)
                             exit(0);
+
+                        addPoints(1, player);
+                        if (DEBUGGER) 
+                            printf("Sending correct..\n");
                         bzero(buffer, sizeof(buffer));
                         strcpy(buffer, "correct");
                         send(newSocket, buffer, 1024, 0);
 
+                        if (DEBUGGER) 
+                            printf("Sending player score..\n");
                         char char_player_score = player->score + '0';
                         bzero(buffer, sizeof(buffer));
                         strcpy(buffer, &char_player_score);
                         send(newSocket, buffer, 1024, 0);
 
+                        if (DEBUGGER) 
+                            printf("Sending computer score..\n");
                         // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
                         char char_computer_score = computer->score + '0';
                         bzero(buffer, sizeof(buffer));
@@ -578,7 +607,7 @@ int main()
 	}
 	printf("CONSOLE: Binded to port %d\n", 4444);
     if(listen(sockfd, 10) == 0){
-		printf("[+]Listening....\n");
+		printf("[+]Listening..\n..\n\n");
 	} else {
 		printf("[-]Error in binding.\n");
 	}
@@ -632,7 +661,7 @@ int main()
 					bzero(lastname, sizeof(lastname));
 					bzero(country, sizeof(country));
 
-					// Game starts...
+					// Game starts..\n.
 					int game_start = 1;
 					if(game_start)
 					{

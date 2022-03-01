@@ -26,7 +26,7 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-
+DEBUGGER = true;
 void playersTurn(){
     //receive from server:
     //          set of random alphabets
@@ -155,7 +155,7 @@ int main()
             scanf("%s", &buffer[0]);
             send(clientSocket, buffer, strlen(buffer), 0);
 
-			// Game starts...
+			// Game starts..\n.
 
             int game_start = 1;
             while(game_start)
@@ -165,8 +165,10 @@ int main()
                 strcpy(test, buffer);
                 printf("Turn: %s\n", test);
                 
-                if (strcmp(buffer, "turn") == 0)
+                if (strcmp(buffer, "turn"))
                 {
+                    if (DEBUGGER) 
+                        printf("Waiting for # of resets..");
                     // Recieves number of resets that already exist
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
@@ -174,12 +176,17 @@ int main()
                     printf("Number of resets used: %d\n", resetCounter);
 
                     // Players turn, recieves letters, list of words, etc.
+                    if (DEBUGGER) 
+                        printf("Waiting for letters..");
                     char *letters;
                     bzero(buffer, sizeof(buffer));
                     recv(clientSocket, buffer, 1024, 0);
                     printf("Letters: %s\n", buffer);
                     //strcpy(letters, buffer);
 
+
+                    if (DEBUGGER) 
+                        printf("Waiting for starting characters..");
                     // Recieves starting character
                     char starting_char = '0';
                     bzero(buffer, sizeof(buffer));
@@ -208,6 +215,8 @@ int main()
                             printf("Number of used words: %i\n", noUsedWords);
                             
                             if (noUsedWords != 0) {
+                                if (DEBUGGER) 
+                                    printf("Waiting for # of used words..\n");
                                 for (int i = 0; i < noUsedWords; i++)
                                 {
                                     bzero(buffer, sizeof(buffer));
@@ -229,6 +238,9 @@ int main()
                                 scanf("%s", &buffer[0]);
                                 send(clientSocket, buffer, 1024, 0);
 
+                                if (DEBUGGER) 
+                                    printf("Waiting for response..\n");
+
                                 // Correct/incorrect word response from server
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
@@ -248,11 +260,15 @@ int main()
                                     printf("Incorrect answer!\n");
                                 }
                             }
+
+                            if (DEBUGGER) 
+                                printf("Waiting for player score..\n");
                             // Current player score
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, 1024, 0);
                             printf("Current score: %s\n", buffer);
-
+                            if (DEBUGGER) 
+                                printf("Waiting for opponent score..\n");
                             // Opponent score
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, 1024, 0);
