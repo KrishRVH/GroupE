@@ -26,12 +26,12 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-DEBUGGER = true;
+bool DEBUGGER = true;
 void playersTurn(){
     //receive from server:
     //          set of random alphabets
     //          player's current score
-    //          opponents' current score
+    //          opponents' currents score
     //          words that have been used in the game so far
     //          starting character of the word that the player needs to form the word with
     

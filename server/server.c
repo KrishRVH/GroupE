@@ -27,7 +27,7 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-DEBUGGER = true;
+bool DEBUGGER = true;
 
 // Mqueue globals
 struct mq_attr attr; // Only used for buffer size/declaration in mqueue
