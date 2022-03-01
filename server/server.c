@@ -462,7 +462,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
                         if (strcmp(recieveMsg(input_check), "INVALID"))
                         {
-                            addPoints(5, player);
+                            addPoints(5, player); // is it supposed to add?
                             if (incorrect == 3) { break; } else { continue; }
                         }
 
@@ -532,12 +532,12 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         if (incorrect == 3) { break; } else { continue; }
                     }
                 }
-                if (i==(n-1))
+                /*if (i==(n-1))
                 {
                     printf("\n BUFFALO: Word is not valid.");
                     penalise(1, newSocket, player);
                     if (incorrect == 3) { break; } else { continue; }
-                }
+                }*/ // Temporarily seeing what happens when i remove this.
             }
             else
             {
