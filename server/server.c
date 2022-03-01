@@ -640,7 +640,7 @@ int main()
                     printf("getting choice..\n");
 				recv(newSocket, buffer, 1024, 0);
 				printf("%s\n", buffer);
-                if(strcmp(buffer, "1"))
+                if(true) //strcmp(buffer, "1")) just gonna default to singleplayer for now...
 				{
                     if (DEBUGGER)
                         printf("SINGAPLAYA");
@@ -688,7 +688,7 @@ int main()
 
 					}
 				}
-                else if(strcmp(buffer, "2"))
+                /*else if(strcmp(buffer, "2"))
 				{
 					// Multiplayer game
                     if (DEBUGGER)
@@ -735,7 +735,7 @@ int main()
 				{
 					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 					break;
-				}
+				}*/ // this is broke
 				else
 				{
 					//printf("Client: %s\n", buffer);
