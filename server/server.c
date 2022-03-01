@@ -477,16 +477,18 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             }
                         }
                         
-                        if (strcmp(recieveMsg(dictionary_check), "INVALID"))
+                        /*if (strcmp(recieveMsg(dictionary_check), "INVALID"))
                         {
-                            printf("INVALID");
+                            printf("INVALID || ");
                             penalise(1, newSocket, player);
                             if (incorrect == 3) { break; } else { continue; }
-                        }
+                        }*/ // this runs no matter what and i dont know why lol is dict chck broke??
 
+
+                        // IDK if this is supposed to do this.
                         if (strcmp(recieveMsg(input_check), "INVALID"))
                         {
-                            printf("INVALID");
+                            printf("INVALID????");
                             addPoints(5, player); // is it supposed to add?
                             if (incorrect == 3) { break; } else { continue; }
                         }

@@ -28,7 +28,7 @@
 #define SA struct sockaddr
 
 bool DEBUGGER = true;
-void playersTurn(){
+void playersTurn() {
     //receive from server:
     //          set of random alphabets
     //          player's current score
