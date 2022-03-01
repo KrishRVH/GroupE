@@ -638,6 +638,8 @@ int main()
 				printf("%s\n", buffer);
                 if(strcmp(buffer, "1"))
 				{
+                    if (DEBUGGER)
+                        printf("SINGAPLAYA");
 					// Single player game
 
                     // Receiving player information
@@ -682,7 +684,7 @@ int main()
 
 					}
 				}
-                if(strcmp(buffer, "2"))
+                else if(strcmp(buffer, "2"))
 				{
 					// Multiplayer game
 
@@ -724,7 +726,7 @@ int main()
 
 				}
                 // Clean client exit
-				if(strcmp(buffer, "3") == 0)
+				else sif(strcmp(buffer, "3") == 0)
 				{
 					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 					break;
