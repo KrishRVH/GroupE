@@ -347,13 +347,15 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
         strcpy(buffer, &num_used_words);
         send(newSocket, buffer, 1024, 0);
 
-        /*for (int i = 0; i <= noUsedWords; i++)
+        printf("%d", noUsedWords);
+
+        for (int i = 0; i <= noUsedWords; i++)
         {
             printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, usedWords[i]);
             send(newSocket, buffer, 1024, 0);
-        }*/ // more testing
+        }
 
         // Recieves first word from client
         //gets(prev);

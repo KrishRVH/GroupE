@@ -206,6 +206,7 @@ int main()
                             sscanf(buffer, "%d", &noUsedWords);
                             
                             printf("Number of used words: %i\n", noUsedWords);
+                            printf("%d", noUsedWords);
                             for (int i = 0; i < noUsedWords; i++)
                             {
                                 bzero(buffer, sizeof(buffer));
