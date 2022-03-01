@@ -206,13 +206,15 @@ int main()
                             sscanf(buffer, "%d", &noUsedWords);
                             
                             printf("Number of used words: %i\n", noUsedWords);
-                            printf("%d", noUsedWords);
-                            for (int i = 0; i < noUsedWords; i++)
-                            {
-                                bzero(buffer, sizeof(buffer));
-                                recv(clientSocket, buffer, 1024, 0);
-                                strcpy(usedWords[i], buffer);
-                                printf("%s ", usedWords[i]);
+                            
+                            if (noUsedWords != 0) {
+                                for (int i = 0; i < noUsedWords; i++)
+                                {
+                                    bzero(buffer, sizeof(buffer));
+                                    recv(clientSocket, buffer, 1024, 0);
+                                    strcpy(usedWords[i], buffer);
+                                    printf("%s ", usedWords[i]);
+                                }
                             }
 
                             while (1) {

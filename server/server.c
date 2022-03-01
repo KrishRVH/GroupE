@@ -348,13 +348,14 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
         send(newSocket, buffer, 1024, 0);
 
         printf("%d", noUsedWords);
-
-        for (int i = 0; i <= noUsedWords; i++)
-        {
-            printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
-            bzero(buffer, sizeof(buffer));
-            strcpy(buffer, usedWords[i]);
-            send(newSocket, buffer, 1024, 0);
+        if (noUsedWords != 0) {
+            for (int i = 0; i <= noUsedWords; i++)
+            {
+                printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+                bzero(buffer, sizeof(buffer));
+                strcpy(buffer, usedWords[i]);
+                send(newSocket, buffer, 1024, 0);
+            }
         }
 
         // Recieves first word from client
@@ -429,13 +430,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             {
                                 char message[8] = "VALID";
                                 printf("\nVALID WORD IN DICT\n");
-                                sendGameMsg(dictionary_check, message, 8);
+                                sendGameMsg(dictionary_check, &message, 8);
                             }
                             else
                             {
                                 char message[8] = "INVALID";
                                 printf("\nINVALID WORD IN DICT\n");
-                                sendGameMsg(dictionary_check, message, 8);
+                                sendGameMsg(dictionary_check, &message, 8);
                             }
                         }
                         else
@@ -465,6 +466,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 
                         if (strcmp(recieveMsg(input_check), "INVALID"))
                         {
+                            printf("INVALID");
                             addPoints(5, player); // is it supposed to add?
                             if (incorrect == 3) { break; } else { continue; }
                         }
