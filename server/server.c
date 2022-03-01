@@ -138,7 +138,7 @@ int recievePlayerConnectMsg(mqd_t mqd)
 }
 
 // Send message for game instruction
-void sendGameMsg(mqd_t mqd, char *message[8], int size)
+void sendGameMsg(mqd_t mqd, char *message, int size)
 {
 	mq_send(mqd, message, size, 10);
 }
@@ -428,15 +428,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             int valid_dict = dictionaryCheck(nnewf, lowernew, newSocket);
                             if (valid_dict == 1)
                             {
-                                char message[8] = "VALID";
                                 printf("\nVALID WORD IN DICT\n");
-                                sendGameMsg(dictionary_check, &message, 8);
+                                sendGameMsg(dictionary_check, "VALID", 8);
                             }
                             else
                             {
-                                char message[8] = "INVALID";
                                 printf("\nINVALID WORD IN DICT\n");
-                                sendGameMsg(dictionary_check, &message, 8);
+                                sendGameMsg(dictionary_check, "INVALID", 8);
                             }
                         }
                         else
