@@ -143,7 +143,7 @@ int main()
 		send(clientSocket, buffer, strlen(buffer), 0);
         printf("Input: %s", buffer);
 
-        if(strcmp(buffer, "1") == 0)
+        if(strcmp(buffer, "1"))
 		{
             printf("\nSingle Player Mode\n");
             printf("Enter your first name: ");
@@ -294,7 +294,7 @@ int main()
 
         }
 
-        if(strcmp(buffer, "2") == 0)
+        if(strcmp(buffer, "2"))
 		{
 			//multiplayer
 			//send connection to server
@@ -306,7 +306,7 @@ int main()
 			//work check METHOD returns a correct or not correct response
 		}
 
-		if(strcmp(buffer, "3") == 0)
+		if(strcmp(buffer, "3"))
 		{
 			close(clientSocket);
 			printf("Exiting game. Closing application.\n");

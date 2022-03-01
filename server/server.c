@@ -631,7 +631,7 @@ int main()
 
 		if((childpid = fork()) == 0)
         {
-			close(sockfd);
+			close(sockfd); 
 			while(1)
 			{
 				recv(newSocket, buffer, 1024, 0);
