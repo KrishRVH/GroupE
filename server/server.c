@@ -691,7 +691,8 @@ int main()
                 else if(strcmp(buffer, "2"))
 				{
 					// Multiplayer game
-
+                    if (DEBUGGER)
+                        printf("multiplayer\n");
 					// POSIX queues
 					mqd_t waiting_players = openMsgQueue("/Waiting_players");
 
