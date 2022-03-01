@@ -138,6 +138,8 @@ int main()
         printf("> ");
 
 		scanf("%s", &buffer[0]);
+        if (DEBUGGER) 
+            printf("sending choice..\n");
 		send(clientSocket, buffer, strlen(buffer), 0);
         printf("Input: %s", buffer);
 
@@ -146,14 +148,20 @@ int main()
             printf("\nSingle Player Mode\n");
             printf("Enter your first name: ");
             scanf("%s", &buffer[0]);
+            if (DEBUGGER) 
+                printf("sending first name..\n");
             send(clientSocket, buffer, strlen(buffer), 0);
 
             printf("\nEnter your last name: ");
             scanf("%s", &buffer[0]);
+            if (DEBUGGER) 
+                printf("sending last name..\n");
             send(clientSocket, buffer, strlen(buffer), 0);
             
             printf("\nEnter your country: ");
             scanf("%s", &buffer[0]);
+            if (DEBUGGER) 
+                printf("sending country..\n");
             send(clientSocket, buffer, strlen(buffer), 0);
 
 			// Game starts..\n.
@@ -162,12 +170,12 @@ int main()
             while(game_start)
             {
                 char test[50];
-                recv(clientSocket, buffer, 1024, 0);
-                strcpy(test, buffer);
-                printf("Turn: %s\n", test);
+                //recv(clientSocket, buffer, 1024, 0);
+               //strcpy(test, buffer);
+                //printf("Turn: %s\n", test);
                 
-                if (strcmp(buffer, "turn") == 0)
-                {
+                //if (strcmp(buffer, "turn") == 0)
+               // {
                     if (DEBUGGER) 
                         printf("Waiting for # of resets..");
                     // Recieves number of resets that already exist
@@ -277,11 +285,11 @@ int main()
                             
                         }
                     }
-                }
-                else
-                {
+                //}
+                //else
+               // {
                     // Idk
-                }
+               // }
             }
 
         }

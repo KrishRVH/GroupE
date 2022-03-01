@@ -641,14 +641,20 @@ int main()
 					// Single player game
 
                     // Receiving player information
+                    if (DEBUGGER) 
+                        printf("getting first name..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
                     bzero(buffer, sizeof(buffer));
-
+                    
+                    if (DEBUGGER) 
+                        printf("getting last name..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(lastname, buffer);
                     bzero(buffer, sizeof(buffer));
 
+                    if (DEBUGGER) 
+                        printf("getting country..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(country, buffer);
                     bzero(buffer, sizeof(buffer));
@@ -669,8 +675,8 @@ int main()
 					if(game_start)
 					{
 						// turn input
-						scanf("%s", &buffer[0]);
-						send(newSocket, buffer, 1024, 0);
+						/*scanf("%s", &buffer[0]);
+						send(newSocket, buffer, 1024, 0);*/ // very glitchy
 
                         playerTurn(newSocket, &added_player, &added_computer, dictionary_check, input_check);
 
