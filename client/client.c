@@ -236,6 +236,9 @@ int main()
                             }
 
                             while (1) {
+                                if (DEBUGGER) 
+                                    printf("NEW ITERATION..\n");
+                                
                                 // Player can submit a guess in under 4 minutes
                                 // Start time for 4 minutes
                                 //signal(SIGALRM, mySignal);
