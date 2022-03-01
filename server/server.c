@@ -223,7 +223,7 @@ int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
     char lined[bufferLengthd];
     int linedlen = 0;
     int lowernewlen = 0;
-    printf("\nChecking if %s is a valid dictionary word",lowernew);
+    printf("\nChecking if %s is a valid dictionary word", lowernew);
     filePointerd = fopen("dictionary.txt", "r");
     for (int i = 0; lowernew[i]!='\0'; i++)
     {
@@ -347,13 +347,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
         strcpy(buffer, &num_used_words);
         send(newSocket, buffer, 1024, 0);
 
-        for (int i = 0; i <= noUsedWords; i++)
+        /*for (int i = 0; i <= noUsedWords; i++)
         {
             printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, usedWords[i]);
             send(newSocket, buffer, 1024, 0);
-        }
+        }*/ // more testing
 
         // Recieves first word from client
         //gets(prev);
@@ -426,13 +426,13 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                             if (valid_dict == 1)
                             {
                                 char message[8] = "VALID";
-                                printf("VALID WORD IN DICT\n");
+                                printf("\nVALID WORD IN DICT\n");
                                 sendGameMsg(dictionary_check, message, 8);
                             }
                             else
                             {
                                 char message[8] = "INVALID";
-                                printf("INVALID WORD IN DICT\n");
+                                printf("\nINVALID WORD IN DICT\n");
                                 sendGameMsg(dictionary_check, message, 8);
                             }
                         }
@@ -456,6 +456,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         
                         if (strcmp(recieveMsg(dictionary_check), "INVALID"))
                         {
+                            printf("INVALID");
                             penalise(1, newSocket, player);
                             if (incorrect == 3) { break; } else { continue; }
                         }
@@ -505,22 +506,21 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         //scanf("%d",&run);
                         if (run==0)
                             exit(0);
-                        else
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "correct");
-                            send(newSocket, buffer, 1024, 0);
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, "correct");
+                        send(newSocket, buffer, 1024, 0);
 
-                            char char_player_score = player->score + '0';
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, &char_player_score);
-                            send(newSocket, buffer, 1024, 0);
+                        char char_player_score = player->score + '0';
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, &char_player_score);
+                        send(newSocket, buffer, 1024, 0);
 
-                            // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
-                            char char_computer_score = computer->score + '0';
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, &char_computer_score);
-                            send(newSocket, buffer, 1024, 0);
-                            break;
+                        // if multiplayer, write a for loop that sends multiple scores depending on amt of players.
+                        char char_computer_score = computer->score + '0';
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, &char_computer_score);
+                        send(newSocket, buffer, 1024, 0);
+                        break;
                     }   
                     else
                     {
