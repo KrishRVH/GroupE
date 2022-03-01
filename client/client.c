@@ -230,12 +230,12 @@ int main()
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
 
-                                if (strcmp(buffer, "correct") == 0) 
+                                if (strcmp(buffer, "correct")) 
                                 {
                                     printf("Correct answer!\n");
                                     break; // OPA!
                                 } 
-                                if (strcmp(buffer, "final") == 0)
+                                if (strcmp(buffer, "final"))
                                 {
                                     printf("Final incorrect answer.\n");
                                     break;
