@@ -143,7 +143,7 @@ int main()
 		send(clientSocket, buffer, strlen(buffer), 0);
         printf("Input: %s\n", buffer);
 
-        if(strcmp(buffer, "1"))
+        if(true) //strcmp(buffer, "1")) the comparing is broke so
 		{
             printf("\nSingle Player Mode\n");
             printf("Enter your first name: ");
