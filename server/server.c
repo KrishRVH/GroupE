@@ -490,7 +490,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         {
                             printf("INVALID????");
                             addPoints(5, player); // is it supposed to add?
-                            if (incorrect == 3) { break; } else { continue; }
+                            //if (incorrect == 3) { break; } else { continue; }
                         }
 
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
