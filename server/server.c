@@ -351,33 +351,36 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     strcpy(buffer, &letters[rng]);
     send(newSocket, buffer, 1024, 0);
     
+
+    if (DEBUGGER) 
+        printf("NEW ITERATION..\n");
+    if (DEBUGGER) 
+        printf("Sending # of used words..\n");
+    // Sends number of used words and used words to client
+    char num_used_words = noUsedWords + '0';
+    bzero(buffer, sizeof(buffer));
+    strcpy(buffer, &num_used_words);
+    send(newSocket, buffer, 1024, 0);
+
+    printf("%d", noUsedWords);
+    if (noUsedWords != 0) {
+        if (DEBUGGER) 
+            printf("Sending used words..\n");
+
+        for (int i = 0; i <= noUsedWords; i++)
+        {
+            printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
+            bzero(buffer, sizeof(buffer));
+            strcpy(buffer, usedWords[i]);
+            send(newSocket, buffer, 1024, 0);
+        }
+    }
+
+
 	int run = 1;
     int first = 1;
     while (run!=0)
     {
-        if (DEBUGGER) 
-            printf("NEW ITERATION..\n");
-        if (DEBUGGER) 
-            printf("Sending # of used words..\n");
-        // Sends number of used words and used words to client
-        char num_used_words = noUsedWords + '0';
-        bzero(buffer, sizeof(buffer));
-        strcpy(buffer, &num_used_words);
-        send(newSocket, buffer, 1024, 0);
-
-        printf("%d", noUsedWords);
-        if (noUsedWords != 0) {
-            if (DEBUGGER) 
-                printf("Sending used words..\n");
-
-            for (int i = 0; i <= noUsedWords; i++)
-            {
-                printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
-                bzero(buffer, sizeof(buffer));
-                strcpy(buffer, usedWords[i]);
-                send(newSocket, buffer, 1024, 0);
-            }
-        }
 
         // Recieves first word from client
         //gets(prev);
