@@ -137,7 +137,7 @@ int main()
         printf("3) Exit\n");
         printf("> ");
         
-		scanf("%s", &buffer);
+		scanf("%s", &buffer[0]);
         if (DEBUGGER) 
             printf("sending choice..\n");
 		send(clientSocket, buffer, strlen(buffer), 0);
