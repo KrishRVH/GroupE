@@ -297,7 +297,7 @@ int main()
 
         }
 
-        if(strcmp(buffer, "2"))
+        else if(strcmp(buffer, "2"))
 		{
 			//multiplayer
 			//send connection to server
@@ -309,7 +309,7 @@ int main()
 			//work check METHOD returns a correct or not correct response
 		}
 
-		if(strcmp(buffer, "3"))
+		else if(strcmp(buffer, "3"))
 		{
 			close(clientSocket);
 			printf("Exiting game. Closing application.\n");
