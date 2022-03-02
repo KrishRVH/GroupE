@@ -176,13 +176,6 @@ int main()
                 
                 //if (strcmp(buffer, "turn") == 0)
                // {
-                    if (DEBUGGER) 
-                        printf("Waiting for # of resets..");
-                    // Recieves number of resets that already exist
-                    bzero(buffer, sizeof(buffer));
-                    recv(clientSocket, buffer, 1024, 0);
-                    int resetCounter = buffer[0] - '0';
-                    printf("Number of resets used: %d\n", resetCounter);
 
                     // Players turn, recieves letters, list of words, etc.
                     if (DEBUGGER) 
@@ -217,28 +210,36 @@ int main()
                             int noUsedWords = 0;
                             char usedWords[100][100];
 
-                            bzero(buffer, sizeof(buffer));
-                            recv(clientSocket, buffer, 1024, 0);
-                            sscanf(buffer, "%d", &noUsedWords);
-                            
-                            printf("Number of used words: %i\n", noUsedWords);
-                            
-                            if (noUsedWords != 0) {
-                                if (DEBUGGER) 
-                                    printf("Waiting for # of used words..\n");
-                                for (int i = 0; i < noUsedWords; i++)
-                                {
-                                    bzero(buffer, sizeof(buffer));
-                                    recv(clientSocket, buffer, 1024, 0);
-                                    strcpy(usedWords[i], buffer);
-                                    printf("%s ", usedWords[i]);
-                                }
-                            }
-
                             while (1) {
                                 if (DEBUGGER) 
                                     printf("NEW ITERATION..\n");
                             
+                                if (DEBUGGER) 
+                                    printf("Waiting for # of resets..");
+                                // Recieves number of resets that already exist
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                int resetCounter = buffer[0] - '0';
+                                printf("Number of resets used: %d\n", resetCounter);
+
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                sscanf(buffer, "%d", &noUsedWords);
+                                
+                                printf("Number of used words: %i\n", noUsedWords);
+                                
+                                if (noUsedWords != 0) {
+                                    if (DEBUGGER) 
+                                        printf("Waiting for # of used words..\n");
+                                    for (int i = 0; i < noUsedWords; i++)
+                                    {
+                                        bzero(buffer, sizeof(buffer));
+                                        recv(clientSocket, buffer, 1024, 0);
+                                        strcpy(usedWords[i], buffer);
+                                        printf("%s ", usedWords[i]);
+                                    }
+                                }
+
                                 if (noUsedWords != 0) {
                                     if (DEBUGGER) 
                                         printf("Waiting for # of used words..\n");
