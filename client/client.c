@@ -218,7 +218,9 @@ int main()
                                 if (DEBUGGER) 
                                     printf("Waiting for # of resets..");
                                 // Recieves number of resets that already exist
-                                recv(clientSocket, &resetCounter, sizeof(resetCounter), 0);
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                resetCounter = buffer[0] - '0';
                                 printf("Number of resets used: %d\n", resetCounter);
                                 
                                 recv(clientSocket, &noUsedWords, sizeof(noUsedWords), 0);
