@@ -154,7 +154,7 @@ int main()
 
             printf("\nEnter your last name: ");
             scanf("%s", &buffer[0]);
-            if (DEBUGGER) 
+            if (DEBUGGER)
                 printf("sending last name..\n");
             send(clientSocket, buffer, strlen(buffer), 0);
             

@@ -305,7 +305,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
 	// Correct/incorrect
 	char answer[] = "incorrect";
 
-    srand(time(NULL)); 
+    srand(time(NULL));
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
     int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
     char rng2char[7];
@@ -510,7 +510,6 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         if (dup == 0) {    // not a duplicate: add it to usedWords
                             strcpy(usedWords[noUsedWords+1], new);
                             noUsedWords += 1;
-                            printf("FUCK\n");
                         }
                         if(dup) 
                         {
