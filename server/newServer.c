@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <stdbool.h> 
 #include <sys/wait.h>
+#include <time.h>
 
 // Socket/network includes
 #include <netdb.h>
@@ -120,11 +121,9 @@ void playerTurn(int newSocket)
     int run = 1;
     int first = 1;
     printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
-    gets(prev);
     if (prev[0]!=letters[rng])
     {
         printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
-        //penalise
         exit(0);
     }
     
