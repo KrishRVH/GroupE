@@ -24,7 +24,7 @@
 #include <errno.h>
 
 struct Player added_player;
-struct Computer added_computer
+struct Computer added_computer;
 char prev[100];
 char new[100];
 char newf[101] = ""; 
