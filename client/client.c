@@ -240,17 +240,6 @@ int main()
                                     }
                                 }
 
-                                if (noUsedWords != 0) {
-                                    if (DEBUGGER) 
-                                        printf("Waiting for # of used words..\n");
-                                    for (int i = 0; i < noUsedWords; i++)
-                                    {
-                                        bzero(buffer, sizeof(buffer));
-                                        recv(clientSocket, buffer, 1024, 0);
-                                        strcpy(usedWords[i], buffer);
-                                        printf("%s ", usedWords[i]);
-                                    }
-                                }
                                 // Player can submit a guess in under 4 minutes
                                 // Start time for 4 minutes
                                 //signal(SIGALRM, mySignal);
