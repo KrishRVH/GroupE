@@ -351,9 +351,6 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     strcpy(buffer, &letters[rng]);
     send(newSocket, buffer, 1024, 0);
     
-
-    if (DEBUGGER) 
-        printf("NEW ITERATION..\n");
     if (DEBUGGER) 
         printf("Sending # of used words..\n");
     // Sends number of used words and used words to client
@@ -381,7 +378,8 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
     int first = 1;
     while (run!=0)
     {
-
+        if (DEBUGGER) 
+            printf("NEW ITERATION..\n");
         // Recieves first word from client
         //gets(prev);
         if (DEBUGGER) 
