@@ -32,9 +32,6 @@ int createClient()
 	struct sockaddr_in serverAddr;
 	char buffer[1024];
 
-    void(*mySignal)(int);
-    mySignal = myAlarm;
-
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if(clientSocket < 0)
 	{
