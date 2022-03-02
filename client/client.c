@@ -207,10 +207,11 @@ int main()
                         else
                         {
                             // Recieves number of list of words, then loops recv for words storing into array
-                            int noUsedWords = 0;
+                            //int noUsedWords = 0;
                             char usedWords[100][100];
 
                             while (1) {
+                                int noUsedWords = 0;
                                 if (DEBUGGER) 
                                     printf("NEW ITERATION..\n");
                             
@@ -223,8 +224,8 @@ int main()
                                 printf("Number of resets used: %d\n", resetCounter);
 
                                 bzero(buffer, sizeof(buffer));
-                                recv(clientSocket, buffer, 1024, 0);
-                                sscanf(buffer, "%d", &noUsedWords);
+                                recv(clientSocket, &noUsedWords, sizeof(noUsedWords), 0);
+                                //sscanf(buffer, "%d", &noUsedWords);
                                 
                                 printf("Number of used words: %i\n", noUsedWords);
                                 

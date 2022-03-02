@@ -42,7 +42,7 @@ char new[100];
 char newf[101] = ""; 
 char newadd[101] = "\n";
 char usedWords[100][100];
-char noUsedWords = 0;
+int noUsedWords = 0;
 char letters [6];
 char fname[14] = "";
 
@@ -362,14 +362,12 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
         send(newSocket, buffer, 1024, 0);
 
         if (DEBUGGER)
-            uint32_t un = htonl(noUsedWords);
             printf("Sending # of used words..\n");
+            int converted = htonl(noUsedWords);
             // Sends number of used words and used words to client
-            printf("NUM USED WORDS: %u", un);
-            char test = (char)noUsedWords;
+            printf("NUM USED WORDS: %d", converted);
             bzero(buffer, sizeof(buffer));
-            strcpy(buffer, &test);
-            send(newSocket, &un, 1024, 0);
+            send(newSocket, &converted, sizeof(converted), 0);
 
         printf("%d", noUsedWords);
         if (noUsedWords != 0) {
