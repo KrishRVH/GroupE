@@ -366,7 +366,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
             // Sends number of used words and used words to client
             printf("NUM USED WORDS: %c", (char)noUsedWords);
             bzero(buffer, sizeof(buffer));
-            strcpy(buffer, &(char)noUsedWords);
+            strcpy(buffer, (char)noUsedWords);
             send(newSocket, buffer, 1024, 0);
 
         printf("%d", noUsedWords);
