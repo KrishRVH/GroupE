@@ -58,7 +58,33 @@ struct Computer
 	int resets;
 } Computer;
 
-void playerTurn(newSocket)
+struct Player newPlayer(char *firstname, char *lastname, char *country)
+{
+	struct Player new_player;
+	
+	new_player.score = 0;
+	strcpy(new_player.firstname, firstname);
+	strcpy(new_player.lastname, lastname);
+	strcpy(new_player.country, country);
+	new_player.num_words = 0;
+	new_player.num_words_added = 0;
+    new_player.resets = 0;
+
+	return new_player;
+}
+
+struct Computer newComputer()
+{
+	struct Computer new_computer;
+	new_computer.score = 0;
+	new_computer.num_words = 0;
+	new_computer.num_words_added = 0;
+	new_computer.resets = 0;
+
+	return new_computer;
+}
+
+void playerTurn(int newSocket)
 {
     srand(time(NULL)); 
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
