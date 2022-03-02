@@ -510,6 +510,7 @@ void playerTurn(int newSocket, struct Player *player, struct Computer *computer,
                         if (dup == 0) {    // not a duplicate: add it to usedWords
                             strcpy(usedWords[noUsedWords+1], new);
                             noUsedWords += 1;
+                            printf("FUCK\n");
                         }
                         if(dup) 
                         {
