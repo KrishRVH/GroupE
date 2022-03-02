@@ -198,115 +198,110 @@ int main()
 
                     // Starts player turn
                     //int resetCounter = 0;
-                    while(1)
-                    {
+                    // Recieves number of list of words, then loops recv for words storing into array
+                    int noUsedWords = 0;
+                    char usedWords[100][100];
+
+                    while (1) {
+                        if (DEBUGGER) 
+                            printf("NEW ITERATION..\n");
+                    
+                        if (DEBUGGER) 
+                            printf("Waiting for # of resets..");
+                        // Recieves number of resets that already exist
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+                        int resetCounter = buffer[0] - '0';
+                        printf("Number of resets used: %d\n", resetCounter);
+
                         if (resetCounter == 3)
                         {
                             break;
                         }
-                        else
-                        {
-                            // Recieves number of list of words, then loops recv for words storing into array
-                            int noUsedWords = 0;
-                            char usedWords[100][100];
 
-                            while (1) {
-                                if (DEBUGGER) 
-                                    printf("NEW ITERATION..\n");
-                            
-                                if (DEBUGGER) 
-                                    printf("Waiting for # of resets..");
-                                // Recieves number of resets that already exist
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+                        sscanf(buffer, "%d", &noUsedWords);
+                        
+                        printf("Number of used words: %i\n", noUsedWords);
+                        
+                        if (noUsedWords != 0) {
+                            if (DEBUGGER) 
+                                printf("Waiting for # of used words..\n");
+                            for (int i = 0; i < noUsedWords; i++)
+                            {
                                 bzero(buffer, sizeof(buffer));
                                 recv(clientSocket, buffer, 1024, 0);
-                                int resetCounter = buffer[0] - '0';
-                                printf("Number of resets used: %d\n", resetCounter);
-
-                                bzero(buffer, sizeof(buffer));
-                                recv(clientSocket, buffer, 1024, 0);
-                                sscanf(buffer, "%d", &noUsedWords);
-                                
-                                printf("Number of used words: %i\n", noUsedWords);
-                                
-                                if (noUsedWords != 0) {
-                                    if (DEBUGGER) 
-                                        printf("Waiting for # of used words..\n");
-                                    for (int i = 0; i < noUsedWords; i++)
-                                    {
-                                        bzero(buffer, sizeof(buffer));
-                                        recv(clientSocket, buffer, 1024, 0);
-                                        strcpy(usedWords[i], buffer);
-                                        printf("%s ", usedWords[i]);
-                                    }
-                                }
-
-                                if (noUsedWords != 0) {
-                                    if (DEBUGGER) 
-                                        printf("Waiting for # of used words..\n");
-                                    for (int i = 0; i < noUsedWords; i++)
-                                    {
-                                        bzero(buffer, sizeof(buffer));
-                                        recv(clientSocket, buffer, 1024, 0);
-                                        strcpy(usedWords[i], buffer);
-                                        printf("%s ", usedWords[i]);
-                                    }
-                                }
-                                // Player can submit a guess in under 4 minutes
-                                // Start time for 4 minutes
-                                //signal(SIGALRM, mySignal);
-                                //alarm(240);
-
-                                // Player word submission
-                                printf("\nEnter your word: ");
-                                bzero(buffer, sizeof(buffer));
-                                scanf("%s", &buffer[0]);
-                                send(clientSocket, buffer, 1024, 0);
-
-                                if (DEBUGGER) 
-                                    printf("Waiting for response..\n");
-
-                                // Correct/incorrect word response from server
-                                bzero(buffer, sizeof(buffer));
-                                recv(clientSocket, buffer, 1024, 0);
-
-                                if (strcmp(buffer, "correct")) 
-                                {
-                                    printf("Correct answer!\n");
-                                    break; // OPA!
-                                } 
-                                if (strcmp(buffer, "final"))
-                                {
-                                    printf("Final incorrect answer.\n");
-                                    break;
-                                }
-                                else 
-                                {
-                                    printf("Incorrect answer!\n");
-                                }
+                                strcpy(usedWords[i], buffer);
+                                printf("%s ", usedWords[i]);
                             }
+                        }
 
+                        if (noUsedWords != 0) {
                             if (DEBUGGER) 
-                                printf("Waiting for player score..\n");
-                            // Current player score
-                            bzero(buffer, sizeof(buffer));
-                            recv(clientSocket, buffer, 1024, 0);
-                            printf("Current score: %s\n", buffer);
-                            if (DEBUGGER) 
-                                printf("Waiting for opponent score..\n");
-                            // Opponent score
-                            bzero(buffer, sizeof(buffer));
-                            recv(clientSocket, buffer, 1024, 0);
-                            printf("Opponents score: %s\n", buffer);
-                            
+                                printf("Waiting for # of used words..\n");
+                            for (int i = 0; i < noUsedWords; i++)
+                            {
+                                bzero(buffer, sizeof(buffer));
+                                recv(clientSocket, buffer, 1024, 0);
+                                strcpy(usedWords[i], buffer);
+                                printf("%s ", usedWords[i]);
+                            }
+                        }
+                        // Player can submit a guess in under 4 minutes
+                        // Start time for 4 minutes
+                        //signal(SIGALRM, mySignal);
+                        //alarm(240);
+
+                        // Player word submission
+                        printf("\nEnter your word: ");
+                        bzero(buffer, sizeof(buffer));
+                        scanf("%s", &buffer[0]);
+                        send(clientSocket, buffer, 1024, 0);
+
+                        if (DEBUGGER) 
+                            printf("Waiting for response..\n");
+
+                        // Correct/incorrect word response from server
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+
+                        if (strcmp(buffer, "correct")) 
+                        {
+                            printf("Correct answer!\n");
+                            break; // OPA!
+                        } 
+                        if (strcmp(buffer, "final"))
+                        {
+                            printf("Final incorrect answer.\n");
+                            break;
+                        }
+                        else 
+                        {
+                            printf("Incorrect answer!\n");
                         }
                     }
-                //}
-                //else
-               // {
-                    // Idk
-               // }
-            }
 
+                    if (DEBUGGER) 
+                        printf("Waiting for player score..\n");
+                    // Current player score
+                    bzero(buffer, sizeof(buffer));
+                    recv(clientSocket, buffer, 1024, 0);
+                    printf("Current score: %s\n", buffer);
+                    if (DEBUGGER) 
+                        printf("Waiting for opponent score..\n");
+                    // Opponent score
+                    bzero(buffer, sizeof(buffer));
+                    recv(clientSocket, buffer, 1024, 0);
+                    printf("Opponents score: %s\n", buffer);
+                    
+                }
+            }
+        //}
+        //else
+        // {
+            // Idk
+        // }
         }
 
         else if(strcmp(buffer, "2"))
