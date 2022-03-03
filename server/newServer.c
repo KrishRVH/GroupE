@@ -538,6 +538,7 @@ void playerTurn(int newSocket)
                 else
                 {
                     printf("EHDADAWDAWD\n");
+                    strcpy(prev, buffer);
                     strcpy(new,prev);
                     first = 0;
                     if (gameLogic(newSocket) == 0)
