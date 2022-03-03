@@ -407,7 +407,8 @@ int gameLogic(int newSocket)
                     if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
                     {
                         bzero(buffer, sizeof(buffer));
-                        strcpy(buffer, "INCORRECT DICT");
+                        strcpy(buffer, "INCORRECT");
+                        printf("INCORRECT DICT\n");
                         send(newSocket, buffer, 1024, 0);
                         return 0;
                     }
@@ -440,7 +441,8 @@ int gameLogic(int newSocket)
                         {
                             //penalise
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "INCORRECT DUPLICATE");
+                            strcpy(buffer, "INCORRECT");
+                            printf("INCORRECT DUPLICATE\n");
                             send(newSocket, buffer, 1024, 0);
                             return 0;
                         }
@@ -449,7 +451,8 @@ int gameLogic(int newSocket)
                 else
                 {
                     bzero(buffer, sizeof(buffer));
-                    strcpy(buffer, "INCORRECT NOT VALID");
+                    strcpy(buffer, "INCORRECT");
+                    printf("INCORRECT NOT VALID\n");
                     send(newSocket, buffer, 1024, 0);
                     return 0;
                 }
@@ -457,7 +460,8 @@ int gameLogic(int newSocket)
             if(i==(n-1))
             {
                 bzero(buffer, sizeof(buffer));
-                strcpy(buffer, "INCORRECT CHARS");
+                strcpy(buffer, "INCORRECT");
+                printf("INCORRECT CHARS");
                 send(newSocket, buffer, 1024, 0);
                 return 0;
             }
@@ -465,7 +469,8 @@ int gameLogic(int newSocket)
         else
         {
             bzero(buffer, sizeof(buffer));
-            strcpy(buffer, "INCORRECT DISALLOWED");
+            strcpy(buffer, "INCORRECT");
+            printf("INCORRECT DISALLOWED\n");
             send(newSocket, buffer, 1024, 0);
             return 0;
         }
@@ -524,7 +529,8 @@ void playerTurn(int newSocket)
                 {
                     first = 1;
                     bzero(buffer, sizeof(buffer));
-                    strcpy(buffer, "INCORRECT FIRST LETTER");
+                    strcpy(buffer, "INCORRECT");
+                    printf("INCORRECT FIRST LETTER\n");
                     send(newSocket, buffer, 1024, 0);
                     resets++;
                     continue;
