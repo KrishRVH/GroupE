@@ -119,7 +119,6 @@ int createClient()
                         {
                             printf("INCORRECT\n");
                             resets++;
-                            continue;
                         }
                         else
                         {
