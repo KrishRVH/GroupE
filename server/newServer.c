@@ -336,6 +336,140 @@ int inputCheck()
     fclose(filePointer);
 }
 
+int gameLogic(int newSocket)
+{
+    // Socket variables
+	char buffer[1024];
+
+    // Client word
+    bzero(buffer, sizeof(buffer));
+    recv(newSocket, buffer, 1024, 0);
+    printf("USER INPUT: %s\n", buffer);
+
+    strcpy(new, buffer);
+    strcpy(newf,"");
+    strcpy(newadd,"\n");
+    strcat(newf, new);
+    strcat(newf,"\n");
+    strcat(newadd, newf);
+    size_t n = sizeof(prev)/sizeof(char);
+    size_t nnew = sizeof(new)/sizeof(char);
+    size_t nnewf = sizeof(newf)/sizeof(char);
+    char lowernew[101];
+
+    int disallowed = 0;
+    for (int i=0; i<n;i++)
+    {
+        for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
+        {
+            for (int y = 0; y < 6 && new[x]!='\0'; y++)
+            {
+                //printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
+                if (new[x]!=letters[y])
+                {
+                    if (letters[y+1]=='\0')
+                        disallowed=1;
+                    else
+                        continue;
+                }
+                else
+                    break;
+            }
+        }
+        if (disallowed==0)
+        {
+            if (new[0]==prev[i])
+            {
+                printf("\nUsed correct characters!\n");
+                int j = i;
+                int k = 0;
+                while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
+                {
+                    //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
+                    j++;
+                    k++;
+                    //printf("The value of j is %d k is %d n is %d", j,k,n);
+                }
+                if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
+                {
+                    printf("\nWord is valid!\n");
+                    //check if word is a dictionary word
+                    printf("\nConverting %s to lower\n",new);
+                    for(int w = 0; w<nnewf; w++)
+                    {
+                        lowernew[w] = tolower(newf[w]);
+                    }
+
+                    // Dictionary
+                    // int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
+                    // FORKING
+                    if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
+                    {
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, "INCORRECT DICT");
+                        send(newSocket, buffer, 1024, 0);
+                        return 0;
+                    }
+                    else
+                    {
+                        // Used words check
+                        //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
+                        int dup = 0;      
+                        for (int j = 0; j < 100; j++) 
+                        {
+                            if(strcmp(new, usedWords[j]) == 0) 
+                            {
+                                dup = 1;   // got a duplicate
+                                break;    
+                            }
+                        }
+                        if (dup == 0) 
+                        {    // not a duplicate: add it to usedWords
+                            strcpy(usedWords[noUsedWords+1], new);
+                            noUsedWords += 1;
+
+                            // Send correct message
+                            bzero(buffer, sizeof(buffer));
+                            strcpy(buffer, "CORRECT");
+                            send(newSocket, buffer, 1024, 0);
+                            return 1;
+                        }
+                        if(dup) 
+                        {
+                            //penalise
+                            bzero(buffer, sizeof(buffer));
+                            strcpy(buffer, "INCORRECT DUPLICATE");
+                            send(newSocket, buffer, 1024, 0);
+                            return 0;
+                        }
+                    }
+                }
+                else
+                {
+                    bzero(buffer, sizeof(buffer));
+                    strcpy(buffer, "INCORRECT NOT VALID");
+                    send(newSocket, buffer, 1024, 0);
+                    return 0;
+                }
+            }
+            if(i==(n-1))
+            {
+                bzero(buffer, sizeof(buffer));
+                strcpy(buffer, "INCORRECT CHARS");
+                send(newSocket, buffer, 1024, 0);
+                return 0;
+            }
+        }
+        else
+        {
+            bzero(buffer, sizeof(buffer));
+            strcpy(buffer, "INCORRECT DISALLOWED");
+            send(newSocket, buffer, 1024, 0);
+            return 0;
+        }
+    }  
+}
+
 void playerTurn(int newSocket)
 {
     srand(time(NULL)); 
@@ -364,7 +498,6 @@ void playerTurn(int newSocket)
     strcpy(buffer, letters);
     send(newSocket, buffer, 1024, 0);
     
-    int disallowed = 0;
     int first = 1;
     int run = 1;
     int resets = 0;
@@ -396,137 +529,34 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
-                    strcpy(new, buffer);
-                    strcpy(newf,"");
-                    strcpy(newadd,"\n");
-                    strcat(newf, new);
-                    strcat(newf,"\n");
-                    strcat(newadd, newf);
-                    size_t n = sizeof(prev)/sizeof(char);
-                    size_t nnew = sizeof(new)/sizeof(char);
-                    size_t nnewf = sizeof(newf)/sizeof(char);
-                    char lowernew[101];
-
-                    for (int i=0; i<n;i++)
+                    first = 0;
+                    if (gameLogic(newSocket) == 0)
                     {
-                        for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
+                        resets++;
+                        continue;
+                    }
+                    else
+                    {
+                        if (inputCheck() == 0)
                         {
-                            for (int y = 0; y < 6 && new[x]!='\0'; y++)
-                            {
-                                //printf("\n Iteration %d y iteration %d we're looking at %c in new and %c in letters\n", x, y, new[x], letters[y]);
-                                if (new[x]!=letters[y])
-                                {
-                                    if (letters[y+1]=='\0')
-                                        disallowed=1;
-                                    else
-                                        continue;
-                                }
-                                else
-                                    break;
-                            }
-                        }
-                        if (disallowed==0)
-                        {
-                            if (new[0]==prev[i])
-                            {
-                                printf("\nUsed correct characters!\n");
-                                int j = i;
-                                int k = 0;
-                                while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
-                                {
-                                    //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
-                                    j++;
-                                    k++;
-                                    //printf("The value of j is %d k is %d n is %d", j,k,n);
-                                }
-                                if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
-                                {
-                                    printf("\nWord is valid!\n");
-                                    //check if word is a dictionary word
-                                    printf("\nConverting %s to lower\n",new);
-                                    for(int w = 0; w<nnewf; w++)
-                                    {
-                                        lowernew[w] = tolower(newf[w]);
-                                    }
-
-                                    // Dictionary
-                                    // int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
-                                    // FORKING
-                                    if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
-                                    {
-                                        bzero(buffer, sizeof(buffer));
-                                        strcpy(buffer, "INCORRECT DICT");
-                                        send(newSocket, buffer, 1024, 0);
-                                        resets++;
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        // Used words check
-                                        //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
-                                        int dup = 0;      
-                                        for (int j = 0; j < 100; j++) 
-                                        {
-                                            if(strcmp(new, usedWords[j]) == 0) 
-                                            {
-                                                dup = 1;   // got a duplicate
-                                                break;    
-                                            }
-                                        }
-                                        if (dup == 0) 
-                                        {    // not a duplicate: add it to usedWords
-                                            strcpy(usedWords[noUsedWords+1], new);
-                                            noUsedWords += 1;
-
-                                            // Send correct message
-                                            bzero(buffer, sizeof(buffer));
-                                            strcpy(buffer, "CORRECT");
-                                            send(newSocket, buffer, 1024, 0);
-                                        }
-                                        if(dup) 
-                                        {
-                                            //penalise
-                                            bzero(buffer, sizeof(buffer));
-                                            strcpy(buffer, "INCORRECT DUPLICATE");
-                                            send(newSocket, buffer, 1024, 0);
-                                            resets++;
-                                            continue;
-                                        }
-
-                                        if (inputCheck() == 0)
-                                        {
-                                            // Send a different message, check for message on client
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    bzero(buffer, sizeof(buffer));
-                                    strcpy(buffer, "INCORRECT NOT VALID");
-                                    send(newSocket, buffer, 1024, 0);
-                                    resets++;
-                                    continue;
-                                }
-                            }
-                            if(i==(n-1))
-                            {
-                                bzero(buffer, sizeof(buffer));
-                                strcpy(buffer, "INCORRECT CHARS");
-                                send(newSocket, buffer, 1024, 0);
-                                resets++;
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "INCORRECT DISALLOWED");
-                            send(newSocket, buffer, 1024, 0);
-                            resets++;
-                            continue;
+                            // Send a different message, check for message on client
                         }
                     }
-                    first = 0;
+                }
+            }
+            else
+            {
+                if (gameLogic(newSocket) == 0)
+                {
+                    resets++;
+                    continue;
+                }
+                else
+                {
+                    if (inputCheck() == 0)
+                    {
+                        // Send a different message, check for message on client
+                    }
                 }
             }
             break;
