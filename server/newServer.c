@@ -350,7 +350,7 @@ void playerTurn(int newSocket)
     else    
         strcat(fname, "input_0");
     strcat(fname, rng2char);
-    printf("\nWe have chosen %s",fname);
+    printf("\nWe have chosen %s\n",fname);
     fileStream = fopen (fname, "r");
     fgets (letters, 7, fileStream); 
     fclose(fileStream);
