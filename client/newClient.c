@@ -111,6 +111,7 @@ int createClient()
                         printf("\nEnter your word: ");
                         bzero(buffer, sizeof(buffer));
                         scanf("%s", &buffer[0]);
+                        buffer[strcspn(buffer, "\n")] = 0;
                         send(clientSocket, buffer, 1024, 0);
 
                         // Receives answer
