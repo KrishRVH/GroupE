@@ -386,7 +386,7 @@ void playerTurn(int newSocket)
                 {
                     first = 1;
                     bzero(buffer, sizeof(buffer));
-                    strcpy(buffer, "INCORRECT");
+                    strcpy(buffer, "INCORRECT FIRST LETTER");
                     send(newSocket, buffer, 1024, 0);
                     resets++;
                     continue;
@@ -452,7 +452,7 @@ void playerTurn(int newSocket)
                                     if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
                                     {
                                         bzero(buffer, sizeof(buffer));
-                                        strcpy(buffer, "INCORRECT");
+                                        strcpy(buffer, "INCORRECT DICT");
                                         send(newSocket, buffer, 1024, 0);
                                         resets++;
                                         continue;
@@ -484,7 +484,7 @@ void playerTurn(int newSocket)
                                         {
                                             //penalise
                                             bzero(buffer, sizeof(buffer));
-                                            strcpy(buffer, "INCORRECT");
+                                            strcpy(buffer, "INCORRECT DUPLICATE");
                                             send(newSocket, buffer, 1024, 0);
                                             resets++;
                                             continue;
@@ -499,7 +499,7 @@ void playerTurn(int newSocket)
                                 else
                                 {
                                     bzero(buffer, sizeof(buffer));
-                                    strcpy(buffer, "INCORRECT");
+                                    strcpy(buffer, "INCORRECT NOT VALID");
                                     send(newSocket, buffer, 1024, 0);
                                     resets++;
                                     continue;
@@ -508,7 +508,7 @@ void playerTurn(int newSocket)
                             if(i==(n-1))
                             {
                                 bzero(buffer, sizeof(buffer));
-                                strcpy(buffer, "INCORRECT");
+                                strcpy(buffer, "INCORRECT CHARS");
                                 send(newSocket, buffer, 1024, 0);
                                 resets++;
                                 continue;
@@ -517,7 +517,7 @@ void playerTurn(int newSocket)
                         else
                         {
                             bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "INCORRECT");
+                            strcpy(buffer, "INCORRECT DISALLOWED");
                             send(newSocket, buffer, 1024, 0);
                             resets++;
                             continue;
@@ -525,7 +525,6 @@ void playerTurn(int newSocket)
                     }
                     first = 0;
                 }
-                
             }
             break;
             // Send number of used words
