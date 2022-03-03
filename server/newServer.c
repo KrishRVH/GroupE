@@ -378,12 +378,12 @@ void playerTurn(int newSocket)
                 bzero(buffer, sizeof(buffer));
                 strcpy(buffer, &letters[rng]);
                 send(newSocket, buffer, 1024, 0);
-                printf("STARTING CHAR: %s", buffer);
+                printf("STARTING CHAR: %s\n", buffer);
 
                 // Client word
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
-                printf("USER INPUT: %s", buffer);
+                printf("USER INPUT: %s\n", buffer);
 
                 if (buffer[0] != letters[rng])
                 {
@@ -429,7 +429,7 @@ void playerTurn(int newSocket)
                         {
                             if (new[0]==prev[i])
                             {
-                                printf("\nUsed correct characters!");
+                                printf("\nUsed correct characters!\n");
                                 int j = i;
                                 int k = 0;
                                 while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
@@ -441,9 +441,9 @@ void playerTurn(int newSocket)
                                 }
                                 if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
                                 {
-                                    printf("\nWord is valid!");
+                                    printf("\nWord is valid!\n");
                                     //check if word is a dictionary word
-                                    printf("\nConverting %s to lower",new);
+                                    printf("\nConverting %s to lower\n",new);
                                     for(int w = 0; w<nnewf; w++)
                                     {
                                         lowernew[w] = tolower(newf[w]);
