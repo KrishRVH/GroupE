@@ -120,7 +120,6 @@ void computerTurn()
 {
     //Computer will check input file line by line for usable words (if they're wordbuilder words that haven't been used yet, it plays them)
     int prevlen = 0;
-    char new[100];
     for (int i = 0; prev[i]!='\0'; i++)
     {
         prevlen++;
@@ -149,7 +148,6 @@ void computerTurn()
         if (c == EOF) 
         {
             printf("\nComputer could not find appropriate word");
-            exit(0);
         }
         else
         {
@@ -217,8 +215,7 @@ void computerTurn()
                             if(strcmp(new, usedWords[j]) == 0) 
                             {
                                 printf("\nWord %10s has been found in %d of usedWords as %10s",new,j,usedWords[j]);
-                                dup = 1;   // got a duplicate
-                                break;    
+                                dup = 1;   // got a duplicate   
                             }
                         }
                         if (dup == 0) {    // not a duplicate: add it to usedWords  
@@ -605,6 +602,7 @@ void playerTurn(int newSocket)
                 }
             }
         }
+        computerTurn();
         // Computer plays
         // Sets resets to zero
         run = 0;
