@@ -357,6 +357,7 @@ int gameLogic(int newSocket)
     size_t nnewf = sizeof(newf)/sizeof(char);
     char lowernew[101];
 
+    printf("GOT TO THE LOOP\n");
     int disallowed = 0;
     for (int i=0; i<n;i++)
     {
