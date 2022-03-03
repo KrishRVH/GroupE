@@ -440,6 +440,8 @@ int gameLogic(int newSocket, char *buffer)
                         }
                     }
                 }
+                strcpy(prev,new);
+                strcpy(new,"");
                 else
                 {
                     bzero(buffer, sizeof(buffer));
@@ -549,9 +551,13 @@ void playerTurn(int newSocket)
             }
             else
             {
+                // Client word
+                bzero(buffer, sizeof(buffer));
+                recv(newSocket, buffer, 1024, 0);
+                printf("USER INPUT: %s\n", buffer);
+
                 printf("EHDADAWDAWD\n");
-                strcpy(prev, buffer);
-                if (gameLogic(newSocket) == 0)
+                if (gameLogic(newSocket, buffer) == 0)
                 {
                     resets++;
                     continue;
