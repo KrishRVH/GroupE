@@ -529,6 +529,7 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
+                    strcpy(new,prev);
                     first = 0;
                     if (gameLogic(newSocket) == 0)
                     {
