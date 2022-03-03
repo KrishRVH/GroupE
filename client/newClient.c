@@ -124,6 +124,7 @@ int createClient()
                         else
                         {
                             first = 0;
+                            printf("USER SCORED\n");
                         }
                     }
                 }
