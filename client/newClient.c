@@ -93,6 +93,7 @@ int createClient()
 
                 int resets = 0;
                 int first = 1;
+                RESET:do
                 {
                     if (first == 1)
                     {
@@ -125,7 +126,7 @@ int createClient()
                         }
                     }
                     break;
-                } while(resets < 3);
+                }while (resets < 3);
                 break;
             }
         }
