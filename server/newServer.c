@@ -429,6 +429,7 @@ int gameLogic(int newSocket)
                             noUsedWords += 1;
 
                             // Send correct message
+                            printf("CORRECT: %s", buffer);
                             bzero(buffer, sizeof(buffer));
                             strcpy(buffer, "CORRECT");
                             send(newSocket, buffer, 1024, 0);
