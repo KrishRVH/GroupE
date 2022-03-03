@@ -119,7 +119,7 @@ void playerTurn(int newSocket)
     int resets = 0;
     while(run != 0)
     {
-        while (resets < 3)
+        RESET:do
         {
             if (first == 1)
             {
@@ -136,7 +136,7 @@ void playerTurn(int newSocket)
                     strcpy(buffer, "INCORRECT");
                     send(newSocket, buffer, 1024, 0);
                     resets++;
-                    continue;
+                    goto RESET;
                 }
                 else
                 {
@@ -150,7 +150,7 @@ void playerTurn(int newSocket)
             // Send number of used words
             // Send used words
             // Send letters
-        }
+        }while (resets < 3);
         run = 0;
     }
 }
