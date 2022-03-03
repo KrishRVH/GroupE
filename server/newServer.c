@@ -336,17 +336,8 @@ int inputCheck()
     fclose(filePointer);
 }
 
-int gameLogic(int newSocket)
+int gameLogic(int newSocket, char *buffer)
 {
-    printf("YES\n");
-    // Socket variables
-	char buffer[1024];
-
-    // Client word
-    bzero(buffer, sizeof(buffer));
-    recv(newSocket, buffer, 1024, 0);
-    printf("USER INPUT: %s\n", buffer);
-
     strcpy(new, buffer);
     strcpy(newf,"");
     strcpy(newadd,"\n");
@@ -540,9 +531,8 @@ void playerTurn(int newSocket)
                 {
                     printf("EHDADAWDAWD\n");
                     strcpy(prev, buffer);
-                    strcpy(new, prev);
                     first = 0;
-                    if (gameLogic(newSocket) == 0)
+                    if (gameLogic(newSocket, buffer) == 0)
                     {
                         resets++;
                         continue;
@@ -559,6 +549,8 @@ void playerTurn(int newSocket)
             }
             else
             {
+                printf("EHDADAWDAWD\n");
+                strcpy(prev, buffer);
                 if (gameLogic(newSocket) == 0)
                 {
                     resets++;
