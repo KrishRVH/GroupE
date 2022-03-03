@@ -427,6 +427,7 @@ int gameLogic(int newSocket, char *buffer)
                             bzero(buffer, sizeof(buffer));
                             strcpy(buffer, "CORRECT");
                             send(newSocket, buffer, 1024, 0);
+                            strcpy(prev, new);
                             return 1;
                         }
                         if(dup) 
@@ -440,8 +441,6 @@ int gameLogic(int newSocket, char *buffer)
                         }
                     }
                 }
-                strcpy(prev,new);
-                strcpy(new,"");
                 else
                 {
                     bzero(buffer, sizeof(buffer));
