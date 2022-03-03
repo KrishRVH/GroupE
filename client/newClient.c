@@ -116,6 +116,7 @@ int createClient()
 
                         if (strcmp(buffer, "INCORRECT") == 0)
                         {
+                            printf("INCORRECT\n");
                             resets++;
                             continue;
                         }

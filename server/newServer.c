@@ -240,7 +240,6 @@ int createServer()
 					if(game_start)
 					{
                         playerTurn(newSocket);
-
 					}
 				}
                 /*else if(strcmp(buffer, "2"))
