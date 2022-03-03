@@ -378,6 +378,7 @@ void playerTurn(int newSocket)
                 bzero(buffer, sizeof(buffer));
                 strcpy(buffer, &letters[rng]);
                 send(newSocket, buffer, 1024, 0);
+                printf("STARTING CHAR: %s", buffer);
 
                 // Client word
                 bzero(buffer, sizeof(buffer));
