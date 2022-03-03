@@ -87,6 +87,45 @@ int createClient()
             int game_start = 1;
             while(game_start)
             {
+                bzero(buffer, sizeof(buffer));
+                recv(clientSocket, buffer, 1024, 0);
+                printf("Letters: %s\n", buffer);
+
+                int resets = 0;
+                int first = 1;
+                while (resets < 3)
+                {
+                    if (first == 1)
+                    {
+                        // Recieves starting character
+                        char starting_char = '0';
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+                        strcpy(&starting_char, buffer);
+                        printf("The starting character is: %c\n", starting_char);
+
+                        // First words submission
+                        printf("\nEnter your word: ");
+                        bzero(buffer, sizeof(buffer));
+                        scanf("%s", &buffer[0]);
+                        send(clientSocket, buffer, 1024, 0);
+
+                        // Receives answer
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
+
+                        if (strcmp(buffer, "INCORRECT") == 0)
+                        {
+                            resets++;
+                            continue;
+                        }
+                        else
+                        {
+                            first = 0;
+                        }
+                    }
+                    break;
+                }
                 break;
             }
         }

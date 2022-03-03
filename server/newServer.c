@@ -110,26 +110,49 @@ void playerTurn(int newSocket)
 	char buffer[1024];
 
     // Sends letters to client
-    bzero(buffer, sizeof(buffer));
     strcpy(buffer, letters);
     send(newSocket, buffer, 1024, 0);
-
-    for (int i = 0; i<=noUsedWords;i++)
-    {
-        printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
-    }
-    int run = 1;
-    int first = 1;
-    printf("\nFirst turn! Enter a valid word starting with the letter %c ",letters[rng]);
-    if (prev[0]!=letters[rng])
-    {
-        printf("\n%c is not %c Invalid starting character.",prev[0],letters[rng]);
-        exit(0);
-    }
     
     int disallowed = 0;
+    int first = 1;
+    int run = 1;
+    int resets = 0;
+    while(run != 0)
+    {
+        while (resets < 3)
+        {
+            if (first == 1)
+            {
+                // Sends starting character
+                bzero(buffer, sizeof(buffer));
+                strcpy(buffer, &letters[rng]);
+                send(newSocket, buffer, 1024, 0);
 
 
+                if (buffer[0] != letters[rng])
+                {
+                    first = 1;
+                    bzero(buffer, sizeof(buffer));
+                    strcpy(buffer, "INCORRECT");
+                    send(newSocket, buffer, 1024, 0);
+                    resets++;
+                    continue;
+                }
+                else
+                {
+
+                    first = 0;
+                }
+                
+            }
+            break;
+            // Send resets
+            // Send number of used words
+            // Send used words
+            // Send letters
+        }
+        run = 0;
+    }
 }
 
 int createServer()
