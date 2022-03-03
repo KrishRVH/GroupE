@@ -72,16 +72,19 @@ int createClient()
             printf("Enter your first name: ");
             bzero(buffer, sizeof(buffer));
             scanf("%s", &buffer[0]);
+            buffer[strcspn(buffer, "\n")] = 0;
             send(clientSocket, buffer, strlen(buffer), 0);
 
             printf("\nEnter your last name: ");
             bzero(buffer, sizeof(buffer));
             scanf("%s", &buffer[0]);
+            buffer[strcspn(buffer, "\n")] = 0;
             send(clientSocket, buffer, strlen(buffer), 0);
 
             printf("\nEnter your country: ");
             bzero(buffer, sizeof(buffer));
             scanf("%s", &buffer[0]);
+            buffer[strcspn(buffer, "\n")] = 0;
             send(clientSocket, buffer, strlen(buffer), 0);
 
             int game_start = 1;
