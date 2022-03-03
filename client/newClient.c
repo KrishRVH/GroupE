@@ -93,7 +93,7 @@ int createClient()
 
                 int resets = 0;
                 int first = 1;
-                RESET:do
+                while (resets < 3)
                 {
                     if (first == 1)
                     {
@@ -118,7 +118,7 @@ int createClient()
                         {
                             printf("INCORRECT\n");
                             resets++;
-                            goto RESET;
+                            continue;
                         }
                         else
                         {
@@ -126,7 +126,7 @@ int createClient()
                         }
                     }
                     break;
-                }while (resets < 3);
+                }
                 break;
             }
         }
