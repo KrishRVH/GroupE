@@ -289,7 +289,7 @@ int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
     char lined[bufferLengthd];
     int linedlen = 0;
     int lowernewlen = 0;
-    printf("\nChecking if %s is a valid dictionary word", lowernew);
+    printf("\nChecking if %s is a valid dictionary word\n", lowernew);
     filePointerd = fopen("dictionary.txt", "r");
     for (int i = 0; lowernew[i]!='\0'; i++)
     {
@@ -660,11 +660,11 @@ int createServer()
 			{
 				recv(newSocket, buffer, 1024, 0);
 				printf("%s\n", buffer);
-                if(true) //strcmp(buffer, "1")) just gonna default to singleplayer for now...
+                if(true)
 				{
 					// Single player game
 
-                    // Receiving player information 
+                    // Receiving player information
                     printf("getting first name..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
