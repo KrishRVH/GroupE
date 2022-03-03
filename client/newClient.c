@@ -114,18 +114,18 @@ int createClient()
                         bzero(buffer, sizeof(buffer));
                         recv(clientSocket, buffer, 1024, 0);
 
-                        printf("ERROR: %s", buffer);
+                        printf("ERROR: %s\n", buffer);
                         if (strcmp(buffer, "INCORRECT") == 0)
                         {
                             printf("INCORRECT\n");
                             resets++;
+                            continue;
                         }
                         else
                         {
                             first = 0;
                         }
                     }
-                    break;
                 }
                 break;
             }
