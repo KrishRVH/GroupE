@@ -34,6 +34,7 @@ char usedWords[100][100];
 int noUsedWords = 1;
 char letters [6];
 char fname[14] = "";
+size_t nnew;
 
 #define MAX 50
 #define PORT 8000
@@ -83,6 +84,36 @@ struct Computer newComputer()
 	new_computer.resets = 0;
 
 	return new_computer;
+}
+
+void minusScore(struct Player new_player, int num)
+{
+    new_player.score += num;
+}
+
+void addScore(struct Player new_player)
+{
+    size_t length = nnew;
+    if (length == 3 || length == 4)
+    {
+        new_player.score += 1;
+    }
+    if (length == 5)
+    {
+        new_player.score += 2;
+    }
+    if (length == 6)
+    {
+        new_player.score += 3;
+    }
+    if (length == 7)
+    {
+        new_player.score += 4;
+    }
+    if (length >= 8)
+    {
+        new_player.score += 11;
+    }
 }
 
 void computerTurn()
@@ -141,7 +172,7 @@ void computerTurn()
         strcat(newadd, new);
         strcat(newadd,"\n");
         size_t n = sizeof(prev)/sizeof(char);
-        size_t nnew = sizeof(new)/sizeof(char);
+        nnew = sizeof(new)/sizeof(char);
         size_t nnewf = sizeof(newf)/sizeof(char);
         for (int i=0; i<n;i++)
         {
@@ -401,6 +432,7 @@ int gameLogic(int newSocket, char *buffer)
                         bzero(buffer, sizeof(buffer));
                         strcpy(buffer, "INCORRECT");
                         printf("INCORRECT DICT\n");
+                        minusScore(added_player, -1);
                         send(newSocket, buffer, 1024, 0);
                         return 0;
                     }
@@ -436,6 +468,7 @@ int gameLogic(int newSocket, char *buffer)
                             bzero(buffer, sizeof(buffer));
                             strcpy(buffer, "INCORRECT");
                             printf("INCORRECT DUPLICATE\n");
+                            minusScore(added_player, -2);
                             send(newSocket, buffer, 1024, 0);
                             return 0;
                         }
@@ -446,6 +479,7 @@ int gameLogic(int newSocket, char *buffer)
                     bzero(buffer, sizeof(buffer));
                     strcpy(buffer, "INCORRECT");
                     printf("INCORRECT NOT VALID\n");
+                    minusScore(added_player, -1);
                     send(newSocket, buffer, 1024, 0);
                     return 0;
                 }
@@ -455,6 +489,7 @@ int gameLogic(int newSocket, char *buffer)
                 bzero(buffer, sizeof(buffer));
                 strcpy(buffer, "INCORRECT");
                 printf("INCORRECT CHARS");
+                minusScore(added_player, -1);
                 send(newSocket, buffer, 1024, 0);
                 return 0;
             }
@@ -464,6 +499,7 @@ int gameLogic(int newSocket, char *buffer)
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, "INCORRECT");
             printf("INCORRECT DISALLOWED\n");
+            minusScore(added_player, -1);
             send(newSocket, buffer, 1024, 0);
             return 0;
         }
@@ -530,7 +566,6 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
-                    printf("EHDADAWDAWD\n");
                     strcpy(prev, buffer);
                     first = 0;
                     if (gameLogic(newSocket, buffer) == 0)
@@ -540,11 +575,11 @@ void playerTurn(int newSocket)
                     }
                     else
                     {
-                        printf("EHDADAWDAWD\n");
-                        //if (inputCheck() == 0)
-                        //{
+                        addScore(added_player);
+                        if (inputCheck() == 0)
+                        {
                             // Send a different message, check for message on client
-                        //}
+                        }
                     }
                 }
             }
@@ -555,7 +590,6 @@ void playerTurn(int newSocket)
                 recv(newSocket, buffer, 1024, 0);
                 printf("USER INPUT: %s\n", buffer);
 
-                printf("EHDADAWDAWD\n");
                 if (gameLogic(newSocket, buffer) == 0)
                 {
                     resets++;
@@ -563,16 +597,13 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
+                    addScore(added_player);
                     if (inputCheck() == 0)
                     {
                         // Send a different message, check for message on client
                     }
                 }
             }
-            break;
-            // Send number of used words
-            // Send used words
-            // Send letters
         }
         // Computer plays
         // Sets resets to zero
