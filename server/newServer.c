@@ -379,8 +379,10 @@ void playerTurn(int newSocket)
                 strcpy(buffer, &letters[rng]);
                 send(newSocket, buffer, 1024, 0);
 
+                // Client word
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
+                printf("USER INPUT: %s", buffer);
 
                 if (buffer[0] != letters[rng])
                 {
