@@ -338,6 +338,7 @@ int inputCheck()
 
 int gameLogic(int newSocket)
 {
+    printf("YES\n");
     // Socket variables
 	char buffer[1024];
 
@@ -539,7 +540,7 @@ void playerTurn(int newSocket)
                 {
                     printf("EHDADAWDAWD\n");
                     strcpy(prev, buffer);
-                    strcpy(new,prev);
+                    strcpy(new, prev);
                     first = 0;
                     if (gameLogic(newSocket) == 0)
                     {
@@ -548,10 +549,11 @@ void playerTurn(int newSocket)
                     }
                     else
                     {
-                        if (inputCheck() == 0)
-                        {
+                        printf("EHDADAWDAWD\n");
+                        //if (inputCheck() == 0)
+                        //{
                             // Send a different message, check for message on client
-                        }
+                        //}
                     }
                 }
             }
