@@ -56,6 +56,7 @@ in singleplayer the server is only allowed to use input.txt words, not dictionar
 
 #include "Main.h"
 
+
 int computerTurn()
 {
     //Computer will check input file line by line for usable words (if they're wordbuilder words that haven't been used yet, it plays them)
