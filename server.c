@@ -2,7 +2,6 @@
 
 int main()
 {
-    server();
-    client();
+    createServer();
     return 0;
 }
