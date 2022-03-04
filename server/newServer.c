@@ -115,7 +115,7 @@ int recievePlayerConnectMsg(mqd_t mqd)
 	int prio = 10;
     struct mq_attr attr;
 	mq_getattr(mqd, &attr);
-	p_buffer = calloc(attr.mq_msgsize, 1);
+	char *p_buffer = calloc(attr.mq_msgsize, 1);
 	int num_msgs = attr.mq_curmsgs;
 	
 	unsigned int priority = 0;
