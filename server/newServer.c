@@ -122,23 +122,23 @@ void addComputerScore(struct Computer new_computer)
     size_t length = nnew;
     if (length == 3 || length == 4)
     {
-        new_player.score += 1;
+        new_computer.score += 1;
     }
     if (length == 5)
     {
-        new_player.score += 2;
+        new_computer.score += 2;
     }
     if (length == 6)
     {
-        new_player.score += 3;
+        new_computer.score += 3;
     }
     if (length == 7)
     {
-        new_player.score += 4;
+        new_computer.score += 4;
     }
     if (length >= 8)
     {
-        new_player.score += 11;
+        new_computer.score += 11;
     }
 }
 
