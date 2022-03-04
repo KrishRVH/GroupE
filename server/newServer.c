@@ -557,6 +557,7 @@ void playerTurn(int newSocket)
     
     while(run != 0)
     {
+        // Sends letters
         bzero(buffer, sizeof(buffer));
         strcpy(buffer, letters);
         send(newSocket, buffer, 1024, 0);
@@ -638,6 +639,7 @@ void playerTurn(int newSocket)
                     {
                         // Send a different message, check for message on client
                     }
+                    break;
                 }
             }
         }
