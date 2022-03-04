@@ -3,6 +3,8 @@
 
 #include "Main.h"
 
+extern size_t nnew;
+
 void minusPlayerScore(struct Player new_player, int num)
 {
     new_player.score += num;

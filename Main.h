@@ -39,12 +39,7 @@ extern struct Player added_player;
 extern struct Computer added_computer;
 extern char prev[100];
 extern char new[100];
-extern char newf[101] = ""; 
-extern char newadd[101] = "\n";
-exctern char usedWords[100][100];
-exctern uint32_t noUsedWords = 1;
 extern char letters [6];
-extern char fname[14] = "";
 extern size_t nnew;
 
 // Adam Loeckle

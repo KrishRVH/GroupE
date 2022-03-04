@@ -11,6 +11,12 @@
 
 #include "Main.h"
 
+char newf[101] = ""; 
+char newadd[101] = "\n";
+char usedWords[100][100];
+uint32_t noUsedWords = 1;
+char fname[14] = "";
+
 struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
 	struct Player new_player;
