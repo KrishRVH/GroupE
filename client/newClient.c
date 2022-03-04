@@ -144,6 +144,6 @@ int clientGame()
 
 int main()
 {
-    createClient();
+    clientGame();
     return 0;
 }
