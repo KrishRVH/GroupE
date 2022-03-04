@@ -113,6 +113,7 @@ void sendPlayerConnectMsg(mqd_t mqd)
 int recievePlayerConnectMsg(mqd_t mqd)
 {
 	int prio = 10;
+    struct mq_attr attr;
 	mq_getattr(mqd, &attr);
 	p_buffer = calloc(attr.mq_msgsize, 1);
 	int num_msgs = attr.mq_curmsgs;
@@ -142,6 +143,7 @@ void sendDictionaryMsg(mqd_t mqd, char *message, int size)
 
 char * recieveDictionaryMessage(mqd_t mqd)
 {
+    struct mq_attr attr;
     char *message = malloc(1024);
 	mq_getattr(mqd, &attr);
 	char *p_buffer = calloc(attr.mq_msgsize, 1);
