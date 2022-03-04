@@ -588,7 +588,6 @@ void playerTurn(int newSocket)
                 {
                     // Game logic
                     strcpy(prev, buffer);
-                    first = 0;
                     if (gameLogic(newSocket, buffer) == 0)
                     {
                         resets++;
@@ -596,6 +595,7 @@ void playerTurn(int newSocket)
                     }
                     else
                     {
+                        first = 0;
                         addPlayerScore(added_player);
                         if (inputCheck() == 0)
                         {
