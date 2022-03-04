@@ -87,6 +87,77 @@ struct Computer newComputer()
 	return new_computer;
 }
 
+// Opens message queue, should only be ran once.
+mqd_t openMsgQueue(char *queue_name)
+{
+	// Ensures message queue does not already exist and creates a new one
+	mq_unlink(queue_name);
+	mqd_t mqd = mq_open(queue_name, O_CREAT | O_RDWR, 0600, NULL);
+
+	if (mqd == -1)
+	{
+		perror("mq_open");
+	}
+	else
+	{
+		printf("MQ was opened \n");
+	}
+	return mqd;
+}
+
+void sendPlayerConnectMsg(mqd_t mqd)
+{
+	mq_send(mqd, "WAITING", 1, 10);
+}
+
+int recievePlayerConnectMsg(mqd_t mqd)
+{
+	int prio = 10;
+	mq_getattr(mqd, &attr);
+	p_buffer = calloc(attr.mq_msgsize, 1);
+	int num_msgs = attr.mq_curmsgs;
+	
+	unsigned int priority = 0;
+	if (num_msgs != 0)
+	{
+		if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void sendDictionaryMsg(mqd_t mqd, char *message, int size)
+{
+	mq_send(mqd, message, size, 10);
+}
+
+char * recieveDictionaryMessage(mqd_t mqd)
+{
+    char *message = malloc(1024);
+	mq_getattr(mqd, &attr);
+	char *p_buffer = calloc(attr.mq_msgsize, 1);
+
+    unsigned int priority = 0;
+    if ((mq_receive(mqd, p_buffer, attr.mq_msgsize, &priority)) != -1)
+    {
+        // Collects message from queue
+        if (priority == 10)
+        {
+            strcpy(message, p_buffer);
+            return message;
+        }
+    }
+}
+
 void minusPlayerScore(struct Player new_player, int num)
 {
     new_player.score += num;
@@ -299,7 +370,7 @@ int computerTurn()
     fclose(filePointer);
 }
 
-int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
+void dictionaryCheck(mqd_t dictionary, size_t nnewf, char *lowernew, int newSocket)
 {
     for(int w = 0; w<nnewf; w++)
     {
@@ -336,11 +407,11 @@ int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
     fclose(filePointerd);
     if (wordExistd==1)
     {
-        return 1;
+        sendDictionaryMsg(dictionary, "CORRECT", 7);
     }
     else
     {
-        return 0;
+        sendDictionaryMsg(dictionary, "INCORRECT", 9);
     }
 }
 
@@ -402,6 +473,8 @@ int gameLogic(int newSocket, char *buffer)
     size_t nnewf = sizeof(newf)/sizeof(char);
     char lowernew[101];
 
+    mqd_t dictionary = openMsgQueue("/Dictionary_Check");
+
     printf("GOT TO THE LOOP\n");
     int disallowed = 0;
     for (int i=0; i<n;i++)
@@ -449,17 +522,13 @@ int gameLogic(int newSocket, char *buffer)
                     // Dictionary
                     // int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
                     // FORKING --------------------------------------------------------------
-                    if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
+                    if (fork() == 0)
                     {
-                        bzero(buffer, sizeof(buffer));
-                        strcpy(buffer, "INCORRECT");
-                        printf("INCORRECT DICT\n");
-                        minusPlayerScore(added_player, -1);
-                        send(newSocket, buffer, 1024, 0);
-                        return 0;
+                        dictionaryCheck(dictionary, nnewf, lowernew, newSocket);
                     }
                     else
                     {
+                        wait(NULL);
                         // Used words check
                         //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
                         int dup = 0;      
@@ -494,6 +563,17 @@ int gameLogic(int newSocket, char *buffer)
                             send(newSocket, buffer, 1024, 0);
                             return 0;
                         }
+                    }
+
+                    // Recieve dictionary check posix message, return 0 if incorrect
+                    if (strcmp(recieveDictionaryMessage(dictionary), "INCORRECT") == 0)
+                    {
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, "INCORRECT");
+                        printf("INCORRECT DICT\n");
+                        minusPlayerScore(added_player, -1);
+                        send(newSocket, buffer, 1024, 0);
+                        return 0;
                     }
                 }
                 else
@@ -774,7 +854,7 @@ int createServer()
                 if(strcmp(buffer, "2") == 0)
 				{
 					// POSIX queues
-					mqd_t waiting_players = openMsgQueue("/Waiting_players");
+					//mqd_t waiting_players = openMsgQueue("/Waiting_players");
 
 					// Receiving player information
                     recv(newSocket, buffer, 1024, 0);
@@ -796,16 +876,16 @@ int createServer()
                     printf("Last name: %s\n", added_player.lastname);
                     printf("Country: %s\n", added_player.country);
 
-					if (recievePlayerConnectMsg(waiting_players) == 1)
-					{
+					//if (recievePlayerConnectMsg(waiting_players) == 1)
+					//{
 						// Starts multiplayer game with other connected player
-					}
-					else
-					{
+					//}
+					//else
+					//{
 						// Sends message to POSIX queue that this client is waiting.
 						// Asks client if they want to wait after two minutes of waiting.
-						sendPlayerConnectMsg(waiting_players);
-					}
+						//sendPlayerConnectMsg(waiting_players);
+					//}
 				}
                 // Clean client exit
 				if(strcmp(buffer, "3") == 0)
