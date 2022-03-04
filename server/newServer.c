@@ -7,6 +7,7 @@
 #include <stdbool.h> 
 #include <sys/wait.h>
 #include <time.h>
+#include <stdint.h>
 
 // Socket/network includes
 #include <netdb.h>
@@ -31,7 +32,7 @@ char new[100];
 char newf[101] = ""; 
 char newadd[101] = "\n";
 char usedWords[100][100];
-int noUsedWords = 1;
+uint32_t noUsedWords = 1;
 char letters [6];
 char fname[14] = "";
 size_t nnew;
@@ -583,7 +584,7 @@ void playerTurn(int newSocket)
                 // Game logic
 
                 // Send number of used words
-                int converted = htonl(noUsedWords);
+                uint32_t converted = htonl(noUsedWords);
                 send(newSocket, &converted, sizeof(converted), 0);
 
                 // Send used words in for loop

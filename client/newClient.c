@@ -4,7 +4,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
-#include <stdbool.h> 
+#include <stdbool.h>
+#include <stdint.h> 
 
 // Socket/network includes
 #include <netdb.h>
@@ -131,9 +132,10 @@ int clientGame()
                     {
                         // Recieves number of used words
                         // Recieves used words
-                        int converted = 0;
+                        uint32_t converted = 0;
                         recv(clientSocket, &converted, sizeof(converted), 0);
-                        printf("NUMBER OF WORDS: %d\n", converted);
+                        uint32_t noUsedWords = htonl(converted);
+                        printf("NUMBER OF WORDS: %d\n", noUsedWords);
                     }
                 }
                 break;
