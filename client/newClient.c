@@ -158,12 +158,6 @@ int clientGame()
                         bzero(buffer, sizeof(buffer));
                         recv(clientSocket, buffer, 1024, 0);
 
-                        // Word submission
-                        printf("\nEnter your word: ");
-                        bzero(buffer, sizeof(buffer));
-                        scanf("%s", &buffer[0]);
-                        send(clientSocket, buffer, 1024, 0);
-
                         if (strcmp(buffer, "INCORRECT") == 0)
                         {
                             printf("INCORRECT\n");
