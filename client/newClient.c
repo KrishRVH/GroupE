@@ -172,7 +172,7 @@ int clientGame()
                 // Recieves if computer scored or not
                 bzero(buffer, sizeof(buffer));
                 recv(clientSocket, buffer, sizeof(buffer), 0);
-                printf("COMPUTER ANSWER: %s", buffer);
+                printf("COMPUTER ANSWER: %s\n", buffer);
             }
         }
     }

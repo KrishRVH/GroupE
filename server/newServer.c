@@ -557,9 +557,10 @@ void playerTurn(int newSocket)
     
     while(run != 0)
     {
+        bzero(buffer, sizeof(buffer));
         strcpy(buffer, letters);
         send(newSocket, buffer, 1024, 0);
-        
+
         int resets = 0;
         while (resets < 3)
         {
