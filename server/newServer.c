@@ -657,6 +657,11 @@ void playerTurn(int newSocket)
             strcpy(buffer, "COMP CORRECT");
             send(newSocket, buffer, sizeof(buffer), 0);
         }
+
+        for (int i = 0; i < noUsedWords; i++)
+        {
+            printf("\nWORD USED: %s\n", usedWords[i]);
+        }
     }
 }
 
