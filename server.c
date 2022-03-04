@@ -25,6 +25,10 @@
 // Error handling
 #include <errno.h>
 
+#define MAX 50
+#define PORT 8000
+#define SA struct sockaddr
+
 struct Player added_player;
 struct Computer added_computer;
 char prev[100];
