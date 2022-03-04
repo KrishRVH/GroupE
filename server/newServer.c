@@ -553,9 +553,9 @@ void playerTurn(int newSocket)
 	char buffer[1024];
     
     int first = 1;
-    int run = 1;
+    int pass = 0;
     
-    while(run != 0)
+    while(pass < 4)
     {
         // Sends letters
         bzero(buffer, sizeof(buffer));
@@ -575,6 +575,12 @@ void playerTurn(int newSocket)
                 // Client word
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
+
+                if (strcmp(buffer, "pass") == 0)
+                {
+                    pass++;
+                    break;
+                }
 
                 if (buffer[0] != letters[rng])
                 {
@@ -648,8 +654,9 @@ void playerTurn(int newSocket)
         {
             // Computer passed
             bzero(buffer, sizeof(buffer));
-            strcpy(buffer, "COMP INCORRECT");
+            strcpy(buffer, "COMP PASSED");
             send(newSocket, buffer, sizeof(buffer), 0);
+            pass++;
         }
         else
         {

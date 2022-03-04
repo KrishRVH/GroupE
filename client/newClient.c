@@ -85,9 +85,9 @@ int clientGame()
             scanf("%s", &buffer[0]);
             send(clientSocket, buffer, strlen(buffer), 0);
 
-            int game_start = 1;
             int first = 1;
-            while(game_start)
+            int pass = 0;
+            while(pass < 4)
             {
                 bzero(buffer, sizeof(buffer));
                 recv(clientSocket, buffer, 1024, 0);
@@ -110,6 +110,12 @@ int clientGame()
                         bzero(buffer, sizeof(buffer));
                         scanf("%s", &buffer[0]);
                         send(clientSocket, buffer, 1024, 0);
+
+                        if (strcmp(buffer, "pass") == 0)
+                        {
+                            pass++;
+                            break;
+                        }
 
                         // Receives answer
                         bzero(buffer, sizeof(buffer));
@@ -153,6 +159,12 @@ int clientGame()
                         bzero(buffer, sizeof(buffer));
                         scanf("%s", &buffer[0]);
                         send(clientSocket, buffer, 1024, 0);
+
+                        if (strcmp(buffer, "pass") == 0)
+                        {
+                            pass++;
+                            break;
+                        }
 
                         // Receives answer
                         bzero(buffer, sizeof(buffer));
