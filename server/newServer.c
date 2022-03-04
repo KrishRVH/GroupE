@@ -614,7 +614,7 @@ void playerTurn(int newSocket)
                 send(newSocket, &converted, sizeof(converted), 0);
 
                 // Send used words in for loop
-                for (int i = 0; i < noUsedWords; i++)
+                for (int i = 0; i <= noUsedWords; i++)
                 {
                     bzero(buffer, sizeof(buffer));
                     strcpy(buffer, usedWords[i]);

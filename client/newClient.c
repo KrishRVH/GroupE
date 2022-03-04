@@ -140,7 +140,7 @@ int clientGame()
                         printf("NUMBER OF WORDS: %d\n", noUsedWords);
 
                         printf("WORDS USED: ");
-                        for (int i = 0; i < noUsedWords; i++)
+                        for (int i = 0; i <= noUsedWords; i++)
                         {
                             bzero(buffer, sizeof(buffer));
                             recv(clientSocket, buffer, sizeof(buffer), 0);
