@@ -130,6 +130,7 @@ int clientGame()
                         if (strcmp(buffer, "CORRECT") == 0)
                         {
                             first = 0;
+                            pass = 0;
                             printf("USER SCORED\n");
                             // Check for bonus points
                             break;
@@ -178,6 +179,7 @@ int clientGame()
                         }
                         if (strcmp(buffer, "CORRECT") == 0)
                         {
+                            pass = 0;
                             printf("USER SCORED\n");
                             // Check for bonus points
                             break;
@@ -188,7 +190,14 @@ int clientGame()
                 // Recieves if computer scored or not
                 bzero(buffer, sizeof(buffer));
                 recv(clientSocket, buffer, sizeof(buffer), 0);
-                printf("COMPUTER ANSWER: %s\n", buffer);
+                if (strcmp(buffer, "COMP CORRECT"))
+                {
+                    pass = 0;
+                }
+                if (strcmp(buffer, "COMP PASSED"))
+                {
+                    pass++;
+                }
             }
         }
     }

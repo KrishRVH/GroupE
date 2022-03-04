@@ -603,6 +603,7 @@ void playerTurn(int newSocket)
                     else
                     {
                         first = 0;
+                        pass = 0;
                         addPlayerScore(added_player);
                         if (inputCheck() == 0)
                         {
@@ -646,6 +647,7 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
+                    pass = 0;
                     addPlayerScore(added_player);
                     if (inputCheck() == 0)
                     {
@@ -671,6 +673,7 @@ void playerTurn(int newSocket)
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, "COMP CORRECT");
             send(newSocket, buffer, sizeof(buffer), 0);
+            pass = 0;
         }
 
         for (int i = 0; i <= noUsedWords; i++)
