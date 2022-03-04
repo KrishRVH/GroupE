@@ -423,7 +423,7 @@ int gameLogic(int newSocket, char *buffer)
 
                     // Dictionary
                     // int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
-                    // FORKING
+                    // FORKING --------------------------------------------------------------
                     if (dictionaryCheck(nnewf, lowernew, newSocket) == 0)
                     {
                         bzero(buffer, sizeof(buffer));
@@ -544,25 +544,23 @@ void playerTurn(int newSocket)
                 bzero(buffer, sizeof(buffer));
                 strcpy(buffer, &letters[rng]);
                 send(newSocket, buffer, 1024, 0);
-                printf("STARTING CHAR: %s\n", buffer);
 
                 // Client word
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
-                printf("USER INPUT: %s\n", buffer);
 
                 if (buffer[0] != letters[rng])
                 {
                     first = 1;
                     bzero(buffer, sizeof(buffer));
                     strcpy(buffer, "INCORRECT");
-                    printf("INCORRECT FIRST LETTER\n");
                     send(newSocket, buffer, 1024, 0);
                     resets++;
                     continue;
                 }
                 else
                 {
+                    // Game logic
                     strcpy(prev, buffer);
                     first = 0;
                     if (gameLogic(newSocket, buffer) == 0)
@@ -582,11 +580,19 @@ void playerTurn(int newSocket)
             }
             else
             {
+                // Game logic
+
+                // Send number of used words
+                int converted = htonl(noUsedWords);
+                send(newSocket, &converted, sizeof(converted), 0);
+
+                // Send used words in for loop
+
                 // Client word
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
-                printf("USER INPUT: %s\n", buffer);
 
+                strcpy(prev, buffer);
                 if (gameLogic(newSocket, buffer) == 0)
                 {
                     resets++;
@@ -602,9 +608,8 @@ void playerTurn(int newSocket)
                 }
             }
         }
-        computerTurn();
-        // Computer plays
-        // Sets resets to zero
+        //computerTurn();
+        resets = 0;
         run = 0;
     }
 }

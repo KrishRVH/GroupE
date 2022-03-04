@@ -26,7 +26,7 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-int createClient()
+int clientGame()
 {
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;
@@ -92,7 +92,7 @@ int createClient()
                 printf("Letters: %s\n", buffer);
 
                 int resets = 0;
-                int first = 1;
+                int first = 0;
                 while (resets < 3)
                 {
                     if (first == 1)
@@ -124,7 +124,16 @@ int createClient()
                         {
                             first = 0;
                             printf("USER SCORED\n");
+                            // Computer plays
                         }
+                    }
+                    else
+                    {
+                        // Recieves number of used words
+                        // Recieves used words
+                        int converted = 0;
+                        recv(clientSocket, &converted, sizeof(converted), 0);
+                        printf("NUMBER OF WORDS: %d\n", converted);
                     }
                 }
                 break;
