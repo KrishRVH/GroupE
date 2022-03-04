@@ -5,6 +5,7 @@
 
 #include "Main.h"
 
+/*
 void server()
 {
 	int sockfd, newsockfd, port_num;
@@ -52,3 +53,4 @@ void server()
 		}
 	}
 }
+*/
