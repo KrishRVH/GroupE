@@ -16,5 +16,5 @@ POSIX QUEUE:
 
 INSTRUCTIONS FOR COMPILE AND RUN:
 
-Server start: gcc server.c adamloeckle.c krishravi.c drewnguyen.c patricklaverty.c -o server -lrt -pthread
-Client start: gcc client.c adamloeckle.c krishravi.c drewnguyen.c patricklaverty.c -o client -lrt -pthread
+Server start: gcc server.c -o server -lrt -pthread
+Client start: gcc client.c -o client -lrt -pthread
