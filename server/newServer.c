@@ -551,16 +551,15 @@ void playerTurn(int newSocket)
 
     // Socket variables
 	char buffer[1024];
-
-    // Sends letters to client
-    strcpy(buffer, letters);
-    send(newSocket, buffer, 1024, 0);
     
-    int first = 1;                   // TESTTING
+    int first = 1;
     int run = 1;
     
     while(run != 0)
     {
+        strcpy(buffer, letters);
+        send(newSocket, buffer, 1024, 0);
+        
         int resets = 0;
         while (resets < 3)
         {
