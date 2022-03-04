@@ -632,6 +632,12 @@ void playerTurn(int newSocket)
                 bzero(buffer, sizeof(buffer));
                 recv(newSocket, buffer, 1024, 0);
 
+                if (strcmp(buffer, "pass") == 0)
+                {
+                    pass++;
+                    break;
+                }
+
                 strcpy(prev, buffer);
                 if (gameLogic(newSocket, buffer) == 0)
                 {
