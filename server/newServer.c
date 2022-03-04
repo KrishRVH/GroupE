@@ -665,17 +665,14 @@ int createServer()
 					// Single player game
 
                     // Receiving player information
-                    printf("getting first name..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(firstname, buffer);
                     bzero(buffer, sizeof(buffer));
                     
-                    printf("getting last name..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(lastname, buffer);
                     bzero(buffer, sizeof(buffer));
 
-                    printf("getting country..\n");
                     recv(newSocket, buffer, 1024, 0);
                     strcpy(country, buffer);
                     bzero(buffer, sizeof(buffer));
