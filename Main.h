@@ -34,19 +34,6 @@
 #define PORT 8000
 #define SA struct sockaddr
 
-// Globals
-extern struct Player added_player;
-extern struct Computer added_computer;
-extern char prev[100];
-extern char new[100];
-extern char usedWords[100][100];
-extern char letters [6];
-extern size_t nnew;
-extern char fname[14];
-extern char newadd[101];
-extern char newf[101];
-extern uint32_t noUsedWords;
-
 // Adam Loeckle
 struct Player newPlayer(char *firstname, char *lastname, char *country);
 struct Computer newComputer();

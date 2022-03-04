@@ -11,11 +11,6 @@
 
 #include "Main.h"
 
-newf[101] = ""; 
-newadd[101] = "\n";
-noUsedWords = 1;
-fname[14] = "";
-
 struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
 	struct Player new_player;
