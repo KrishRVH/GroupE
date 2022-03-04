@@ -87,12 +87,12 @@ struct Computer newComputer()
 	return new_computer;
 }
 
-void minusScore(struct Player new_player, int num)
+void minusPlayerScore(struct Player new_player, int num)
 {
     new_player.score += num;
 }
 
-void addScore(struct Player new_player)
+void addPlayerScore(struct Player new_player)
 {
     size_t length = nnew;
     if (length == 3 || length == 4)
@@ -117,7 +117,32 @@ void addScore(struct Player new_player)
     }
 }
 
-void computerTurn()
+void addComputerScore(struct Computer new_computer)
+{
+    size_t length = nnew;
+    if (length == 3 || length == 4)
+    {
+        new_player.score += 1;
+    }
+    if (length == 5)
+    {
+        new_player.score += 2;
+    }
+    if (length == 6)
+    {
+        new_player.score += 3;
+    }
+    if (length == 7)
+    {
+        new_player.score += 4;
+    }
+    if (length >= 8)
+    {
+        new_player.score += 11;
+    }
+}
+
+int computerTurn()
 {
     //Computer will check input file line by line for usable words (if they're wordbuilder words that haven't been used yet, it plays them)
     int prevlen = 0;
@@ -149,6 +174,7 @@ void computerTurn()
         if (c == EOF) 
         {
             printf("\nComputer could not find appropriate word");
+            return 0;
         }
         else
         {
@@ -241,11 +267,12 @@ void computerTurn()
                             {
                                 printf("\nUsed word %d of %d is %s",i,noUsedWords,usedWords[i]);
                             }
+                            strcpy(prev,new);
+                            strcpy(new,"");
                             run = 0;
+                            return 1;
+                            
                         }
-                        strcpy(prev,new);
-                        strcpy(new,"");
-                        break;
                     }   
                     else
                     {
@@ -254,21 +281,18 @@ void computerTurn()
                         printf("\n Invalid but part of it was at some point");
                         //in theory we should never be here?
                         //penalise
-                        break;
                     }
                 }
                 if (i==(n-1))
                 {
                     //printf("\nComputer's Word is not valid.");
                     //penalise
-                    break;
                 }
             }
             else
             {
                 printf("\nWord contains disallowed characters.");
                 //penalise
-                break;
             }
         }
     }
@@ -430,7 +454,7 @@ int gameLogic(int newSocket, char *buffer)
                         bzero(buffer, sizeof(buffer));
                         strcpy(buffer, "INCORRECT");
                         printf("INCORRECT DICT\n");
-                        minusScore(added_player, -1);
+                        minusPlayerScore(added_player, -1);
                         send(newSocket, buffer, 1024, 0);
                         return 0;
                     }
@@ -466,7 +490,7 @@ int gameLogic(int newSocket, char *buffer)
                             bzero(buffer, sizeof(buffer));
                             strcpy(buffer, "INCORRECT");
                             printf("INCORRECT DUPLICATE\n");
-                            minusScore(added_player, -2);
+                            minusPlayerScore(added_player, -2);
                             send(newSocket, buffer, 1024, 0);
                             return 0;
                         }
@@ -477,7 +501,7 @@ int gameLogic(int newSocket, char *buffer)
                     bzero(buffer, sizeof(buffer));
                     strcpy(buffer, "INCORRECT");
                     printf("INCORRECT NOT VALID\n");
-                    minusScore(added_player, -1);
+                    minusPlayerScore(added_player, -1);
                     send(newSocket, buffer, 1024, 0);
                     return 0;
                 }
@@ -487,7 +511,7 @@ int gameLogic(int newSocket, char *buffer)
                 bzero(buffer, sizeof(buffer));
                 strcpy(buffer, "INCORRECT");
                 printf("INCORRECT CHARS");
-                minusScore(added_player, -1);
+                minusPlayerScore(added_player, -1);
                 send(newSocket, buffer, 1024, 0);
                 return 0;
             }
@@ -497,7 +521,7 @@ int gameLogic(int newSocket, char *buffer)
             bzero(buffer, sizeof(buffer));
             strcpy(buffer, "INCORRECT");
             printf("INCORRECT DISALLOWED\n");
-            minusScore(added_player, -1);
+            minusPlayerScore(added_player, -1);
             send(newSocket, buffer, 1024, 0);
             return 0;
         }
@@ -534,9 +558,10 @@ void playerTurn(int newSocket)
     
     int first = 0;                   // TESTTING
     int run = 1;
-    int resets = 0;
+    
     while(run != 0)
     {
+        int resets = 0;
         while (resets < 3)
         {
             if (first == 1)
@@ -571,11 +596,12 @@ void playerTurn(int newSocket)
                     }
                     else
                     {
-                        addScore(added_player);
+                        addPlayerScore(added_player);
                         if (inputCheck() == 0)
                         {
                             // Send a different message, check for message on client
                         }
+                        break;
                     }
                 }
             }
@@ -588,6 +614,12 @@ void playerTurn(int newSocket)
                 send(newSocket, &converted, sizeof(converted), 0);
 
                 // Send used words in for loop
+                for (int i = 0; i < noUsedWords; i++)
+                {
+                    bzero(buffer, sizeof(buffer));
+                    strcpy(buffer, usedWords[i]);
+                    send(newSocket, buffer, sizeof(buffer), 0);
+                }
 
                 // Client word
                 bzero(buffer, sizeof(buffer));
@@ -601,7 +633,7 @@ void playerTurn(int newSocket)
                 }
                 else
                 {
-                    addScore(added_player);
+                    addPlayerScore(added_player);
                     if (inputCheck() == 0)
                     {
                         // Send a different message, check for message on client
@@ -609,9 +641,22 @@ void playerTurn(int newSocket)
                 }
             }
         }
-        //computerTurn();
-        resets = 0;
-        run = 0;
+        
+        if (computerTurn() == 0)
+        {
+            // Computer passed
+            bzero(buffer, sizeof(buffer));
+            strcpy(buffer, "COMP INCORRECT");
+            send(newSocket, buffer, sizeof(buffer), 0);
+        }
+        else
+        {
+            // Computer was successful add points
+            addComputerScore(added_computer);
+            bzero(buffer, sizeof(buffer));
+            strcpy(buffer, "COMP CORRECT");
+            send(newSocket, buffer, sizeof(buffer), 0);
+        }
     }
 }
 

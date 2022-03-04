@@ -86,6 +86,7 @@ int clientGame()
             send(clientSocket, buffer, strlen(buffer), 0);
 
             int game_start = 1;
+            int first = 1;
             while(game_start)
             {
                 bzero(buffer, sizeof(buffer));
@@ -93,7 +94,6 @@ int clientGame()
                 printf("Letters: %s\n", buffer);
 
                 int resets = 0;
-                int first = 0;                   // TESTING
                 while (resets < 3)
                 {
                     if (first == 1)
@@ -125,20 +125,53 @@ int clientGame()
                         {
                             first = 0;
                             printf("USER SCORED\n");
-                            // Computer plays
+                            // Check for bonus points
                         }
                     }
                     else
                     {
                         // Recieves number of used words
                         // Recieves used words
+                        char usedWords[100][100];
                         uint32_t converted = 0;
                         recv(clientSocket, &converted, sizeof(converted), 0);
                         uint32_t noUsedWords = htonl(converted);
                         printf("NUMBER OF WORDS: %d\n", noUsedWords);
+
+                        printf("WORDS USED: ");
+                        for (int i = 0; i < noUsedWords; i++)
+                        {
+                            bzero(buffer, sizeof(buffer));
+                            recv(clientSocket, buffer, sizeof(buffer), 0);
+                            printf("%s ", buffer);
+                        }
+                        printf("\n");
+
+                        // Word submission
+                        printf("\nEnter your word: ");
+                        bzero(buffer, sizeof(buffer));
+                        scanf("%s", &buffer[0]);
+                        send(clientSocket, buffer, 1024, 0);
+
+                        if (strcmp(buffer, "INCORRECT") == 0)
+                        {
+                            printf("INCORRECT\n");
+                            resets++;
+                            continue;
+                        }
+                        else
+                        {
+                            printf("USER SCORED\n");
+                            // Check for bonus points
+                            break;
+                        }
                     }
                 }
-                break;
+                // Computer plays
+                // Recieves if computer scored or not
+                bzero(buffer, sizeof(buffer));
+                recv(clientSocket, buffer, sizeof(buffer), 0);
+                printf("COMPUTER ANSWER: %s", buffer);
             }
         }
     }
