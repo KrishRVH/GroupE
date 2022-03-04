@@ -11,26 +11,6 @@
 
 #include "Main.h"
 
-// Player struct
-struct Player
-{
-	int score;
-	char firstname[50];
-	char lastname[50];
-	char country[50];
-	int num_words;
-	int num_words_added;
-	int resets;
-} Player;
-
-struct Computer
-{
-	int score;
-	int num_words;
-	int num_words_added;
-	int resets;
-} Computer;
-
 struct Player newPlayer(char *firstname, char *lastname, char *country)
 {
 	struct Player new_player;

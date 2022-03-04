@@ -47,7 +47,7 @@ char letters [6];
 char fname[14] = "";
 size_t nnew;
 
-// Adam
+// Adam Loeckle
 struct Player newPlayer(char *firstname, char *lastname, char *country);
 struct Computer newComputer();
 mqd_t openMsgQueue(char *queue_name);
@@ -59,6 +59,23 @@ char * recieveDictionaryMessage(mqd_t mqd);
 int playerTurn(int newSocket);
 int createServer();
 int clientGame();
+struct Player
+{
+	int score;
+	char firstname[50];
+	char lastname[50];
+	char country[50];
+	int num_words;
+	int num_words_added;
+	int resets;
+} Player;
+struct Computer
+{
+	int score;
+	int num_words;
+	int num_words_added;
+	int resets;
+} Computer;
 
 // Drew
 void minusPlayerScore(struct Player new_player, int num);
