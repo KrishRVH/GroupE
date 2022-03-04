@@ -57,7 +57,7 @@ void addComputerScore(struct Computer new_computer)
         new_computer.score += 11;
     }
 }
-
+/*
 void clientt()
 {
 	int new_socket;
@@ -90,9 +90,11 @@ void clientt()
 
 	//close(new_socket);
 }
+*/
 
+/*
 //function for communication between client and server
-void /*varnameTBD*/(int new_socket)
+void (int new_socket)
 {
     char buff[MAX];
     int n;
@@ -121,9 +123,11 @@ void /*varnameTBD*/(int new_socket)
     }
 
 }
+*/
 
 //socket creation and verification from client side
 
+/*
 void clientToServer()
 {
 
@@ -156,27 +160,33 @@ void clientToServer()
     }
 
     //function for client-server communication
-    /*varnameTBD*/(new_socket);
+    (new_socket);
     close(new_socket);
 }
+*/
 
+/*
 void recieveMsg(int new_socket, char * msg)
 {
-    memset(/*tbd*/);
+    memset();
     int n = read(new_socket, msg, 3);
     //server conditionals for  reading message from server socket
     error("");
 }
+*/
 
 
+/*
 //function for update from server
-void receiveUpdate(int new_socket, char /*var name of game state*/)
+void receiveUpdate(int new_socket, char )
 {
     int player_id = receiveInt(new_socket);
-    int /*Player state of board*/(new_socket);
+    int (new_socket);
     //update game state
 }
+*/
 
+/*
 //function for receiving player struct
 void recievePlayerMsg(){
 
@@ -206,9 +216,10 @@ void sendToServer(int newsocket, int msg){
     if(n < 0){
         error()
     }
-    printf(/*print statement to server*/)
+    printf()
 
 }
+*/
 
 
 
