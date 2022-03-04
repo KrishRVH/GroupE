@@ -191,11 +191,11 @@ int clientGame()
                 bzero(buffer, sizeof(buffer));
                 recv(clientSocket, buffer, sizeof(buffer), 0);
                 printf("COMPUTER BUFF: %s\n", buffer);
-                if (strcmp(buffer, "COMP CORRECT"))
+                if (strcmp(buffer, "COMP CORRECT") == 0)
                 {
                     pass = 0;
                 }
-                if (strcmp(buffer, "COMP PASSED"))
+                if (strcmp(buffer, "COMP PASSED") == 0)
                 {
                     pass++;
                 }
