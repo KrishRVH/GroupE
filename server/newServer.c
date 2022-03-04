@@ -528,7 +528,7 @@ int gameLogic(int newSocket, char *buffer)
     }  
 }
 
-void playerTurn(int newSocket)
+int playerTurn(int newSocket)
 {
     srand(time(NULL)); 
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
@@ -681,6 +681,7 @@ void playerTurn(int newSocket)
             printf("\nWORD USED: %s\n", usedWords[i]);
         }
     }
+    return 0;
 }
 
 int createServer()
@@ -732,7 +733,7 @@ int createServer()
 			{
 				recv(newSocket, buffer, 1024, 0);
 				printf("%s\n", buffer);
-                if(true)
+                if(strcmp(buffer, "1") == 0)
 				{
 					// Single player game
 
@@ -760,18 +761,18 @@ int createServer()
 					bzero(lastname, sizeof(lastname));
 					bzero(country, sizeof(country));
 
-					// Game starts..\n.
-					int game_start = 1;
-					if(game_start)
+					// Game starts
+					if(playerTurn(newSocket) == 0)
 					{
-                        playerTurn(newSocket);
+                        // SCOREBOARD METHOD HERE, MAKE SCOREBOARD METHOD AND PUT IT ABOVE
+                        // singlePlayerScoreboard();
+                        // NEEDS TO SEND CLIENT SCORE OF PLAYER AND COMPUTER
+                        // NEEDS TO LET CLIENT KNOW IF THEY WERE ADDED TO SINGLE PLAYER SCOREBOARD FILE
+                        // IF PLAYER HAS HIGHER SCORE THAN COMPUTER ADD THEM TO SINGLE PLAYER SCOREBOARD FILE
 					}
 				}
-                /*else if(strcmp(buffer, "2"))
+                if(strcmp(buffer, "2") == 0)
 				{
-					// Multiplayer game
-                    if (DEBUGGER)
-                        printf("multiplayer\n");
 					// POSIX queues
 					mqd_t waiting_players = openMsgQueue("/Waiting_players");
 
@@ -805,22 +806,18 @@ int createServer()
 						// Asks client if they want to wait after two minutes of waiting.
 						sendPlayerConnectMsg(waiting_players);
 					}
-
-					
-
 				}
                 // Clean client exit
-				else if(strcmp(buffer, "3") == 0)
+				if(strcmp(buffer, "3") == 0)
 				{
 					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 					break;
-				}*/ // this is broke
-				else
-				{
-					//printf("Client: %s\n", buffer);
-					//send(newSocket, buffer, strlen(buffer), 0);
-					//bzero(buffer, sizeof(buffer));
 				}
+                else
+                {
+                    printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+					break;
+                }
 			}
 		}
 	}

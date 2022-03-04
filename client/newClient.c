@@ -181,7 +181,6 @@ int clientGame()
                         {
                             pass = 0;
                             printf("USER SCORED\n");
-                            // Check for bonus points
                             break;
                         }
                     }
@@ -200,6 +199,12 @@ int clientGame()
                     pass++;
                 }
             }
+
+            // SCOREBOARD OUTPUT HERE
+        }
+        if (strcmp(buffer, "2") == 0)
+        {
+
         }
     }
 }
