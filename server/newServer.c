@@ -531,7 +531,7 @@ void playerTurn(int newSocket)
     strcpy(buffer, letters);
     send(newSocket, buffer, 1024, 0);
     
-    int first = 1;
+    int first = 0;                   // TESTTING
     int run = 1;
     int resets = 0;
     while(run != 0)

@@ -92,7 +92,7 @@ int clientGame()
                 printf("Letters: %s\n", buffer);
 
                 int resets = 0;
-                int first = 0;
+                int first = 0;                   // TESTING
                 while (resets < 3)
                 {
                     if (first == 1)
