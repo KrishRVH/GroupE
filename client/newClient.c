@@ -121,7 +121,7 @@ int clientGame()
                             resets++;
                             continue;
                         }
-                        else
+                        if (strcmp(buffer, "CORRECT") == 0)
                         {
                             first = 0;
                             printf("USER SCORED\n");
@@ -160,7 +160,7 @@ int clientGame()
                             resets++;
                             continue;
                         }
-                        else
+                        if (strcmp(buffer, "CORRECT") == 0)
                         {
                             printf("USER SCORED\n");
                             // Check for bonus points
