@@ -126,6 +126,7 @@ int clientGame()
                             first = 0;
                             printf("USER SCORED\n");
                             // Check for bonus points
+                            break;
                         }
                     }
                     else
