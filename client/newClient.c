@@ -131,16 +131,6 @@ int clientGame()
                     }
                     else
                     {
-                        // First words submission
-                        printf("\nEnter your word: ");
-                        bzero(buffer, sizeof(buffer));
-                        scanf("%s", &buffer[0]);
-                        send(clientSocket, buffer, 1024, 0);
-
-                        // Receives answer
-                        bzero(buffer, sizeof(buffer));
-                        recv(clientSocket, buffer, 1024, 0);
-                        
                         // Recieves number of used words
                         // Recieves used words
                         char usedWords[100][100];
@@ -157,6 +147,16 @@ int clientGame()
                             printf("%s ", buffer);
                         }
                         printf("\n");
+
+                        // First words submission
+                        printf("\nEnter your word: ");
+                        bzero(buffer, sizeof(buffer));
+                        scanf("%s", &buffer[0]);
+                        send(clientSocket, buffer, 1024, 0);
+
+                        // Receives answer
+                        bzero(buffer, sizeof(buffer));
+                        recv(clientSocket, buffer, 1024, 0);
 
                         // Word submission
                         printf("\nEnter your word: ");
