@@ -524,48 +524,7 @@ int gameLogic(int newSocket, char *buffer)
                     // Dictionary
                     // int dictionaryCheck(size_t nnewf, char *lowernew, int newSocket)
                     // FORKING --------------------------------------------------------------
-                    if (fork() == 0)
-                    {
-                        dictionaryCheck(dictionary, nnewf, lowernew, newSocket);
-                    }
-                    else
-                    {
-                        wait(NULL);
-                        // Used words check
-                        //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
-                        int dup = 0;      
-                        for (int j = 0; j < 100; j++) 
-                        {
-                            if(strcmp(new, usedWords[j]) == 0) 
-                            {
-                                dup = 1;   // got a duplicate
-                                break;    
-                            }
-                        }
-                        if (dup == 0) 
-                        {    // not a duplicate: add it to usedWords
-                            strcpy(usedWords[noUsedWords+1], new);
-                            noUsedWords += 1;
-
-                            // Send correct message
-                            printf("CORRECT: %s", buffer);
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "CORRECT");
-                            send(newSocket, buffer, 1024, 0);
-                            strcpy(prev, new);
-                            return 1;
-                        }
-                        if(dup) 
-                        {
-                            //penalise
-                            bzero(buffer, sizeof(buffer));
-                            strcpy(buffer, "INCORRECT");
-                            printf("INCORRECT DUPLICATE\n");
-                            minusPlayerScore(added_player, -2);
-                            send(newSocket, buffer, 1024, 0);
-                            return 0;
-                        }
-                    }
+                    dictionaryCheck(dictionary, nnewf, lowernew, newSocket);
 
                     // Recieve dictionary check posix message, return 0 if incorrect
                     if (strcmp(recieveDictionaryMessage(dictionary), "INCORRECT") == 0)
@@ -574,6 +533,42 @@ int gameLogic(int newSocket, char *buffer)
                         strcpy(buffer, "INCORRECT");
                         printf("INCORRECT DICT\n");
                         minusPlayerScore(added_player, -1);
+                        send(newSocket, buffer, 1024, 0);
+                        return 0;
+                    }
+                    
+                    wait(NULL);
+                    // Used words check
+                    //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
+                    int dup = 0;
+                    for (int j = 0; j < 100; j++) 
+                    {
+                        if(strcmp(new, usedWords[j]) == 0) 
+                        {
+                            dup = 1;   // got a duplicate
+                            break;    
+                        }
+                    }
+                    if (dup == 0) 
+                    {    // not a duplicate: add it to usedWords
+                        strcpy(usedWords[noUsedWords+1], new);
+                        noUsedWords += 1;
+
+                        // Send correct message
+                        printf("CORRECT: %s", buffer);
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, "CORRECT");
+                        send(newSocket, buffer, 1024, 0);
+                        strcpy(prev, new);
+                        return 1;
+                    }
+                    if(dup) 
+                    {
+                        //penalise
+                        bzero(buffer, sizeof(buffer));
+                        strcpy(buffer, "INCORRECT");
+                        printf("INCORRECT DUPLICATE\n");
+                        minusPlayerScore(added_player, -2);
                         send(newSocket, buffer, 1024, 0);
                         return 0;
                     }
