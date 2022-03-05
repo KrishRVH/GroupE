@@ -109,7 +109,7 @@ int computerTurn()
                     if ((j==n) || (prev[j]=='\0') || ((new[k]=='\0') && (prev[j]=='\0')))
                     {
                         //printf("\nComputer's Word is valid!");
-                        //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
+                        //check if word has already been used reference 
                         int dup = 0;      
                         for (int j = 0; j < 100; j++) 
                         {
@@ -220,7 +220,7 @@ void dictionaryCheck(mqd_t dictionary, size_t nnewf, char *lowernew, int newSock
 
 int inputCheck()
 {
-    //check if word is already in the input file https://www.efaculty.in/c-programs/check-whether-a-given-word-exists-in-a-file-or-not-program-in-c/
+    //check if word is already in the input file
     FILE* filePointer;
     int wordExist=0;
     int bufferLength = 255;
@@ -250,7 +250,7 @@ int inputCheck()
 
     if (wordExist!=1)
     {
-        //add word to input file https://stackoverflow.com/questions/19429138/append-to-the-end-of-a-file-in-c
+        //add word to input file
         FILE * fptr;	
         fptr = fopen(fname, "a"); 
         fputs(newadd, fptr);
@@ -340,7 +340,7 @@ int gameLogic(int newSocket, char *buffer)
                     
                     wait(NULL);
                     // Used words check
-                    //check if word has already been used https://stackoverflow.com/questions/63132911/check-if-a-string-is-included-in-an-array-and-append-if-not-c
+                    //check if word has already been used
                     int dup = 0;
                     for (int j = 0; j < 100; j++) 
                     {
