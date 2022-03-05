@@ -841,12 +841,12 @@ int createServer()
 					// Game starts
 					if(playerTurn(newSocket) == 0)
 					{
-                        singlePlayerScoreboard()
                         // SCOREBOARD METHOD HERE, MAKE SCOREBOARD METHOD AND PUT IT ABOVE
                         // singlePlayerScoreboard();
                         // NEEDS TO SEND CLIENT SCORE OF PLAYER AND COMPUTER
                         // NEEDS TO LET CLIENT KNOW IF THEY WERE ADDED TO SINGLE PLAYER SCOREBOARD FILE
                         // IF PLAYER HAS HIGHER SCORE THAN COMPUTER ADD THEM TO SINGLE PLAYER SCOREBOARD FILE
+                        
 					}
 				}
                 if(strcmp(buffer, "2") == 0)
