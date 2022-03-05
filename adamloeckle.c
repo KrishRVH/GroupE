@@ -1,5 +1,9 @@
-// Author: Adam Loeckle
+//
 /*
+Group Number: E  
+▪ Group member name: Adam Loeckle  
+▪ Email: adam.loeckle@okstate.edu
+▪ Date: 03/04/2022
 Responsibilities:
 POSIX Queue/Server side messaging
 

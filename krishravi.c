@@ -1,5 +1,9 @@
-//Author: Krish Ravi
+//
 /*
+Group Number: E  
+▪ Group member name: Krish Ravi  
+▪ Email: vignesh.ravi@okstate.edu 
+▪ Date: 03/04/2022
 Responsibilities: Exclusively Game Logic
 
 Completed: Entirety of actual game logic alongside Adam Loeckle, including pass and reset implementation
