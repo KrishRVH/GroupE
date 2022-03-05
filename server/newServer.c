@@ -841,6 +841,7 @@ int createServer()
 					// Game starts
 					if(playerTurn(newSocket) == 0)
 					{
+                        singlePlayerScoreboard()
                         // SCOREBOARD METHOD HERE, MAKE SCOREBOARD METHOD AND PUT IT ABOVE
                         // singlePlayerScoreboard();
                         // NEEDS TO SEND CLIENT SCORE OF PLAYER AND COMPUTER

@@ -5,11 +5,17 @@
 /*
 Responsibilities: Server-client architecture including handling of user ersponse, game processes and instructions with Client
 Completed: Unused early iteration server code below that was referenced for final server
-           Earlier iteration server-client architecture
+           Earlier iteration server-client architecture 
+
+Other: Synchronization and debugging
+
+This is just a basic setup for server communication and setup.
+
+Also need to complete scoreboard.....
 
 #include "Main.h"
 
-/*
+
 void server()
 {
 	int sockfd, newsockfd, port_num;
@@ -56,5 +62,21 @@ void server()
 			close(new_sockfd);
 		}
 	}
+}
+
+// Game starts
+if(playerTurn(newSocket) == 0)
+{
+	// SCOREBOARD METHOD HERE, MAKE SCOREBOARD METHOD AND PUT IT ABOVE
+	// singlePlayerScoreboard();
+	// NEEDS TO SEND CLIENT SCORE OF PLAYER AND COMPUTER
+	// NEEDS TO LET CLIENT KNOW IF THEY WERE ADDED TO SINGLE PLAYER SCOREBOARD FILE
+	// IF PLAYER HAS HIGHER SCORE THAN COMPUTER ADD THEM TO SINGLE PLAYER SCOREBOARD FILE
+	
+}
+
+
+int displaySingleplayerScoreboard() {
+	welp
 }
 */
