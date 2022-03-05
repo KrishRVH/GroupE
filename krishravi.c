@@ -282,7 +282,7 @@ int gameLogic(int newSocket, char *buffer)
     int disallowed = 0;
     for (int i=0; i<n;i++)
     {
-        for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++)
+        for (int x = 0; x < nnew && disallowed==0 && new[x]!='\0'; x++) //this loop checks if there is any disallowed characters in the user entry from this input file
         {
             for (int y = 0; y < 6 && new[x]!='\0'; y++)
             {
@@ -305,7 +305,7 @@ int gameLogic(int newSocket, char *buffer)
                 printf("\nUsed correct characters!\n");
                 int j = i;
                 int k = 0;
-                while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0')))
+                while ((j<n) && (new[k]==prev[j]) && !((new[k]=='\0') && (prev[j]=='\0'))) //checks if the 
                 {
                     //printf("\n Iteration %d we're looking at %c in new and %c in prev\n", i, prev[j], new[k]);
                     j++;

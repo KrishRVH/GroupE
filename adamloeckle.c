@@ -126,7 +126,7 @@ int playerTurn(int newSocket)
 {
     srand(time(NULL)); 
     int rng = (rand()%5)+1; //seeding random number from 1 to 10 for first turn word
-    int rng2 = 1; //(rand()%10)+1; seeding random number from 1 to 10 for input.txt
+    int rng2 = (rand()%10)+1; //seeding random number from 1 to 10 for input.txt
     char rng2char[7];   
     sprintf(rng2char, "%d.txt", rng2);
     FILE *fileStream; 
