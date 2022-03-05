@@ -1,13 +1,20 @@
 // Author: Adam Loeckle
-// Responsibilities:
-// - POSIX Queue/Server side messaging
-// - Server method creation
-// - Player turn logic, server/client communication
-// - Player/computer structs
-//
-// References:
-// https://linux.die.net/man/3/
-// https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
+/*
+Responsibilities:
+POSIX Queue/Server side messaging
+
+Completed:
+            POSIX Queue/Server-side messaging
+            Entirety of final server method completion as illustrated below
+            Entirety of final client structure
+            Collaboration with Krish to adapt gamelogic into server/client architecture
+            Player/computer structures
+
+References:
+https://linux.die.net/man/3/
+https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork
+
+*/
 
 #include "Main.h"
 

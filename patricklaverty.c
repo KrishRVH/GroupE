@@ -2,6 +2,10 @@
 // - Server communication
 // - Based on code from geeksforgeeks.com
 // Will handle up to 3 clients
+/*
+Responsibilities: Server-client architecture including handling of user ersponse, game processes and instructions with Client
+Completed: Unused early iteration server code below that was referenced for final server
+           Earlier iteration server-client architecture
 
 #include "Main.h"
 

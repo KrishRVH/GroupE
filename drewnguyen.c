@@ -1,5 +1,9 @@
 //Author: Drew Nguyen
-//client handling
+/*
+Responsibilities: Client implementation and Client-server architecture
+Completed: Unused score calculation (below) logic
+           Unused early iteration client code
+*/
 
 #include "Main.h"
 
